@@ -28,7 +28,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "start node ../harpx/bin/harpx server & browser-sync start --proxy localhost:9000 --files '*.ejs, *.less'",
-    "compile": "node ../harpx/bin/harpx compile"
+    "compile": "node ../harpx/bin/harpx compile",
+    "deploy": "git add www && git commit -m 'WIP' && git subtree push --prefix=www origin gh-pages"
   },
   "repository": {
     "type": "git",

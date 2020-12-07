@@ -113,20 +113,20 @@
 <div class="coffee-header">
     <h1>Coffee Chain Locations in Japan</h1>
     <div id="chain-selector">
-        <div class="ui checkbox mobile hidden" v-for="chain in chains">
-            <input type="checkbox" :id="chain" :value="chain" checked="true" v-model="checkedChains" v-on:click="clicked" onclick="hoge(this.id, this.checked)">
+        <div class="ui checkbox checked mobile hidden" v-for="chain in chains">
+            <input type="checkbox" :id="chain" :value="chain" checked="checkedChains" v-on:click="clicked" onclick="hoge(this.id, this.checked)">
             <label :for="chain" class="lbl-chain"><img :src="'img/'+chain+'.png'" alt=""></label>
         </div>
-        <div class="sui checkbox mobile only" v-for="chain in chains">
-            <input type="checkbox" :id="chain" :value="chain" checked="true" v-model="checkedChains" v-on:click="clicked">
+        <div class="sui checkbox checked mobile only" v-for="chain in chains">
+            <input type="checkbox" :id="chain" :value="chain" checked="heckedChains" v-on:click="clicked">
             <label :for="chain" class="lbl-chain">{{chain}}</label>
         </div>
     </div>    
 </div>
 
 <div id="map"></div>
-<link rel="stylesheet" href="https://openlayers.org/en/v4.0.1/css/ol.css" type="text/css">
-<script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
+<link rel="stylesheet" href="https://openlayers.org/en/v6.4.3/css/ol.css" type="text/css">
+<script src="https://openlayers.org/en/v6.4.3/build/ol.js" type="text/javascript"></script>
 
 <script>
 
