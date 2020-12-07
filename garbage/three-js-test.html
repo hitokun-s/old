@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Three.js test" />
+    <meta property="og:type" content="article" />
+
+    <title>Three.js test | Hitokun's</title>
+    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/53/three.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <script>
+    //reference url
+    //http://yomotsu.net/blog/2012/12/01/create-terrain-with-threejs.html
+
+    var WIDTH = window.innerWidth, HEIGHT = window.innerHeight;
+    var renderer, scene, camera, light, controls;
+    var theta = 0;
+
+    function init() {
+        initScene();
+        myanimate();
+        $("#stop").click(stop);
+    }
+
+    function initScene() {
+        //WebGLを使用しないCanvasRendererというのもある。
+        renderer = new THREE.WebGLRenderer({antialias: true});
+        renderer.setSize(WIDTH, HEIGHT);
+
+        //レンダラーのクリアカラー（背景色とアルファ値）を設定
+        renderer.setClearColorHex(0xffffff, 1);
+        $("#test_canvas").append(renderer.domElement);
+
+        //sceneとは仮想３次元空間
+        scene = new THREE.Scene();
+        //scene.fog = new THREE.FogExp2( 0xAA9966, 0.015 );//地平線付近をかすませる
+
+        //透視投影カメラの引数：画角,縦横比,視体積の手前までの距離,視体積の奥までの距離
+        camera = new THREE.PerspectiveCamera(50, WIDTH / HEIGHT, 1, 2000);
+        //位置座標を設定
+        camera.position.set(700, 0, 85);
+
+        camera.up.set(0, 0, 1);
+        //カメラ視野の中心座標を設定
+        //必ず各設定の最後によぶこと。これにより他の設定も反映される
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+//    controls = new THREE.OrbitControls(camera);
+//    controls.center = new THREE.Vector3(0, 0, 0);
+//    controls.addEventListener("change", renderer);
+//    controls.autoRotate = true;
+//    controls.autoRotateSpeed = 2;
+
+        light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(20, 40, -15);
+        light.target.position.copy(scene.position);
+        light.castShadow = true;
+        light.shadowCameraLeft = -60;
+        light.shadowCameraTop = -60;
+        light.shadowCameraRight = 60;
+        light.shadowCameraBottom = 60;
+        light.shadowCameraNear = 20;
+        light.shadowCameraFar = 200;
+        light.shadowBias = -.0001
+        light.shadowMapWidth = light.shadowMapHeight = 2048;
+        light.shadowDarkness = .7;
+        scene.add(light);
+
+        var plane = new THREE.Mesh(
+                //引数：分割セグメント数（方向１）、分割セグメント数（方向２）
+                new THREE.PlaneGeometry(1000, 1000, 20, 20),
+                //overdraw: true にするとセグメント境界が非表示になるらしい
+                new THREE.MeshBasicMaterial({color: 0x555555, wireframe: true})
+        );
+        //plane.rotation.z = 0.5;
+        scene.add(plane);
+
+        //立方体を追加
+        addCube(-1, 0, 4);
+        addCube(-1, 1, 2);
+        addCube(-1, 2, 0);
+        addCube(0, 3, 4);
+        addCube(0, 4, 2);
+        addCube(0, 0, 0);
+        addCube(1, 1, 4);
+        addCube(1, 2, 3);
+        addCube(1, 3, 2);
+        addCube(1, 4, 1);
+        addCube(1, 0, 0);
+
+        addCube(-5, 0, 4);
+        addCube(-5, 1, 2);
+        addCube(-5, 2, 1);
+        addCube(-5, 3, 0);
+        addCube(-4, 4, 4);
+        addCube(-4, 0, 2);
+        addCube(-4, 1, 0);
+        addCube(-3, 2, 4);
+        addCube(-3, 3, 3);
+        addCube(-3, 4, 2);
+        addCube(-3, 0, 0);
+    }
+
+    function addCube(x, y, z) {
+        var cube = new THREE.Mesh(
+                new THREE.CubeGeometry(50, 50, 50),//縦・横・高さ
+                new THREE.MeshLambertMaterial({color: 0xff0000})//材質オブジェクト
+                //MeshLambertMaterial = 光源からの光を反射する材質
+        );
+        scene.add(cube);
+        cube.position.set(25 + 50 * x, 25 + 50 * y, 25 + 50 * z);
+    }
+
+    var anime;
+    var timer = 0;
+    function myanimate() {
+        anime = requestAnimationFrame(myanimate);//再起無限ループによるアニメーション
+//    var timer = Date.now(); 
+//    camera.position.x = 800 * Math.sin( timer / 15 * Math.PI / 360);
+//    camera.position.y = 800 * Math.cos( timer / 15 * Math.PI / 360);
+        timer = timer + 0.005;
+        if (timer == 2)timer = 0;
+        camera.position.x = 800 * Math.sin(timer * Math.PI);
+        camera.position.y = 800 * Math.cos(timer * Math.PI);
+
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+        //camera.position.z = 50 * Math.cos( timer / 100 * Math.PI / 360 );
+        //controls.update();
+        //theta = theta + 0.1;
+
+        //camera.position.z = 300;
+        renderer.render(scene, camera);
+
+        $("#stop").text("STOP");
+        $("#stop").unbind().click(stop);
+    }
+
+    function stop() {
+        cancelAnimationFrame(anime);
+        $("#stop").text("RESTART");
+        $("#stop").unbind().click(myanimate);
+    }
+
+    $(function () {
+        init();
+    });
+
+</script>
+<button id="stop" class="btn btn-danger">STOP</button>
+<div id="test_canvas"></div>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

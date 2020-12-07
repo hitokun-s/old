@@ -1,0 +1,116 @@
+/*
+ref:http://www.fontspace.com/category/futuristic?p=2
+ref:http://fortawesome.github.io/Font-Awesome/icons/
+*/
+
+@font-face {
+    font-family:"indicator";
+    src:url("/css/font/digital-7.ttf");
+    font-weight:normal;
+    font-style:normal;
+}
+
+body {
+    padding-top: 50px;
+    height: 100%;
+    overflow-y: hidden;/* temporary solution */
+    /* body padding for fixed top nav */
+}
+
+/*@font-face {
+font-family: 'Yanone Kaffeesatz';
+src: url('./fonts/YanoneKaffeesatz-Bold.ttf') format('truetype');
+font-weight: 700;
+font-style: normal;
+}*/
+
+
+* {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+         -o-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            
+    box-sizing: border-box;
+}
+
+.future{
+    font-family:"indicator";
+}
+
+.annotation{
+    font-size: 15px;
+}
+
+#title{
+    font-size: xx-large;
+}
+#time{
+    color: red;
+}
+.center{
+    /* width: 90%; */
+    /* margin-left: auto; */
+    /* margin-right: auto; */
+}
+
+.mynopadding{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.mainrow{
+    height: 500px;
+}
+
+.mypanel{
+    height: 100%;
+}
+
+/*#portrait{
+    width: 100%;
+}
+
+#person_info p, #friend_info p{
+    text-align: center;
+    margin: auto;
+}*/
+
+.center{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.navbar-fixed-top{
+    height: 50px;
+}
+
+/*.navbar-fixed-top *{*/
+    /*height: inherit;*/
+/*}*/
+
+.ht-logo{
+    padding-top: 0px;
+}
+
+@media (max-width: 767px) {
+    .navbar-collapse{
+        background-color: rgba(0,0,0,0.8);
+    }
+}
+
+.active{
+    -webkit-box-shadow: 0 0 30px rgba(255, 255, 255, 1.0);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 1.0);
+}
+
+.fb-like{
+    padding-top: 15px;
+}
+
+.destination-year{
+    font-family: "indicator";
+    font-size: 30px
+}
+

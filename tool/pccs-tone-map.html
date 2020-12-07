@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="PCCS Tone Map">
+    <meta name="Keywords" content="pccs,tone,color">
+    <meta property="og:image" content="https://hitokun-s.github.io/tool/img/pccs_tone_map.png"/>
+    <meta property="og:url" content="https://hitokun-s.github.io/tool/pccs-tone-map.html"/>
+    <meta property="og:description" content="PCCS Tone Map"/>
+    
+    <meta property="og:title" content="PCCS Tone Map" />
+    <meta property="og:type" content="article" />
+
+    <title>PCCS Tone Map | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+<!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+    
+    
+<style>
+    .bio{
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+    }
+    #btn-sidebar{
+        position: absolute;
+        right:0px;
+        cursor: pointer;
+    }
+    .my-sidebar{
+        width: 120px;
+        height: 100%;
+        /*background: #428bca;*/
+        background: #3c3c3c;
+        position: absolute;
+        left: 0px;
+        padding-left: 5px;
+        box-sizing: border-box;
+    }
+    body{
+        padding-left: 120px;
+        overflow-y: hidden;
+    }
+
+    #content{
+        position: relative;
+        padding: 5px;
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+    }
+    .my-sidebar a{
+        color: white;
+    }
+    .my-title{
+        color: white;
+    }
+    .bio{
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+    }
+</style>
+
+<!--<div id="navbar" class="ui thin vertical inverted {{ isMobile ? 'top':'left visible'}} sidebar menu">-->
+<div class="my-sidebar">
+    <a class="my-title">
+        <h2>Hitokun's</h2>
+    </a>
+    <!--<div id="breadcrumb">-->
+        <!--<template v-for="item in getMenu()">-->
+            <!--<a :href="item.path" class="item"><i class="right chevron icon divider"></i>{{ item.name }}</a>-->
+        <!--</template>-->
+    <!--</div>-->
+    <div class="bio mobile hidden">
+        <a href="/about.html" class="item">
+            About
+        </a>
+        <a href="/contact.html" class="item">
+            Contact
+        </a>
+    </div>
+</div>
+<!--<div id="content" class="pusher" style="{{ isMobile ? 'padding-top: 40px !important;' : ''}}">-->
+<div id="content">
+    <h1>PCCS Tone Map</h1>
+
+<style>
+  div.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightgrey;
+    border: 0px;
+    pointer-events: none;
+  }
+
+  i{
+    cursor: pointer;
+  }
+
+  .tone-ring path{
+    stroke: white;
+    stroke-width: 5px;
+  }
+  .tone-ring path{
+    cursor: pointer;
+  }
+
+  svg text {
+    text-anchor: middle;
+    /*dominant-baseline: middle;*/
+  }
+  svg text.lower {
+    dominant-baseline: hanging;
+  }
+  svg text.upper {
+    dominant-baseline: no-change;
+  }
+  svg text.big {
+    font-size: 30px;
+  }
+  svg text.small {
+    font-size: 15px;
+    font-style: italic;
+  }
+  .btn-remove{
+    text-anchor: end;
+    cursor: pointer;
+  }
+  .clickable{
+    cursor: pointer;
+  }
+
+  .color-explanation{
+    float:right;
+    margin-left: 5px;
+  }
+</style>
+
+<div class="column" id="stage">
+  <div style="float:left">
+    <svg width="700" height="650">
+      <tone-ring :data="findTone('v')" x="600" y="325" v-on:choose="choose"/>
+      <tone-ring :data="findTone('b')" x="450" y="175" v-on:choose="choose"/>
+      <tone-ring :data="findTone('s')" x="450" y="325" v-on:choose="choose"/>
+      <tone-ring :data="findTone('dp')" x="450" y="475" v-on:choose="choose"/>
+
+      <tone-ring :data="findTone('lt+')" x="300" y="100" v-on:choose="choose"/>
+      <tone-ring :data="findTone('sf')" x="300" y="250" v-on:choose="choose"/>
+      <tone-ring :data="findTone('d')" x="300" y="400" v-on:choose="choose"/>
+      <tone-ring :data="findTone('dk')" x="300" y="550" v-on:choose="choose"/>
+
+      <tone-ring :data="findTone('p+')" x="150" y="100" v-on:choose="choose"/>
+      <tone-ring :data="findTone('ltg')" x="150" y="250" v-on:choose="choose"/>
+      <tone-ring :data="findTone('g')" x="150" y="400" v-on:choose="choose"/>
+      <tone-ring :data="findTone('dkg')" x="150" y="550" v-on:choose="choose"/>
+
+      <tone-pillar :data="findTone('m')" x="0" y="0" v-on:choose="choose"/>
+    </svg>
+  </div>
+  <div style="float:left">
+    <p>chosen colors:</p>
+      <div v-for="color in chosen">
+        <svg width="120" height="60">
+          <rect x="0" y="0" width="120" height="60" :fill="color.code"></rect>
+          <text x="120" y="12" v-on:click="remove(color)" class="btn-remove">x</text>
+        </svg>
+        <div class="color-explanation">
+          <span class="ui grey horizontal label">{{color.name}}</span><br>
+          <span>{{color.code}}</span>
+        </div>
+      </div>
+  </div>
+</div>
+
+<template id="tone-graph-template">
+  <g class="tone-ring" :transform="'translate(' + x + ',' + y + ')'" width="150" height="150" ref="g">
+    <text class="upper big">{{data.code}}</text>
+    <text y="5" class="lower small">{{data.name}}</text>
+  </g>
+</template>
+<template id="tone-pillar-template">
+  <g class="tone-pillar" :transform="'translate(' + x + ',' + y + ')'" width="150" height="500" ref="g">
+    <rect class="clickable" v-for="(color, i) in colors" x="0" :y="75 * i" width="50" height="50" :fill="color.code" v-on:click="choose(color)">
+  </g>
+</template>
+
+<script>
+
+  var div = d3.select("body").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
+
+  // refs: https://medium.com/js-dojo/7-ways-to-define-a-component-template-in-vuejs-c04e0c72900d
+
+  Vue.component('tone-ring', {
+    props: ["data", "x", "y"],
+    data: function(){
+      return {
+        colors: this.data.colors
+      }
+    },
+    mounted: function(){
+      this.show();
+    },
+    template: '#tone-graph-template',
+    methods: {
+      getComplementary: function(colorCode){
+        return this.colors[(this.colors.indexOf(colorCode) + this.colors.length / 2) % this.colors.length];
+      },
+      show: function(){
+        const self = this;
+        var g = d3.select(this.$refs.g),
+            width = +g.attr("width"),
+            height = +g.attr("height"),
+            radius = Math.min(width, height) / 2;
+
+        var pie = d3.pie()
+        .sort(null)
+        .value(function(d) { return 1; });
+
+        if(this.colors.length == 12){
+          pie.startAngle(-(0.5 + 1/12) * Math.PI);
+        }else if(this.colors.length == 24){
+          pie.startAngle(-(7/12 + 1/24) * Math.PI);
+        }
+
+        var path = d3.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(radius * 0.6);
+
+        var label = d3.arc()
+        .outerRadius(radius - 40)
+        .innerRadius(radius - 40);
+
+        var arc = g.selectAll(".arc")
+        .data(pie(this.colors))
+        .enter().append("g")
+        .attr("class", "arc");
+
+        arc.append("path")
+        .attr("d", path)
+        // .attr("visibility", "hidden")
+        .attr("fill", function(d) { return d.data.code; })
+        .on("click", function(d){
+          console.log(d);
+          self.$emit('choose', d.data);
+        })
+        .on("mouseover", function(d){
+          d3.select(this).classed("active", true);
+          div.transition()
+          .duration(200)
+          .style("opacity", .9);
+          div.html(d.data.name + "<br>" + d.data.code)
+          .style("left", (d3.event.pageX) + "px")
+          .style("top", (d3.event.pageY - 40) + "px");
+        })
+        .on("mouseout", function(){
+          d3.select(this).classed("active", false);
+          div.transition()
+          .duration(500)
+          .style("opacity", 0);
+        });
+      }
+    }
+  });
+
+  Vue.component('tone-pillar', {
+    props: ["data", "x", "y"],
+    data: function(){
+      return {
+        colors: this.data.colors
+      }
+    },
+    mounted: function(){
+    },
+    template: '#tone-pillar-template',
+    methods: {
+      choose: function(color){
+        this.$emit('choose', color);
+      }
+    }
+  });
+
+</script>
+
+<div id="main" class="ui">
+</div>
+
+<!--<script  src="sinhalese/dist/main.js"></script>-->
+
+<script>
+  axios.get("data/tones.json").then(function(res){
+    console.log(res.data);
+    var stage = new Vue({
+      el: "#stage",
+      data: {
+        tones: res.data,
+        chosen: []
+      },
+      mounted: function(){
+      },
+      methods:{
+        choose: function(d){
+          this.chosen.push(d);
+        },
+        remove: function(color){
+          console.log("+++++++++");
+          this.chosen.splice(this.chosen.indexOf(color), 1);
+        },
+        findTone: function(code){
+          return _.find(this.tones, function(d){
+            return d.code == code;
+          });
+        },
+        brighter: function(colorCode){
+          return this.hex(d3.hsl(colorCode).brighter(0.8).rgb());
+        },
+        hex: function(rgb){
+          return "#" +
+              ("0" + parseInt(rgb.r,10).toString(16)).slice(-2) +
+              ("0" + parseInt(rgb.g,10).toString(16)).slice(-2) +
+              ("0" + parseInt(rgb.b,10).toString(16)).slice(-2);
+        }
+      }
+    });
+    // stage.$on("choose", function(d){
+    //   console.log("djoihoihs");
+    // })
+  })
+</script>
+</div>
+<script>
+
+    var mediaManager = {
+        data: {
+            windowSize: 0,
+        },
+        methods: {
+            setWindowSize: function(){
+                this.windowSize = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+            }
+        },
+        created: function(){
+            this.setWindowSize();
+        },
+        computed: {
+            isMobile: function(){
+                return  this.windowSize < 768;
+            }
+        }
+    };
+    
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            }
+        },
+        components: {
+        }
+    });
+    var navbar = new Vue({
+        el: '#navbar',
+        mixins: [mediaManager],
+    });
+    // var content = new Vue({
+    //     el: "#content",
+    //     mixins: [mediaManager]
+    // });
+    
+    window.onresize = function() {
+        content.setWindowSize(); // 変数windowSizeが共有されているので、どれか1個を呼ぶだけでいい。
+    };
+    $("#btn-sidebar").click(function(){
+        $('.ui.sidebar').sidebar({});
+    });
+    
+</script>
+
+    
+
+
+</body>
+</html>

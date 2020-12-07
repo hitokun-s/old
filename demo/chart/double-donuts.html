@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Donut Chart</title>
+    <script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="../js/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../../js/underscore-min.js"></script>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/google-tracking.js"></script>
+    <style>
+        #graph {
+            /*position: fixed;*/
+            z-index: 10;
+            width: 600px;
+            height: 500px;
+            background-color: white;
+            /*top:0px;*/
+            /*left: 0px;*/
+            font: 10px sans-serif;
+        }
+
+        .tt {
+            visibility: visible;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .arc path {
+            stroke: #fff;
+        }
+
+        .arc text {
+            font-size: 2em;
+        }
+
+        .arcOuter path {
+            stroke: #fff;
+        }
+
+        .arcOuter text {
+            font-size: 2em;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Double Donuts Chart</h1>
+    <div id="graph"></div>
+</div>
+<script>
+    var svg;
+
+    var margin = {top: 30, right: 40, bottom: 100, left: 100};
+    var width = $("#graph").width() - margin.left - margin.right;
+    var height = $("#graph").height() - margin.top - margin.bottom;
+    var radius = Math.min($("#graph").width(), $("#graph").height()) / 2;
+
+    var color = d3.scale.category10();
+
+    var showMainGraph = function (data, baseSvg, opt) {
+
+        var arc = d3.svg.arc().outerRadius(radius - 50).innerRadius(radius - 110);
+        var arcOuter = d3.svg.arc().outerRadius(radius - 10).innerRadius(radius - 50);
+
+        baseSvg.selectAll("*").remove();
+        var pie = d3.layout.pie()
+                .startAngle(0).endAngle(Math.PI * 2)
+                .value(function (d) {
+                    return d.total;
+                }).sort(null);
+
+        data.forEach(function(d, i){
+            d.color = color(i);
+            console.log(d.color);
+            var c = d3.rgb(d.color)
+            d.children.forEach(function(_d, _i){
+                _d.color = c.brighter((_i + 1)/2);
+                console.log(_d.color);
+            });
+        });
+
+        var dataOuter = _.flatten(data.map(function(d){return d.children;}));
+        console.log(dataOuter);
+
+        baseSvg.attr("transform", "translate(" + radius + "," + radius + ")");
+        var g = baseSvg.selectAll(".arc")
+                .data(pie(data))
+                .enter().append("g")
+                .attr("class", "arc");
+
+        g.append("path")
+                .attr("d", arc)
+                .attr("fill", function (d, i) {
+                    return d.data.color;
+                });
+        g.append("text")
+                .attr("transform", function (d) {
+                    d.innerRadius = 0;
+                    d.outerRadius = radius;
+                    return "translate(" + arc.centroid(d) + ")";
+                })
+                .attr("dy", ".35em")
+                .style("text-anchor", "middle")
+                .text(function (d, i) {
+                    return d.data.name;
+                });
+
+        // outer donut
+        console.log(pie(dataOuter));
+        var gOuter = baseSvg.selectAll(".arcOuter")
+                .data(pie(dataOuter))
+                .enter().append("g")
+                .attr("class", "arcOuter");
+        gOuter.append("path")
+                .attr("d", arcOuter)
+                .attr("fill", function (d, i) {
+                    return d.data.color;
+                });
+        gOuter.append("text")
+                .attr("transform", function (d) {
+                    d.innerRadius = 0;
+                    d.outerRadius = radius;
+                    return "translate(" + arcOuter.centroid(d) + ")";
+                })
+                .attr("dy", ".35em")
+                .style("text-anchor", "middle")
+                .text(function (d, i) {
+                    return d.data.name;
+                });
+    };
+
+    $(function () {
+        svg = d3.select("#graph").append("svg").attr({
+            class: "tt",
+            width: $("#graph").width(),
+            height: $("#graph").height()
+        });
+        var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var data = [
+            {
+                name: "中項目A",
+                total: 128,
+                children: [
+                    {
+                        name: "小項目a1",
+                        total: 50
+                    },
+                    {
+                        name: "小項目a2",
+                        total: 40
+                    },
+                    {
+                        name: "小項目a3",
+                        total: 38
+                    }
+                ]
+            },
+            {
+                name: "中項目B",
+                total: 500,
+                children: [
+                    {
+                        name: "小項目b1",
+                        total: 300
+                    },
+                    {
+                        name: "小項目b2",
+                        total: 150
+                    },
+                    {
+                        name: "小項目b3",
+                        total: 50
+                    }
+                ]
+            },
+            {
+                name: "中項目C",
+                total: 230,
+                children: [
+                    {
+                        name: "小項目c1",
+                        total: 100
+                    },
+                    {
+                        name: "小項目c2",
+                        total: 130
+                    }
+                ]
+            },
+        ]
+
+        showMainGraph(data, g, {
+            width: width,
+            height: height
+        });
+    })
+
+</script>
+</body>
+</html>

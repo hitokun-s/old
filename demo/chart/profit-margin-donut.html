@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profit Margin Donut Chart</title>
+    <script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+    <script type="text/javascript" src="../js/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../../js/underscore-min.js"></script>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/google-tracking.js"></script>
+    <style>
+        body{
+            min-width: 960px;
+        }
+
+        .arc path {
+            stroke: #fff;
+        }
+
+        /*.arc text {*/
+            /*font-size: 1em;*/
+        /*}*/
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Profit Margin Donut Chart</h1>
+    <div id="graph" class="row"></div>
+</div>
+<template id="tmpl-stage">
+    <div class="panel col-sm-12">
+        <div></div>
+    </div>
+</template>
+<script>
+
+    var margin = {top: 40, right: 10, bottom: 10, left: 10};
+
+    var color = d3.scale.category10();
+
+    var pie = d3.layout.pie()
+            .startAngle(0).endAngle(Math.PI * 2)
+            .value(function (d) {
+                return d.value;
+            }).sort(null);
+
+    var showMainGraph = function (dataList, svg, opt) {
+        
+        console.log("dataList", dataList);
+
+        var width = opt.width;
+        var height = opt.height;
+        var radius = Math.min(width, height) / 2;
+        console.log("radius", radius);
+
+        var maxSales = _.max(dataList, function(d){
+            return d.sales;
+        }).sales;
+
+        var arc = function(sales){
+            var tmpRadius = radius * Math.sqrt(sales / maxSales);
+            return d3.svg.arc().outerRadius(tmpRadius).innerRadius(tmpRadius - 50);
+        }
+
+        svg.selectAll("*").remove();
+        
+        var drawText = function(d){
+            var g = d3.select($(this).parent()[0]);
+            g.append("text")
+                    .attr("transform", function (d) {
+                        d.innerRadius = 0;
+                        d.outerRadius = radius;
+                        return "translate(" + arc.centroid(d) + ")";
+                    })
+                    .attr("dy", ".35em")
+                    .style("text-anchor", "middle")
+                    .text(function (d, i) {
+                        return d.data.name;
+                    });
+        }
+
+        dataList.forEach(function(oriData, idx){
+            console.log(oriData);
+            var tmpRadius = radius * Math.sqrt(oriData.sales / maxSales);
+
+            var data = []
+            if(oriData.profit > 0){
+                data = [
+                    {name:"profit", value: oriData.profit, color:"blue"},
+                    {name:"", value: oriData.sales - oriData.profit, color:"lightgrey"},
+                ]
+            }else{
+                data = [
+                    {name:"", value: oriData.sales + oriData.profit, color:"lightgrey"},
+                    {name:"profit", value: -oriData.profit, color:"red"},
+                ]
+            }
+
+            console.log("margin.left + opt.offset.x * idx + radius",margin.left,opt.offset.x * idx,radius);
+            var baseSvg = svg.append("g").attr({
+                transform: "translate(" + (margin.left + opt.offset.x * idx + radius) + "," + (margin.top + radius) + ")"
+            });
+            var g = baseSvg.selectAll(".arc")
+                    .data(pie(data))
+                    .enter().append("g")
+                    .attr("class", "arc");
+
+            g.append("path")
+                    .attr("d", arc(oriData.sales))
+                    .style("opacity", 0)
+                    .attr("fill", function (d, i) {
+                        return d.data.color;
+                    }).transition().duration(1000).style("opacity", 1);
+
+            baseSvg.append("text").attr("font-size", 40)
+                    .attr("fill", oriData.profit > 0 ? "blue":"red")
+                    .attr("transform", "translate(0," +  (- tmpRadius - 10) + ")")
+                    .style("text-anchor", "middle")
+                    .text(~~(oriData.profit * 100 / oriData.sales) + "%");
+        });
+    };
+
+    var data = [
+        {
+            sales: 300,
+            profit: 40
+        },
+        {
+            sales: 200,
+            profit: -40
+        },
+        {
+            sales: 400,
+            profit: 50
+        }
+    ]
+
+    $(function () {
+
+        var elm = $.tmpl($('#tmpl-stage'));
+        $("#graph").append(elm);
+
+        var w = $(".panel").width();
+        var h = $(".panel").width()/3;
+
+        var svg = d3.select(elm[0]).append("svg").attr({
+            width: w,
+            height: h,
+        });
+        
+        console.log("height", h - margin.top - margin.bottom);
+        console.log("h", h);
+
+        showMainGraph(data, svg, {
+            width: w - margin.left - margin.right,
+            height: h - margin.top - margin.bottom,
+            offset:{x: h}
+        });
+
+    })
+
+</script>
+</body>
+</html>

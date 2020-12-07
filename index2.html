@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Top" />
+    <meta property="og:type" content="article" />
+
+    <title>Top | Hitokun's</title>
+    
+    <!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+<div class="ui right floated vertical compact menu">
+    <a href="/demo" class="item">
+        <i class="student icon"></i>
+        Demos
+    </a>
+    <a href="/viz" class="item">
+        <i class="bar chart icon"></i>
+        Viz
+    </a>
+    <a href="/movie" class="item">
+        <i class="video camera icon"></i>
+        Movies
+    </a>
+    <a href="/music" class="item">
+        <i class="music icon"></i>
+        Musics
+    </a>
+    <a href="/project" class="item">
+        <i class="lab icon"></i>
+        Projects
+    </a>
+    <a href="/game" class="item">
+        <i class="game icon"></i>
+        Games
+    </a>
+    <a href="/tool" class="item">
+        <i class="configure icon"></i>
+        Tools
+    </a>
+    <a href="/watch" class="item">
+        <i class="wait icon"></i>
+        Watches
+    </a>
+    <a href="/helloworld" class="item">
+        <i class="trash icon"></i>
+        HelloWorld
+    </a>
+    <a href="/garbage" class="item">
+        <i class="trash icon"></i>
+        Garbages
+    </a>
+</div>
+
+<style>
+    #background{
+        z-index: 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: -330px;
+        top: -41px;
+    }
+    body{
+        overflow-y: hidden;
+    }
+</style>
+
+<script>
+  function setup() {
+
+    $("body").prepend("<div id='background'></div>");
+
+    var width = $("#background").width();
+    var height = $("#background").height() + 50;
+    var canvas = createCanvas(width, height, WEBGL);
+    canvas.parent("#background");
+    ortho();
+
+    // camera(0, -150, 1, 2, -150, 0, 0, 1, 0);
+    camera(-180, 0, 200, 0, 0, 0, 0, 1, 0);
+
+    fill(200);
+    stroke(200);
+  }
+
+  var radius = 300;
+  var speed = 0.005;
+
+  // refs: https://qiita.com/hp0me/items/1570694d9f61368f3ae6
+  // ortho(): https://processing.org/reference/ortho_.html
+
+  function draw() {
+    orbitControl();
+
+    background(255);
+
+    // var locY = (mouseY / height - 0.5) * (-2);
+    // var locX = (mouseX / width - 0.5) * 2;
+    // ambientLight(100, 80, 80);
+    // pointLight(200, 200, 200, locX, locY, 0);
+    // directionalLight(250, 250, 250, locX, -locY, 0.25);
+
+    var _frameCount = frameCount;
+    // rotateX(-0.6);
+    rotateZ(0.5);
+
+    for(var i = -9;i < 9;i++){
+      push();
+      rotateY(_frameCount * speed + TWO_PI * 2 * i / 18);
+      torus(radius, 1, 48, 16);
+      pop();
+    }
+    rotateX(HALF_PI);
+    torus(radius, 1, 48, 16);
+
+    for(var i = -8;i < 9;i++){
+      push();
+      translate(0,0,Math.sin((HALF_PI) * i / 9) * radius);
+      torus(Math.cos((HALF_PI) * i / 9) * radius, 1, 48, 16);
+      pop();
+    }
+
+    for(var i = -18;i < 18;i++){
+      push();
+      var ang = _frameCount * speed + TWO_PI * 2 * i / 36;
+      translate(radius * 1.2 * sin(ang), radius * 1.2 * cos(ang), 0);
+      rotateX(HALF_PI);
+      cylinder(30, 1); // radius, height
+      pop();
+    }
+
+  }
+
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

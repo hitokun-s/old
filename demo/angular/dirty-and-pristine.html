@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Dirty and Pristine</title>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.12/angular.min.js"></script>
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.23/angular.min.js"></script>-->
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div ng-controller="MyController">
+    <form name='vendorForm' novalidate='novalidate'>
+        <select class="dropdown" name="" id="" name='supporterId' ng-model='vendor.supporterId'
+                ng-options="supporter.userId as supporter.name for supporter in supporters">
+            <option value=""></option>
+        </select>
+
+        <label for="">hoges</label>
+        <div class="fields">
+            <div class="field">
+                <div class="ui radio checkbox" ng-click='toggleDeliveryMethod("hoge1")'>
+                    <input type="radio" class="hidden" name="deliveryMethod" checked="" tabindex="0" ng-model="vendor.deliveryMethod" value="hoge1">
+                    <label>hoge1</label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui radio checkbox" ng-click='toggleDeliveryMethod("hoge2")'>
+                    <input type="radio" class="hidden" name="deliveryMethod" checked="" tabindex="0" ng-model="vendor.deliveryMethod" value="hoge2">
+                    <label>hoge2</label>
+                </div>
+            </div>
+        </div>
+
+
+        <button type='submit' value="登録" ng-disabled='vendorForm.$pristine'>button</button>
+    </form>
+</div>
+
+<script>
+    var app = angular.module("myApp", []);
+    
+    app.controller('MyController', ['$scope', '$http', function ($scope, $http) {
+        console.log("hi!");
+
+        console.log($scope.vendorForm);
+
+        $scope.toggleDeliveryMethod = function(d){
+            $scope.vendor.deliveryMethod = d;
+        }
+
+        $scope.vendor = {
+            supporterId : 1000,
+            deliveryMethod: "hoge1"
+        }
+        $scope.supporters = [
+            {userId: 1001, name:"hoge"},
+            {userId: 1002, name:"hoge2"}
+        ]
+//        $scope.vendorForm.$setPristine();
+//        $scope.hoge = function(){
+//            console.log("hoge");
+//        }
+    }]);
+
+</script>
+</body>
+</html>

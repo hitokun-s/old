@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Video Player - Adventure of HelloWorld" />
+    <meta property="og:type" content="article" />
+
+    <title>Video Player - Adventure of HelloWorld | Hitokun's</title>
+    
+    <!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+            svg{
+                position: absolute;
+                z-index : 2;
+            }
+            video{
+                width:100%;
+            }
+            text{
+                stroke: white;
+                fill: white;
+                font-size: 30px;
+            }
+            text:hover{
+                cursor:pointer;
+            }
+            rect:hover{
+                cursor:pointer;
+            }
+        </style>
+        <div id="content">
+            <p>I got video-playered!</p>
+            <p>I am &lt;svg&gt; overlayed on &lt;video&gt; element.</p>
+            <div id="src-html" class="text-center">
+                <svg></svg>
+                <video id="video" loop>
+                    <source src="movie/Reaktorplayer-FractalRevolution393_512kb.mp4">
+                    </source><source src="movie/Reaktorplayer-FractalRevolution393.ogv">
+                </source></video>
+            </div>
+            <p>video source:
+                <a href="https://archive.org/details/Reaktorplayer-FractalRevolution393-3" target="_blank">
+                    https://archive.org/details/Reaktorplayer-FractalRevolution393-3
+                </a>
+            </p>
+        </div>
+        <script>
+            var svg = d3.select("svg");
+            var video = $("#video")[0];
+
+            window.requestAnimFrame = (function() {
+                return  window.requestAnimationFrame ||
+                        window.webkitRequestAnimationFrame ||
+                        window.mozRequestAnimationFrame ||
+                        function(callback) {
+                            window.setTimeout(callback, 1000 / 60);
+                        };
+            })();
+            var animate = function() {
+                played_time.text(video.currentTime);
+                requestAnimFrame(animate);
+            };
+
+            var addBorder = function(text, opt) {
+                var text_width = text.node().getBBox().width;
+                var text_height = text.node().getBBox().height;
+
+                text.attr("dominant-baseline", "middle");
+
+                var padding_left = opt["padding-left"] || 10;
+                var padding_right = opt["padding-right"] || 10;
+                var padding_top = opt["padding-top"] || 3;
+                var padding_bottom = opt["padding-bottom"] || 3;
+
+                d3.select(text.node().parentNode).append("rect").attr({
+                    width: text_width + padding_left + padding_right,
+                    height: text_height + padding_top + padding_bottom,
+                    y: -text_height / 2 - padding_top,
+                    x: -padding_left,
+                    rx: 10,
+                    ry: 10,
+                    fill: "none",
+                    stroke: "white",
+                    "stroke-width": 3
+                });
+            };
+
+            $("#video").bind("loadedmetadata", function() {
+//                    var width = this.videoWidth;
+//                    var height = this.videoHeight; // not available                     
+                svg.attr("width", $("#video").width());
+                svg.attr("height", $("#video").height());
+                svg.append("text").text("Hello World!").attr({x: 60, y: 80});
+
+                var btn_play = svg.append("g").attr("transform", "translate(70,120)");
+                btn_play.append("text").text("play").attr({
+                    x: 0,
+                    y: 0
+                }).on("click", function() {
+                    if (video.paused) {
+                        $("#video")[0].play();
+                    }
+                }).call(addBorder, {});
+
+                var btn_pause = svg.append("g").attr("transform", "translate(160,120)");
+                btn_pause.append("text").text("stop").attr({
+                    x: 0,
+                    y: 0
+                }).on("click", function() {
+                    if (!video.paused) {
+                        $("#video")[0].pause();
+                    }
+                }).call(addBorder, {});
+
+                svg.append("text").text("Time:").attr({x: 60, y: 180});
+                var played_time = svg.append("text").attr({x: 60, y: 210});
+
+                (function animate() {
+                    played_time.text(video.currentTime);
+                    requestAnimFrame(animate);
+                })();
+            });
+        </script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

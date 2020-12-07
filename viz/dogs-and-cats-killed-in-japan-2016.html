@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Dogs and Cats killed in Japan(2016)">
+    <meta name="Keywords" content="Japan,pets,dog,cat,killed,map">
+    <meta property="og:image" content="https://hitokun-s.github.io/viz/img/dogs_and_cats_killed_in_japan_2016.png"/>
+    <meta property="og:url" content="https://hitokun-s.github.io/viz/dogs-and-cats-killed-in-japan-2016.html"/>
+    <meta property="og:description" content="Dogs and Cats killed in Japan(2016)"/>
+    
+    <meta property="og:title" content="Dogs and Cats killed in Japan(2016)" />
+    <meta property="og:type" content="article" />
+
+    <title>Dogs and Cats killed in Japan(2016) | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+
+<script src="https://d3js.org/d3-queue.v3.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.13.0/d3-legend.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/topojson@3.0.0"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <link rel="stylesheet" href="//rawgithub.com/Caged/d3-tip/master/examples/example-styles.css">
+<style type="text/css">
+    body{
+        font-family: 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, Osaka, 'MS PGothic', arial, helvetica, sans-serif;
+    }
+    .pref {
+        cursor: pointer;
+    }
+
+    svg {
+        stroke: darkgrey;
+    }
+
+    #stage {
+        width: 800px;
+        height: 840px;
+        position: relative;
+    }
+    label{
+        font-size: 1.5em !important;
+    }
+    #title{
+        font-size: 100px;
+        line-height: 120px;
+        position: absolute;
+        top: 20px;
+        left: 160px;
+    }
+</style>
+
+
+<h1>Dogs and Cats killed in Japan(2016)</h1>
+
+<form class="ui aligned grid form">
+    <div class="left floated six wide column">
+        <div id="animal-selector">
+            <div class="field">
+                <div class="inline fields">
+                    <div class="field" v-for="animal in animals">
+                        <div class="ui radio checkbox">
+                            <input type="radio" :value="animal.name" id="animal.name" v-model="checkedAnimals">
+                            <label for="{{animal.name}}">{{ animal.name }}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="right floated right aligned six wide column">
+        <a href="https://www.env.go.jp/nature/dobutsu/aigo/2_data/statistics/dog-cat.html">data source(2016)</a>
+    </div>
+</form>
+<div>
+    <div id="stage">
+        <span id="title" v-bind:style="{ color: getColor()}" v-html="getTitle()"></span>
+    </div>
+</div>
+
+
+
+<script>
+    
+    var math = {
+      floor: function(val, num){
+        var h = Math.pow(10, num);
+        return Math.floor(val / h) * h;
+      },
+      ceil: function(val, num){
+        var h = Math.pow(10, num);
+        return Math.ceil(val / h) * h;
+      }
+    }
+
+  var width = $("#stage").width();
+  var height = $("#stage").height();
+
+  var svg = d3.select("#stage").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  var projection = d3.geo.mercator()
+    .center([137, 38.4])
+    .scale(2500)
+    .translate([width / 2, height / 2]);
+
+  var path = d3.geo.path().projection(projection);
+
+  var colorRange = [
+    "#BDECDA",
+    "#04703F",
+    "#000000"
+  ];
+  var colorRanges = {
+    dog: [
+      "#e0f3db",
+      "#7bccc4",
+      "#0868ac"
+    ],
+    cat: [
+      "#fef0d9",
+      "#fc8d59",
+      "#b30000"
+    ],
+    all: [
+      "#edf8fb",
+      "#8c96c6",
+      "#810f7c"
+    ],
+  }
+  
+  var sum = function(arr, prop){
+    var res = 0;
+    arr.forEach(function(d){
+      res += d[prop];
+    });
+    return res;
+  }
+
+  d3.queue()
+    .defer(d3.json, "data/japan.json")
+    .defer(d3.csv, "data/pets_killed_2016.csv")
+    .defer(d3.csv, "data/seirei.csv")
+    .defer(d3.csv, "data/chukaku.csv")
+    .await(function (error, japan, pets, seirei, chukaku) {
+
+      pets.forEach(function (d) {
+        d.dog = +d.dog;
+        d.cat = +d.cat;
+        d.all = d.dog + d.cat;
+        d.type = +d.type;
+      });
+      
+      var prefMap = _.object(pets.map(function(d){
+        d.cities = [];
+        return [d.pref, d];
+      }));
+      
+      seirei.forEach(function(d){
+        if(prefMap[d.pref]){
+          prefMap[d.pref].cities.push(d.city);
+        }
+      });
+      chukaku.forEach(function(d){
+        if(prefMap[d.pref]){
+          prefMap[d.pref].cities.push(d.city);
+        }
+      });
+
+      pets = pets.filter(function(d){
+        return d.type == 1;
+      });
+      console.log(pets);
+      
+      pets.forEach(function (d) {
+        if(d.cities.length > 0){
+          d.dog += sum(d.cities.map(function(c){return prefMap[c]}), "dog");
+          d.cat += sum(d.cities.map(function(c){return prefMap[c]}), "cat");
+          d.all += sum(d.cities.map(function(c){return prefMap[c]}), "all");
+        }
+      });
+      
+      var colors = _.object(["dog", "cat", "all"].map(function(target){
+        var min = d3.min(pets, function (d) {
+          return d[target];
+        });
+        var max = d3.max(pets, function (d) {
+          return d[target];
+        });
+        var color = d3.scale.linear()
+          .range(colorRanges[target])
+          .domain([Math.floor(min), (min + max) / 2, Math.ceil(max)]);
+        
+        return [target, color];
+      }));
+
+      var topo = topojson.feature(japan, japan.objects.pref).features;
+
+      topo.forEach(function (d) {
+        var found = _.find(pets, function (p) {
+          return p.pref == d.properties.name_local;
+        });
+        if (found) {
+          d.pets = found;
+        }
+      });
+      
+      var target = "all";
+      
+      var prefs = svg.selectAll(".pref")
+        .data(topo)
+        .enter()
+        .append("path")
+        .attr("class", function (d, i) {
+          return "pref pref" + i;
+        })
+        .attr("fill", function (d) {
+          if(d.pets){
+            return colors[target](d.pets[target]);
+          }
+          return "transparent";
+        })
+        .attr("d", path);
+
+      // move Okinawa
+      svg.select(".pref46").attr("transform", "translate(650, -250)");
+
+      // draw a line separating Okinawa
+      var lineFunction = d3.svg.line()
+        .x(function (d) {
+          return d.x;
+        })
+        .y(function (d) {
+          return d.y;
+        })
+        .interpolate("linear");
+      var lineData = [
+        {"x": 510, "y": 830},
+        {"x": 600, "y": 630},
+        {"x": 790, "y": 630}
+      ];
+      svg.append("path")
+        .attr("d", lineFunction(lineData))
+        .attr("stroke-width", 2)
+        .attr("fill", "none");
+      
+      
+      // legend
+      var drawLegend = function (target) {
+
+        svg.select(".legendQuant").remove();
+        
+        var domain = colors[target].domain();
+
+        svg.append("g").attr("class", "legendQuant");
+        var legendLinear = d3.legend.color()
+          .ascending(true)
+          .labelFormat(function (d) {
+            return d + "～";
+          })
+          .cells(d3.range(math.floor(domain[0], 2), math.ceil(domain[2], 2), 100))
+          .scale(colors[target]);
+        svg.select(".legendQuant")
+          .call(legendLinear);
+
+        var bbox = svg.select(".legendQuant").node().getBBox();
+        svg.select(".legendQuant").attr("transform", "translate(20, 30)");
+      }
+
+      drawLegend(target);
+
+      /* Initialize tooltip */
+      var tip = d3.tip().attr('class', 'd3-tip').html(function (d) {
+        return "<p>" + d.properties.name_local + "</p><span>" + d.pets[target] + "</span>";
+      });
+      tip.offset(function () {
+        return [this.getBBox().height / 2 - 20, 0]
+      });
+      prefs.call(tip)
+        .on('mouseover', tip.show)
+        .on('mouseout', tip.hide);
+      
+      var title = new Vue({
+        el: "#title",
+        data: {
+          target: target
+        },
+        methods: {
+          getColor: function(){
+            return colorRanges[this.target][1];
+          },
+          getTitle: function(){
+            switch(this,target){
+              case "dog": return "Dogs";
+              case "cat": return "Cats";
+              default: return "Dogs <br>& Cats";
+            }
+          }
+        }
+      });
+      
+      // vue.js for selector
+      var selection = new Vue({
+        el: '#animal-selector',
+        data: {
+          checkedAnimals: "all",
+          animals: [
+            {
+              name: 'dog'
+            },
+            {
+              name: 'cat'
+            },
+            {
+              name: 'all'
+            }
+          ]
+        },
+        watch: {
+          "checkedAnimals": function (val) {
+            target = val; // dog. cat, all
+            prefs.attr("fill", function (d) {
+              if(d.pets){
+                return colors[target](d.pets[target]);
+              }
+              return "transparent";
+            });
+            drawLegend(target);
+            title.target = target;
+          }
+        }
+      });
+
+    });
+
+  
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

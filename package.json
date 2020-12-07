@@ -1,0 +1,43 @@
+{
+  "name": "hitokun-s.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".eslintrc.js",
+  "dependencies": {
+    "css-loader": "^0.28.10",
+    "d3-color": "^1.2.0",
+    "eslint": "^4.18.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-html": "^4.0.2",
+    "lodash": "^4.17.10",
+    "vue": "^2.5.13",
+    "vue-js-modal": "^1.3.12",
+    "vue-loader": "^14.1.1",
+    "vue-mdl": "^1.1.1",
+    "vue-template-compiler": "^2.5.13",
+    "webpack": "^4.0.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-loader": "^7.1.4",
+    "glob": "^7.1.2",
+    "webpack": "^4.1.0",
+    "webpack-watched-glob-entries-plugin": "^2.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "start node ../harpx/bin/harpx server & browser-sync start --proxy localhost:9000 --files '*.ejs, *.less'",
+    "compile": "node ../harpx/bin/harpx compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hitokun-s/hitokun-s.github.io-harp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hitokun-s/hitokun-s.github.io-harp/issues"
+  },
+  "homepage": "https://github.com/hitokun-s/hitokun-s.github.io-harp#readme"
+}

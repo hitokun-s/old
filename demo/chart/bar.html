@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bar Chart</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <style>
+        #graph {
+            /*position: fixed;*/
+            z-index: 10;
+            width: 800px;
+            height: 600px;
+            background-color: white;
+            /*top:0px;*/
+            /*left: 0px;*/
+            font: 10px sans-serif;
+            border: solid 2px black;
+        }
+        .tt {
+            visibility: visible;
+        }
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+        .arc path {
+            stroke: #fff;
+        }
+        .bar {
+            fill: orange;
+        }
+    </style>
+</head>
+<body>
+<div id="graph"></div>
+<script>
+    var svg;
+
+    var margin = {top: 30, right: 40, bottom: 100, left: 100};
+    var width = $("#graph").width() - margin.left - margin.right;
+    var height = $("#graph").height() - margin.top - margin.bottom;
+    var radius = Math.min($("#graph").width(), $("#graph").height()) / 2;
+
+    var getTotalSize = function (data) {
+        var sum = 0;
+        data.forEach(function (d) {
+            d.children.forEach(function (o) {
+                sum += o.size;
+            })
+        });
+        return sum;
+    };
+
+    var showMainGraph = function (data, baseSvg, opt) {
+
+        // each element of data should have 'total' property
+
+        var arc = d3.svg.arc().outerRadius(radius - 10).innerRadius(0);
+
+        var parseDate = d3.time.format("%Y年%m月期").parse;
+        data.forEach(function(v,i){
+            v.monthStr = v.month;
+            v.month = parseDate(v.month);
+        });
+
+        // スケールと出力レンジの定義
+        var xScale = d3.scale.ordinal().rangeRoundBands([0, opt.width], 0.3); // 幅と余白の比率
+        xScale.domain(data.map(function (d) {
+            return d.month;
+        }));
+
+        var yScale = d3.scale.linear()
+                .domain([0,
+                    d3.max(data.map(function (d) {
+                        return d.total;
+                    }))])
+                .range([opt.height, 0]);
+
+        // 軸の定義
+        var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient("bottom")
+                .innerTickSize(0)
+                .outerTickSize(0)
+                .tickPadding(10)
+                .tickFormat(d3.time.format("%Y-%m"));
+
+        var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .outerTickSize(0)
+                .orient("left");
+
+        var xAxisObj, yAxisObj;
+
+        // 呼び出し順で前後配置が決まるため、順序を入れ替えやすいようにメソッド化。
+        var showGrid = function () {
+            xAxisObj = baseSvg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + opt.height + ")")
+                    .call(xAxis)
+                    .selectAll("text")
+                    .style("text-anchor", "middle");
+            var xText = xAxisObj.append("text").text("").style("text-anchor", "middle")
+                    .attr("transform", "translate(130,40)");
+
+            // y軸をsvgに表示
+            yAxisObj = baseSvg.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis);
+            var yText = yAxisObj.append("text")
+                    //                        .attr("transform", "rotate(-90)")
+                    //                        .attr("y", 6)
+                    //                        .attr("dy", ".71em"))
+                    .text("資産規模").style("text-anchor", "end")
+                    .attr("transform", "translate(0,-10)");
+        };
+
+        xAxis.scale(xScale);
+        baseSvg.select(".x").call(xAxis);
+
+        var g = baseSvg.selectAll(".bar")
+                .data(data)
+                .enter().append("g")
+                .attr("class", "bar")
+                .style("cursor", "pointer")
+                .attr("transform", function (d) {
+                    return "translate(" + xScale(d.month) + "," + yScale(d.total) + ")";
+                })
+                .attr("width", xScale.rangeBand())
+                .attr("height", function (d) {
+                    return opt.height - yScale(d.total);
+                }).on("click", function(d){
+                    console.log("clicked!");
+//                    baseSvg.selectAll("*").remove();
+//                    showBSTreeMap(d.data, baseSvg, {
+//                        width:opt.width,
+//                        height:opt.height,
+//                        showText:true
+//                    });
+                });
+        g.each(function (d) {
+            console.log(this);
+            showBSTreeMap(d.total, d3.select(this), {
+                width: this.getAttribute("width"),
+                height: opt.height - yScale(d.total)
+            });
+        });
+        showGrid();
+    };
+
+    var showBSTreeMap = function (data, baseSvg, opt) {
+
+        var box = baseSvg.append('rect')
+                .attr({
+                    fill: "blue",
+                    stroke: "white",
+                    "stroke-width": 3,
+                    width:opt.width,
+                    height:opt.height
+                })
+                .attr("fill", function (d, i) {
+                    return d.color;
+                });
+    };
+
+    $(function () {
+        svg = d3.select("#graph").append("svg").attr({
+            class: "tt",
+            width: $("#graph").width(),
+            height: $("#graph").height()
+        });
+        var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var data = [
+            {
+                "month": "2013年01月期",
+                "total":128
+            },
+            {
+                "month": "2013年03月期",
+                "total":500
+            },
+            {
+                "month": "2013年02月期",
+                "total":230
+            },
+        ]
+
+        showMainGraph(data, g, {
+            width: width,
+            height: height
+        });
+    })
+
+</script>
+</body>
+</html>

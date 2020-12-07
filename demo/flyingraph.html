@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Data is living as you can see">
+    
+    <meta property="og:image" content="https://hitokun-s.github.io/image/flyingraph.png"/>
+    
+    <meta property="og:description" content="Data is living as you can see"/>
+    
+    <meta property="og:title" content="Flyingraph" />
+    <meta property="og:type" content="article" />
+
+    <title>Flyingraph | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+        body{
+            overflow: hidden;
+        }
+        .btn{
+            margin: 4px auto;;
+        }
+        #title_holder{
+            margin: 4px;;
+        }
+        #title{
+            font-size: xx-large;
+            border : solid 2px black;
+            display: inline;
+            padding: 3px;;
+        }
+        #ground{
+            position: relative;
+        }
+
+        #parent{
+            position: absolute;
+            left: 40%;
+            top:30%;
+            transform-style: preserve-3d;
+            perspective-origin: 0px -200px;
+            /*animation-name: parent-orbit;*/
+            animation-duration: 20s;
+            animation-iteration-count:infinite;
+            animation-timing-function:ease-in-out;
+
+            transition: transform 2s ease-in;
+        }
+        @keyframes parent-orbit{
+            0% {transform: perspective(500px)  translateX(200px)  translateY(0px) rotateY(-200deg) ;}
+            50% {transform: perspective(500px)  translateX(-200px)  translateY(100px) rotateY(160deg) ;}
+            100% {transform: perspective(500px) translateX(200px)  translateY(0px) rotateY(520deg) ;}
+        }
+
+        #container{
+            width: 400px;
+            transform-style: preserve-3d;
+            /*animation-name: orbit;*/
+            animation-duration: 0.6s;
+            animation-iteration-count:infinite;
+            animation-timing-function:ease-in-out;
+
+            transition: transform 2s ease-in;
+        }
+        @keyframes orbit{
+            0% {transform:  translateX(300px) translateY(20px) rotateX(60deg);}
+            50% {transform:  translateX(300px) translateY(0px) rotateX(60deg);}
+            100% {transform:  translateX(300px) translateY(20px) rotateX(60deg);}
+        }
+
+        #left{
+            transform-origin:100% 50%;
+            /*animation-name: forleft;*/
+        }
+        #right{
+            transform-origin:0% 50%;
+            /*animation-name: forright;*/
+        }
+
+        .feather{
+            display: inline-block;
+            animation-duration: 0.3s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count:infinite;
+            animation-direction:alternate-reverse;
+
+            transition: transform 1s ease-in;
+        }
+
+        @keyframes forleft{
+            from {transform: rotateY(-45deg);}
+            to {transform: rotateY(45deg);}
+        }
+        @keyframes forright{
+            from {transform: rotateY(45deg);}
+            to {transform: rotateY(-45deg);}
+        }
+
+    </style>
+
+    <script>
+        var show = function() {
+            $("#container").css({
+                "background-color": "red",
+                "opacity": 0.5
+            });
+            $("#parent").css({
+                "background-color": "yellow",
+                "opacity": 0.5
+            });
+        }
+        var hide = function() {
+            $(".plate").css({
+                "background-color": "transparent",
+                "opacity": 1
+            });
+        }
+        var stop = function() {
+            $("#parent, #container, .feather").css("animation-play-state", "paused");
+        }
+        var start = function() {
+            $("#parent, #container, .feather").css("animation-play-state", "running");
+        }
+        $(function() {
+            stop();
+        });
+
+    </script>
+
+<h1>Flyingraph</h1>
+
+<div class="container">
+    
+    <div class="text-center">
+        <a class="btn btn-primary" onclick="show()">Show Structure</a>
+        <a class="btn btn-primary" onclick="hide()">Hide Structure</a>
+        <a class="btn btn-danger" onclick="stop()">Stop</a>
+        <a class="btn btn-danger" onclick="start()">Start</a>
+    </div>
+    <div id="ground">
+    <div id="parent" class="plate">
+        <div id="container" class="plate">
+            <!--do not insert line break between img tags-->
+            <div id="left" class="feather"></div><div id="right" class="feather"></div>
+        </div>
+        <div id="serif-wrapper">
+            <p id="serif"></p>
+        </div>
+    </div>
+    </div>
+
+</div>
+<script>
+    var dataSet1 = [
+        {name: "a", val: 1000},
+        {name: "a", val: 3000},
+        {name: "a", val: 5000},
+        {name: "a", val: 4000},
+        {name: "a", val: 5000},
+        {name: "a", val: 3000},
+        {name: "a", val: 2000},
+        {name: "a", val: 4000},
+        {name: "a", val: 3000},
+        {name: "a", val: 1000}
+    ];
+    var dataSet2 = [
+        {name: "a", val: 2000},
+        {name: "a", val: 4000},
+        {name: "a", val: 5000},
+        {name: "a", val: 5000},
+        {name: "a", val: 4000},
+        {name: "a", val: 2000},
+        {name: "a", val: 1000},
+        {name: "a", val: 4000},
+        {name: "a", val: 3000},
+        {name: "a", val: 1000}
+    ];
+    var w = 200, h = 300;
+    var svg1 = d3.select('#left')
+            .append('svg')
+            .attr({
+                width: w,
+                height: h
+            });
+    var scale = d3.scale.linear()
+            .domain([0, d3.max(dataSet1, function(d) {
+                return d.val
+            })])    //正規化される値の範囲を指定(0〜valの最大値)
+            .range([0, w]);    //出力値の範囲を指定(0〜ステージの高さ)
+
+    var barchart1 = svg1.selectAll('rect')    //rect要素を選択
+            .data(dataSet1)    //データセットを束縛
+            .enter();    //データセットの数に対して選択された要素がいくつ足りないかチェック
+    barchart1.append('rect')    //足りない分のrect要素を追加
+            .attr({
+                x: w,
+                y: function(d, i) {
+                    return i * 30
+                }, //データのインデックス数をy属性に反映
+                width: 0,
+                height: 20,
+                fill: "blue"
+            })
+            .transition().duration(1000)
+            .attr({
+                x: function(d) {
+                    return w - scale(d.val);
+                },
+                width: function(d) {
+                    return scale(d.val);
+                }
+            });
+    barchart1.append("text").attr({
+        x: function(d) {
+            return w - scale(d.val);
+        },
+        y: function(d, i) {
+            return i * 30 + 15;
+        },
+        fill: "white"
+    }).text(function(d) {
+        return d.val;
+    });
+
+    var svg2 = d3.select('#right')
+            .append('svg')
+            .attr({
+                width: w,
+                height: h,
+            });
+    var barchart2 = svg2.selectAll('rect')    //rect要素を選択
+            .data(dataSet2)    //データセットを束縛
+            .enter();    //データセットの数に対して選択された要素がいくつ足りないかチェック
+    barchart2.append('rect')    //足りない分のrect要素を追加
+            .attr({
+                x: 0,
+                y: function(d, i) {
+                    return i * 30;
+                }, //データのインデックス数をy属性に反映
+                width: 0,
+                height: 20,
+                fill: "red"
+            })
+            .transition().call(endall,
+            function() {
+                console.log("all end");
+
+                $("#parent").css("transform", "perspective(500px)  translateX(200px)  translateY(0px) rotateY(160deg)");
+                $("#container").css("transform", "translateX(300px) translateY(20px) rotateX(60deg)");
+                $("#left").css("transform", "rotateY(45deg)");
+                $("#right").css("transform", "rotateY(-45deg)");
+
+
+            });
+    barchart2.append("text").attr({
+        x: function(d) {
+            return scale(d.val);
+        },
+        y: function(d, i) {
+            return i * 30 + 15;
+        },
+        fill: "white",
+        "text-anchor": "end"
+    }).text(function(d) {
+        return d.val;
+    });
+
+    var listenEvents = [
+        'webkitTransitionEnd', // webkit(Chrome1.0, Safari3.2)
+        'oTransitionEnd', // Opera10.5
+        'transitionend'        // IE10, Fx4以降, 12.10以降
+    ];
+    $(function() {
+        var k = 0;
+        $("#parent, #container, .feather").on("transitionend", function(elm) {
+            k++;
+            if (k == 9) {
+                $("#parent").css("animation-name", "parent-orbit");
+                $("#container").css("animation-name", "orbit");
+                $("#left").css("animation-name", "forleft");
+                $("#right").css("animation-name", "forright");
+                start();
+            }
+        });
+    });
+
+    function endall(transition, callback) {
+        var n = 0;
+        transition.duration(1000)
+                .attr({
+                    width: function(d) {
+                        return scale(d.val)
+                    }
+                })
+                .each(function() {
+                    ++n;
+                })
+                .each("end", function() {
+                    if (!--n)
+                        callback.apply(this, arguments);
+                });
+    }
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

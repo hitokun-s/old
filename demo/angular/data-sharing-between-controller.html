@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MyApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Sharing Between Controller</title>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.12/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.12/angular-route.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<h4>Shared State Service</h4>
+<ng-view ng-cloak></ng-view>
+<script>
+    var app = angular.module("MyApp", ['ngRoute','ui.bootstrap']);
+
+    app.config(function($routeProvider){
+        $routeProvider
+                .when('/a',{
+                    templateUrl:'../tmpl/view-a.html'
+                })
+                .when('/b',{
+                    templateUrl:'../tmpl/view-b.html'
+                })
+                .otherwise({
+                    redirectTo:'/a'
+                })
+    });
+
+    app.factory("SharedData", function() {
+        return {
+            text: 'hoge'
+        };
+    });
+
+    app.controller("ShareControllerA", function($scope, SharedData) {
+        $scope.data = SharedData;
+//        $scope.change = function(){
+//            SharedData.text = "hoge2";
+//        }
+        $scope.current1 = new Date();
+        $scope.datePickerOptions1 = {
+            formatMonth: "MMM",
+            datepickerMode: "month",
+            minMode: "month",
+            showWeeks: false
+        };
+        $scope.current2 = new Date();
+        $scope.datePickerOptions2 = {
+            formatMonth: "MMM",
+            datepickerMode: "month",
+            minMode: "month",
+            showWeeks: false
+        };
+        $scope.show = function(){
+            console.log($scope.current1);
+            console.log($scope.current2);
+        }
+    });
+
+    app.controller("ShareControllerB", function($scope, SharedData) {
+        $scope.data = SharedData;
+    });
+</script>
+</body>
+</html>

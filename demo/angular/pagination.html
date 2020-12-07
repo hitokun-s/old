@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular Test</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.12/angular.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">-->
+    <!--<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>-->
+    <!--<script src="https://code.angularjs.org/1.2.19/angular.min.js"></script>-->
+    <!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
+    <!--<script src="//cdn.jsdelivr.net/angular.bootstrap/0.11.0/ui-bootstrap-tpls.min.js"></script>-->
+    <script>
+        var app = angular.module("myApp", [ 'ui.bootstrap' ]);
+
+    </script>
+</head>
+<body ng-controller="MyController">
+<div class="container">
+    <form>
+        <div class="pull-right">
+            <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">previous</button><span>{{currentPage + 1}} / {{ Math.ceil(rows.length / pageSize) }}</span>
+            <button ng-disabled="(currentPage + 1) * pageSize >= rows.length" ng-click="currentPage=currentPage+1">Next</button>
+        </div>
+        <ul>
+            <li ng-repeat="row in rows  | limitTo: pageSize: (currentPage * pageSize)">
+                {{row}}
+            </li>
+        </ul>
+
+    </form>
+</div>
+
+<script>
+    app.filter('startFrom', function() {
+        return function(input, start) {
+            console.log(input);
+            start = +start; //parse to int
+            return input.slice(start);
+        }
+    });
+
+    app.controller('MyController', ['$scope', '$http', function($scope, $http) {
+        $scope.Math = window.Math;
+        $scope.rows = [
+            "asfd",
+            "asfwed",
+            "asfwijiohgfid",
+            "asudffd",
+            "asud2ffd",
+            "asud3ffd",
+            "asud3f4fd",
+            "asud53ffd",
+            "asud63ffd",
+            "asud73ffd",
+            "as23ffd",
+
+        ];
+
+        $scope.currentPage = 0;
+        $scope.pageSize = 5;
+
+
+    }]);
+</script>
+</body>
+</html>

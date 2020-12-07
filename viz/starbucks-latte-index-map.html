@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Starbucks Latte Index map by country">
+    <meta name="Keywords" content="starbucks,latte,country,map">
+    <meta property="og:image" content="https://hitokun-s.github.io/viz/img/starbucks-latte-index.png"/>
+    <meta property="og:url" content="https://hitokun-s.github.io/viz/starbucks-latte-index-map.html"/>
+    <meta property="og:description" content="Starbucks Latte Index map by country"/>
+    
+    <meta property="og:title" content="Starbucks Latte Index" />
+    <meta property="og:type" content="article" />
+
+    <title>Starbucks Latte Index | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+
+<script src="https://d3js.org/d3-queue.v3.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.13.0/d3-legend.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/topojson@3.0.0"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <link rel="stylesheet" href="//rawgithub.com/Caged/d3-tip/master/examples/example-styles.css">
+
+<style type="text/css">
+    svg .country {
+        cursor: pointer;
+        fill: white;
+    }
+
+    svg {
+        /*position: absolute !important;*/
+        /*top: 0px;*/
+        border: 2px black solid;
+    }
+
+    #stage {
+        width: 100%;
+    }
+
+    .d3-tip p {
+        margin-bottom: 0px;
+    }
+</style>
+<h1>Starbucks Latte Index</h1>
+data-source(2016): <a href="https://www.valuepenguin.com/countries-where-buying-starbucks-most-and-least-extravagant">here</a>
+<div id="stage"></div>
+<script>
+
+
+//  var color = d3.scale.linear().domain([-0.2, 0.33, 0.66, 1]).range(["lightcoral", "lightyellow", "lightgreen", "lightblue"]);
+
+  // メルカトル図法は投影方法上、そもそも北極点や南極点を描画できないので、適当な緯度で切るしかない。
+  // 緯度を決めてそこからアスペクト比を割り出してもいいが、最初からサイズを決めてしまっても同じこと。
+  // アスペクト比は9:5にしておく
+  var width = $("#stage").width();
+  var height = $("#stage").width() * 5 / 9;
+
+  var svg = d3.select("#stage").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  var projection = d3.geo.mercator()
+    .center([0, 0])
+    .scale(100)
+    .translate([width / 2, height / 2]);
+
+  projection = d3.geo.mercator()
+    .rotate([205, 0]) // 3 dimentional rotation. set Japan as center
+    .translate([width * 0.5, height * 0.65]) // 赤道を中心にすると南極が大きく入りすぎてバランスが悪い
+    .scale(width / ( Math.PI * 2 ));
+
+  var path = d3.geo.path().projection(projection);
+
+  $(function () {
+
+    d3.queue()
+      .defer(d3.json, "../data/ne_110m_admin_0_countries.geo.json")
+      .defer(d3.csv, "data/latte_index_2016.csv")
+      .await(function (error, json, csv) {
+
+        console.log(json);
+        console.log(csv);
+
+        csv.forEach(function (d) {
+          d.price = +d.price.substring(1);
+        });
+        
+        var colorRange = [
+          "#BDECDA",
+          "#04703F",
+          "#000000"
+        ];
+        
+        var min = d3.min(csv, function (d) {
+            return d.price;
+          });
+        var max = d3.max(csv, function (d) {
+          return d.price;
+        })
+        console.log("min", min);
+        console.log("max", max);
+
+        var color = 
+//          d3.scale.quantize()
+        d3.scale.linear()
+          .range(colorRange)
+          .domain([Math.floor(min), (min+max)/2,  Math.ceil(max)]);
+
+        var hoge = csv.filter(function (rec) {
+          return _.find(json.features, function (d) {
+            return rec.country == d.properties.formal_en || rec.country == d.properties.name || rec.country == d.properties.admin;
+          }) == null;
+        });
+        console.log(hoge);
+
+        var data = _.object(_.map(csv, function (item) {
+          return [item.country, item.price];
+        }));
+
+        json.features.forEach(function (d) {
+          var price = data[d.properties.formal_en] || data[d.properties.name] || data[d.properties.admin];
+          if (price) {
+            d.price = price;
+          }
+        });
+
+//            var topo = topojson.object(japan, japan.objects.pref).geometries; // <= old syntax
+        console.log(d3.geo.bounds(json)); // [​[left, bottom], [right, top]​]
+
+        //left is the minimum longitude, 
+        // bottom is the minimum latitude, 
+        // right is maximum longitude, 
+        // top is the maximum latitude.
+
+        /* Initialize tooltip */
+        var tip = d3.tip().attr('class', 'd3-tip').html(function (d) {
+          return "<p>" + d.properties.name + "</p><span>$" + d.price + "</span>";
+        });
+        tip.offset(function () {
+          return [this.getBBox().height / 2, 0]
+        });
+
+        svg.selectAll('path')
+          .data(json.features)
+          .enter()
+          .append('path')
+          .attr('d', path)
+          .attr('stroke', '#00ac97')
+          .attr('stroke-width', 0.5)
+          .classed("country", true)
+          .filter(function (d) {
+            return d.price;
+          })
+          .call(tip)
+          .style('fill', function (d) {
+            return color(d.price);
+          })
+          .on('mouseover', tip.show)
+          .on('mouseout', tip.hide);
+
+
+        // legend
+
+        svg.append("g")
+          .attr("class", "legendQuant");
+//          .attr("transform", "translate(20," + height -  ")");
+
+//        var colorLegend = d3.legend.color()
+//          .labelFormat(d3.format(".2f"))
+////          .useClass(true)
+//          .scale(color);
+
+        var legendLinear = d3.legend.color()
+          .ascending(true)
+//          .shapeWidth(30)
+          .labelFormat(function(d){
+            return "$" + d + "～";
+          })
+//          .cells(Math.floor(max) - Math.floor(min) + 2)
+          .cells(d3.range(Math.floor(min), Math.ceil(max), 1.0))
+//          .orient('horizontal')
+          .scale(color);
+
+        svg.select(".legendQuant")
+          .call(legendLinear);
+
+        var bbox = svg.select(".legendQuant").node().getBBox();
+        svg.select(".legendQuant").attr("transform", "translate(20," + (height - bbox.height - 10) +  ")");
+      });
+  });
+
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

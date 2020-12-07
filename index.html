@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Top" />
+    <meta property="og:type" content="article" />
+
+    <title>Top | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+<!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+    
+        <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+<link rel="stylesheet" href="css/top.css">
+
+
+
+
+<div class="stage">
+
+  <h1 class="title">Hitokun's</h1>
+
+  <div class="menu top">
+    <ul>
+      <li>
+        <a href="/demo"><i class="fas fa-flask"></i>Demos</a>
+      </li>
+      <li>
+        <a href="/viz"><i class="fas fa-chart-bar"></i>Viz</a>
+      </li>
+      <li>
+        <a href="/project"><i class="fas fa-flask"></i>Projects</a>
+      </li>
+      <li>
+        <a href="/tool" class="item"><i class="configure icon"></i>Tools</a>
+      </li>
+      <li>
+        <a href="/movie" class="item"><i class="fas fa-video"></i>Movies</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="menu bottom">
+    <ul>
+      <li>
+        <a href="/music">
+          <i class="fas fa-music"></i>Musics
+        </a>
+      </li>
+      <li>
+        <a href="/game">
+          <i class="fas fa-gamepad"></i>Game
+        </a>
+      </li>
+      <li>
+        <a href="/watch" class="item">
+          <i class="wait icon"></i>
+          Watches
+        </a>
+      </li>
+      <li>
+        <a href="/garbage" class="item">
+          <i class="trash icon"></i>
+          Garbages
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svg-bg">
+    <marker id="m_ar" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="strokeWidth" preserveAspectRatio="none" markerWidth="4" markerHeight="6" orient="auto">
+      <polygon points="0,0 0,10 10,5" id="ms"/>
+    </marker>
+    <g transform="translate(0,250)">
+    <rect class="main-box" x="0" y="0" width="100%" height="50"></rect>
+    <text class="catch-copy" x="50%" y="25">
+      <tspan id="copy0" class="obj">My</tspan>
+      <tspan id="copy1">.status = (</tspan>
+      <tspan id="copy2" class="obj"> I </tspan>
+      <tspan id="copy3">as</tspan>
+      <tspan id="copy4" class="class">Programmer</tspan>
+      <tspan id="copy5">)</tspan>
+      <tspan id="copy6">.canHelp(</tspan>
+      <tspan id="copy7" class="obj">You</tspan>
+      <tspan>)</tspan> ? <tspan class="const">HAPPY</tspan> : <tspan class="const">SAD</tspan>;
+    </text>
+    </g>
+  </svg>
+</div>
+
+<script>
+
+  var w = window,
+      d = document,
+      e = d.documentElement,
+      g = d.getElementsByTagName('body')[0],
+      x = w.innerWidth || e.clientWidth || g.clientWidth,
+      y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+  console.log(x + ' × ' + y);
+
+  var svg = d3.select("svg")
+  console.log(svg.attr("width"));
+
+  svg.select(".main-box")
+  .on("click", function(){
+    console.log("hi!");
+  });
+
+  var catchCopyBox = svg.select(".catch-copy").node().getBBox();
+  catchCopyBox.bottom = catchCopyBox.y + catchCopyBox.height;
+
+  // catch copy
+
+  var g = d3.select("g");
+
+  // getComputedTextLength();
+  // var offset = g.select("#copy1").node().getComputedTextLength()
+  //     + g.select("#copy2").node().getComputedTextLength()
+  //     + g.select("#copy3").node().getComputedTextLength();
+  var getOffset = function(idx){
+    var sum = 0;
+    for(var i = 0;i < idx;i++){
+      sum += g.select("#copy" + i).node().getComputedTextLength();
+    }
+    console.log("getOffset" + idx, sum);
+    return sum + 3 * idx;
+  }
+
+  var _x = catchCopyBox.x + getOffset(3);
+
+  // add About line
+  g.append("path")
+  .classed("line-i", true)
+  .attr("d", "M" + _x + " " +  catchCopyBox.y
+      + " L" + (_x + 30) + " " + (catchCopyBox.y - 30)
+      + " L" + (_x + 60) + " " + (catchCopyBox.y - 30)
+      + " ");
+  g.append("text")
+  .attrs({
+    x: _x + 60,
+    y: catchCopyBox.y - 30,
+    class: "text-about"
+  }).text("About")
+  .on("click", function(){
+    console.log("About");
+    window.location.href = "/about"
+  });
+
+  // add Contact line
+  var youOffset = catchCopyBox.x + getOffset(7);
+  var lineContactY = catchCopyBox.bottom + 5;
+  g.append("path")
+  .classed("line-contact", true)
+  .attr("d", "M" + youOffset + " " + lineContactY
+    + "Q " + (_x + youOffset) / 2 + "," + (lineContactY + 40) + " " + _x + "," +  lineContactY
+  )
+  .attr("marker-end", "url(#m_ar)");
+
+  g.append("text")
+  .attrs({
+    x: (_x + youOffset) / 2,
+    y: lineContactY + 40,
+    class: "text-contact"
+  }).text("Contact")
+  .on("click", function(){
+    console.log("Contact");
+    window.location.href = "/contact"
+  });
+
+  // bar chart
+  var drawBarChart = function(x, y, w, h){
+
+    var data = [10, 30, 40, 30, 20, 30, 50, 40, 20];
+    var count = data.length;
+    var band = w / (count * 2 - 1);
+
+    var max = _.max(data);
+    console.log("max", max);
+    var scale = function(d){
+      return h * d / max;
+    };
+
+    g.append("g")
+    .attr("transform", "translate(" + x + "," + y + ")")
+    .selectAll(".bar")
+    .data(data)
+    .enter()
+    .append("rect")
+    .classed("bar", true)
+    .attrs({
+      x: function(d, i){
+        return band * 2 * i;
+      },
+      y: function(d){
+        return - scale(d);
+      },
+      width: band,
+      height: scale
+    })
+  }
+  drawBarChart(30, 0, 120, 80);
+
+
+  // star orbits
+
+
+  // binary tree
+
+
+  // fully connected layers
+
+
+  // decision tree
+</script>
+    
+
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Line Chart</title>
+    <script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="../js/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../../js/underscore-min.js"></script>
+    <style>
+        #graph {
+            /*position: fixed;*/
+            z-index: 10;
+            width: 800px;
+            height: 600px;
+            background-color: white;
+            /*top:0px;*/
+            /*left: 0px;*/
+            font: 10px sans-serif;
+            border: solid 2px black;
+        }
+
+        .tt {
+            visibility: visible;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
+    </style>
+</head>
+<body>
+<div id="graph"></div>
+<script>
+    var svg;
+
+    var margin = {top: 30, right: 40, bottom: 100, left: 100};
+    var width = $("#graph").width() - margin.left - margin.right;
+    var height = $("#graph").height() - margin.top - margin.bottom;
+    var radius = Math.min($("#graph").width(), $("#graph").height()) / 2;
+
+    var showMainGraph = function (data, baseSvg, opt) {
+
+        // each element of data should have 'total' property
+
+        var arc = d3.svg.arc().outerRadius(radius - 10).innerRadius(0);
+
+        var parseDate = d3.time.format("%Y年%m月期").parse;
+        data.forEach(function (v, i) {
+            v.monthStr = v.month;
+            v.month = parseDate(v.month);
+        });
+
+        // スケールと出力レンジの定義
+        var xScale = d3.scale.ordinal().rangeRoundBands([0, opt.width], 0.3); // 幅と余白の比率
+//        var xScale = d3.scale.ordinal().rangeRoundBands([0, opt.width]); // 幅と余白の比率
+        xScale.domain(data.map(function (d) {
+            return d.month;
+        }));
+
+        var bandWidth = xScale.rangeBand();
+
+        console.log(xScale.rangeBand());
+        console.log(xScale.rangeExtent());
+        console.log(xScale.range());
+        console.log(xScale.domain());
+
+        var yScale = d3.scale.linear()
+                .domain([0,
+                    d3.max(data.map(function (d) {
+                        return d.total;
+                    }))])
+                .range([opt.height, 0]);
+
+        console.log(yScale.range());
+        console.log(yScale.domain());
+
+        // 線の定義
+        var line = d3.svg.line()
+                .x(function (d) {
+                    return xScale(d.month) + bandWidth / 2;
+                })
+                .y(function (d) {
+                    return yScale(d.total);
+                });
+
+        // 軸の定義
+        var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient("bottom")
+                .innerTickSize(0)
+                .outerTickSize(0)
+                .tickPadding(10)
+                .tickFormat(d3.time.format("%Y-%m"));
+
+        var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .outerTickSize(0)
+                .orient("left");
+
+        var xAxisObj, yAxisObj;
+
+        // 呼び出し順で前後配置が決まるため、順序を入れ替えやすいようにメソッド化。
+        var showGrid = function () {
+            xAxisObj = baseSvg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + opt.height + ")")
+                    .call(xAxis)
+                    .selectAll("text")
+                    .style("text-anchor", "middle");
+            var xText = xAxisObj.append("text").text("").style("text-anchor", "middle")
+                    .attr("transform", "translate(130,40)");
+
+            // y軸をsvgに表示
+            yAxisObj = baseSvg.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis);
+            var yText = yAxisObj.append("text")
+                    //                        .attr("transform", "rotate(-90)")
+                    //                        .attr("y", 6)
+                    //                        .attr("dy", ".71em"))
+                    .text("資産規模").style("text-anchor", "end")
+                    .attr("transform", "translate(0,-10)");
+        };
+
+        xAxis.scale(xScale);
+        baseSvg.select(".x").call(xAxis);
+
+        baseSvg.selectAll("*").remove();
+        baseSvg.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        showGrid();
+        baseSvg.append("path")
+                .datum(data)
+                .attr("class", "line")
+                .attr("d", line);
+    };
+
+
+    $(function () {
+        svg = d3.select("#graph").append("svg").attr({
+            class: "tt",
+            width: $("#graph").width(),
+            height: $("#graph").height()
+        });
+        var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var data = [
+            {
+                "month": "2013年01月期",
+                "total": 128
+            },
+            {
+                "month": "2013年03月期",
+                "total": 500
+            },
+            {
+                "month": "2013年02月期",
+                "total": 230
+            },
+        ]
+
+        showMainGraph(data, g, {
+            width: width,
+            height: height
+        });
+    })
+
+</script>
+</body>
+</html>

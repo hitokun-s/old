@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Donut Chart Containing Negative Value" />
+    <meta property="og:type" content="article" />
+
+    <title>Donut Chart Containing Negative Value | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+        #graph,#graph2{
+            /*position: fixed;*/
+            z-index: 10;
+            width: 500px;
+            height: 500px;
+            background-color: white;
+            /*top:0px;*/
+            /*left: 0px;*/
+            font: 10px sans-serif;
+        }
+
+        .tt {
+            visibility: visible;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .arc path {
+            stroke: #fff;
+        }
+
+        .arc text {
+            font-size: 2em;
+        }
+
+        .arcOuter path {
+            stroke: #fff;
+        }
+
+        .arcOuter text {
+            font-size: 2em;
+        }
+        h2{
+            display: inline-block;
+            border:1px solid black;
+            border-radius: 3px;
+            padding:2px;
+        }
+
+    </style>
+
+    <h1>Donut Chart Containing Negative Value</h1>
+    <div class="row">
+        <div id="graph" class="col-sm-6"><h2>Pattern 1</h2></div>
+        <div id="graph2" class="col-sm-6"><h2>Pattern 2</h2></div>
+    </div>
+<script>
+    var svg;
+
+    var margin = {top: 30, right: 40, bottom: 100, left: 100};
+    var width = $("#graph").width() - margin.left - margin.right;
+    var height = $("#graph").height() - margin.top - margin.bottom;
+    var radius = Math.min($("#graph").width(), $("#graph").height()) / 2;
+
+    var color = d3.scale.category10();
+
+    var showMainGraph = function (data, baseSvg, opt, arcs) {
+
+        baseSvg.selectAll("*").remove();
+        var pie = d3.layout.pie()
+                .startAngle(0).endAngle(Math.PI * 2)
+                .value(function (d) {
+                    return d.total;
+                }).sort(null);
+        var pieData = pie(data);
+        console.log("radius", radius);
+        console.log(pieData);
+
+        data.forEach(function(d, i){
+            d.color = color(i);
+        });
+
+        baseSvg.attr("transform", "translate(" + radius + "," + radius + ")");
+        var g = baseSvg.selectAll(".arc")
+                .data(pieData)
+                .enter().append("g")
+                .attr("class", "arc");
+
+        g.append("path")
+                .attr("d", function(d, i){
+                    return arcs[i](d);
+                })
+                .attr("fill", function (d, i) {
+                    return d.data.color;
+                });
+        g.append("text")
+                .attr("transform", function (d, i) {
+                    d.innerRadius = 0;
+                    d.outerRadius = radius;
+                    return "translate(" + arcs[i].centroid(d) + ")";
+                })
+                .attr("dy", ".35em")
+                .style("text-anchor", "middle")
+                .text(function (d, i) {
+                    return d.data.name;
+                });
+
+        [radius - 50,radius - 90,radius - 130,radius - 170].forEach(function(r){
+            baseSvg.append("circle").attr({
+                x:0,
+                y:0,
+                r:r,
+                fill:"none",
+//                "stroke-dasharray":"3 3",
+                stroke:"gray"
+            });
+        });
+
+    };
+
+    $(function () {
+
+        var data = [
+            {
+                name: "A",
+                total: 300
+            },
+            {
+                name: "B",
+                total: -50
+            },
+            {
+                name: "C",
+                total: 200
+            },
+            {
+                name: "D",
+                total: 150
+            },
+            {
+                name: "E",
+                total: 100
+            },
+            {
+                name: "F",
+                total: 50
+            },
+            {
+                name: "G",
+                total: 30
+            },
+        ]
+
+        var arc1 = d3.svg.arc().outerRadius(radius - 50).innerRadius(radius - 90),
+                arc2 = d3.svg.arc().outerRadius(radius - 90).innerRadius(radius - 130),
+                arc3 = d3.svg.arc().outerRadius(radius - 130).innerRadius(radius - 170)
+
+        var g = d3.select("#graph").append("svg").attr({
+            class: "tt",
+            width: $("#graph").width(),
+            height: $("#graph").height()
+        }).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        showMainGraph(data, g, {
+            width: width,
+            height: height
+        },[
+            arc1,arc2,arc3,arc2,arc1,arc1,arc1
+        ]);
+
+        var g2 = d3.select("#graph2").append("svg").attr({
+            class: "tt",
+            width: $("#graph").width(),
+            height: $("#graph").height()
+        }).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        showMainGraph(data, g2, {
+            width: width,
+            height: height
+        },[
+            arc2,arc1,arc3,arc2,arc2,arc2,arc2
+        ]);
+
+    })
+
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

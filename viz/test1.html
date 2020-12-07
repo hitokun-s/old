@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Cafe(chain store) Location Map in Japan">
+    <meta name="Keywords" content="cafe,chain,map,location,Japan">
+    
+    
+    <meta property="og:description" content="Cafe(chain store) Location Map in Japan"/>
+    
+    <meta property="og:title" content="Cafe(chain store) Location Map in Japan" />
+    <meta property="og:type" content="article" />
+
+    <title>Cafe(chain store) Location Map in Japan | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+
+<script src="https://d3js.org/d3-queue.v3.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-providers/1.1.15/leaflet-providers.min.js"></script>-->
+
+<h1>Cafe(chain store) Location Map in Japan</h1>
+
+<div id="map" style="width: 100%; height: 900px"></div>
+<link rel="stylesheet" href="https://openlayers.org/en/v4.0.1/css/ol.css" type="text/css">
+<script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
+<script>
+    $(function () {
+
+        var styles = [];
+        var features = [];
+
+        var data = [{
+            markerClass: "blue",
+            code: "water",
+            lat: 45, // no really, but you get the idea
+            lng: 137
+        }];
+
+        $.each(data, function (i, item) {
+
+            // Check style cache for already created style
+            if (!styles[item.markerClass]) {
+                // In your case you will want to use  image : new ol.style.Icon(({
+                // but this is the example that I have on hand..
+                styles[item.markerClass] = new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 5,
+                        stroke: new ol.style.Stroke({
+                            color: '#000'
+                        }),
+                        fill: new ol.style.Fill({
+                            color: item.markerClass // attribute colour
+                        })
+                    }),
+                    text: new ol.style.Text({
+                        text: item.code, // attribute code
+                        fill: new ol.style.Fill({
+                            color: "#000" // black text // TODO: Unless circle is dark, then white..
+                        })
+                    })
+                });
+            }
+
+            // Create the feature
+            var marker = new ol.Feature({
+                content: item,
+                mapid: i,
+                geometry: new ol.geom.Point([item.lng, item.lat])
+            });
+
+            // Set style created earlier
+            marker.setStyle(styles[item.markerClass]);
+
+            features.push(marker);
+
+        });
+        
+        var layer = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: 'https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaGl0b2t1biIsImEiOiJjaXVqYnd0NXUwMGRwMm9tc3RvcGZ1ZDZ5In0.Q4wyiiGDLH_lTi3zzFcAtA'
+            })
+        });
+
+// Assuming your layer / source is already map bound
+//        var source = layer.getSource();
+//        source.addFeatures(features);
+
+        var map = new ol.Map({
+            layers: [layer],
+            target: 'map',
+            view: new ol.View({
+                center: [0, 0],
+                zoom: 2
+            })
+        });
+
+        d3.queue()
+                .defer(d3.csv, "data/starbucks.csv")
+                .defer(d3.csv, "data/komeda.csv")
+                .await(function(error, data, data2) {
+                    if (error) {
+                        console.error('Oh dear, something went wrong: ' + error);
+                        return;
+                    }
+                    var starbucks = data.map(function(d){
+                        return L.circle([d.lat, d.lng], 500, {
+                            color: '#3388ff',
+                            fillColor: '#3388ff',
+                            fillOpacity: 1
+                        }).bindPopup(d.name);
+                    });
+                    var komeda = data2.map(function(d){
+                        return L.circle([d.lat, d.lng], 500, {
+                            color: 'red',
+                            fillColor: 'red',
+                            fillOpacity: 1
+                        }).bindPopup(d.name);
+                    });
+                });
+
+        var markers = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: [
+                    new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat(["127.695174", "26.225728"])),
+                        name: 'Vienna',
+                    }),
+                    new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat([-0.13, 51.51])),
+                        name: 'London',
+                    })
+                ]
+            }),
+            style: new ol.style.Style({
+//                image: new ol.style.Icon({
+//                    src: '//openlayers.org/en/v3.12.1/examples/data/icon.png',
+//                    anchor: [0.5, 1]
+//                })
+                image: new ol.style.Circle({
+                    radius: 5,
+                    stroke: new ol.style.Stroke({
+                        color: '#000'
+                    }),
+                    fill: new ol.style.Fill({
+                        color: "red"
+                    })
+                }),
+            })
+        });
+        map.addLayer(markers);
+    });
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Color Tones">
+    <meta name="Keywords" content="tone,color">
+    <meta property="og:image" content="https://hitokun-s.github.io/tool/img/color-tones.png"/>
+    <meta property="og:url" content="https://hitokun-s.github.io/tool/color-tones.html"/>
+    <meta property="og:description" content="Color Tones"/>
+    
+    <meta property="og:title" content="Color Tones" />
+    <meta property="og:type" content="article" />
+
+    <title>Color Tones | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+<!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <h1>Color Tones<small style="margin-left: 15px">(hover, double click, and choose!)</small></h1>
+
+<style>
+
+  /*@keyframes rotation {*/
+  /*from {*/
+  /*transform: perspective(550px) rotateX(70deg) rotateZ(0deg);*/
+  /*}*/
+  /*to {*/
+  /*transform: perspective(550px) rotateX(70deg) rotateZ(360deg);*/
+  /*}*/
+  /*}*/
+
+  .tone-name{
+    top: 33px;
+    position: absolute;
+  }
+  i{
+    cursor: pointer;
+  }
+
+  svg.tone-ring {
+    stroke: white;
+    stroke-width: 5px;
+    -webkit-transition-property: transform;
+    -webkit-transition-duration: 2.5s;
+    transition-property: transform;
+    transition-duration: 0.5s;
+    transform: perspective(550px) rotateX(70deg) rotateZ(0deg);
+    /*animation-name: rotation;*/
+    /*animation-duration: 8s;*/
+    /*animation-iteration-count: infinite;*/
+    /*animation-timing-function: linear;*/
+
+    position: absolute;
+    top: -163px;
+    left: 72px;
+  }
+  svg.tone-ring path{
+    cursor: pointer;
+  }
+  path.active{
+    stroke: red;
+  }
+
+  .css-3d-holder {
+    transform-style: preserve-3d;
+    position: relative;
+    height: 76px;
+    -webkit-transition-property: margin;
+    -webkit-transition-duration: 2.5s;
+    transition-property: margin;
+    transition-duration: 0.5s;
+  }
+
+  /* customize scroll bar */
+  /* refs: https://codepen.io/devstreak/pen/dMYgeO */
+  .scrollbar::-webkit-scrollbar-track
+  {
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);*/
+    border-radius: 10px;
+    background-color: #F5F5F5;
+  }
+
+  .scrollbar::-webkit-scrollbar
+  {
+    width: 12px;
+    background-color: #F5F5F5;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb
+  {
+    border-radius: 10px;
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);*/
+    background-color: grey;
+  }
+
+  svg text {
+    text-anchor: middle;
+    /*dominant-baseline: middle;*/
+  }
+  svg text.lower {
+    dominant-baseline: hanging;
+  }
+  svg text.upper {
+    dominant-baseline: no-change;
+  }
+
+</style>
+
+<div class="ui grid" id="stage">
+  <div class="my-left ten wide column scrollbar" style="overflow-y: scroll;overflow-x: hidden;height:100%;padding-right: 50px">
+    <div>
+      <hoge v-for="(tone, index) in tones" :data="tone" :index="index" v-bind:main.sync="mainColor" v-bind:accent.sync="accentColor">
+    </div>
+  </div>
+  <div class="six wide column">
+    <p>chosen color</p>
+    <svg width="100" height="100">
+      <rect width="100" height="100" :fill="mainColor || 'lightgrey'"/>
+      <text class="upper" x="50" y="50">{{mainColor || 'choose!'}}</text>
+      <text class="lower" x="50" y="50" fill="white">{{mainColor || 'choose!'}}</text>
+    </svg>
+    <svg width="100" height="100">
+      <rect width="100" height="100" :fill="mainColor ? brighter(mainColor) : 'lightgrey'"/>
+      <text class="upper" x="50" y="50">{{mainColor ? brighter(mainColor) : 'choose!'}}</text>
+      <text class="lower" x="50" y="50" fill="white">{{mainColor ? brighter(mainColor) : 'choose!'}}</text>
+    </svg>
+    <p>complementary color</p>
+    <svg width="100" height="100">
+      <rect width="100" height="100" :fill="accentColor || 'lightgrey'"/>
+      <text class="upper" x="50" y="50">{{accentColor || 'choose!'}}</text>
+      <text class="lower" x="50" y="50" fill="white">{{accentColor || 'choose!'}}</text>
+    </svg>
+    <svg width="100" height="100">
+      <rect width="100" height="100" :fill="accentColor ? brighter(accentColor) : 'lightgrey'"/>
+      <text class="upper" x="50" y="50">{{accentColor ? brighter(accentColor) : 'choose!'}}</text>
+      <text class="lower" x="50" y="50" fill="white">{{accentColor ? brighter(accentColor) : 'choose!'}}</text>
+    </svg>
+  </div>
+</div>
+
+<template id="tone-graph-template">
+  <div class="css-3d-holder">
+    <p class="tone-name" v-html="toMultiLines(data.name)"></p>
+    <svg class="tone-ring" :width="piyo()" height="400" ref="svg"/>
+    <!--<svg class="tone-ring" width="400" height="400" ref="svg" />-->
+  </div>
+</template>
+
+<script>
+
+  $("#stage").height($(window).height() - $("#stage").position().top);
+
+  // refs: https://medium.com/js-dojo/7-ways-to-define-a-component-template-in-vuejs-c04e0c72900d
+
+  Vue.component('hoge', {
+    props: ["data", "index"],
+    data: function(){
+      return {
+        colors: this.data.colors.map(function(d){return d.code;})
+      }
+    },
+    mounted: function(){
+      const svg = this.$refs.svg;
+      // this.show(svg, this.data.colors.map(function(d){return d.code;}));
+      this.show();
+      setTimeout(function(){
+        d3.select(svg).style("transform", "perspective(550px) rotateX(70deg) rotateZ(60deg)");
+      }, this.index * 150);
+    },
+    template: '#tone-graph-template',
+    methods: {
+      piyo: function(){
+        // return 300;
+        console.log($('.my-left').width());
+        return $('.my-left').width() > 500 ? 400 : $('.my-left').width() - 70;
+      },
+      toMultiLines: function(text){
+        return text.split(" ").join("<br>");
+      },
+      getComplementary: function(colorCode){
+        return this.colors[(this.colors.indexOf(colorCode) + this.colors.length / 2) % this.colors.length];
+      },
+      fuga: function(){
+        this.rotate(60);
+      },
+      rotate: function(deg){
+        const svg = d3.select(this.$refs.svg);
+        const reg = svg.style("transform").match(/rotateZ\((\d+)deg\)/);
+        if(reg){
+          const rotateZ = (+reg[1]) + deg;
+          console.log(reg.input.replace(reg[0], "rotateZ(" + rotateZ + ")"));
+          svg.style("transform", reg.input.replace(reg[0], "rotateZ(" + rotateZ + "deg)"));
+        }
+      },
+      show: function(){
+        const self = this;
+        var svg = d3.select(this.$refs.svg),
+            width = +svg.attr("width"),
+            height = +svg.attr("height"),
+            radius = Math.min(width, height) / 2,
+            g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        d3.select(self.$el).on("mouseover", function(){
+          d3.select(self.$el)
+          .style("margin-top", +self.index > 0 ? "80px": "0px")
+          .style("margin-bottom", "80px")
+          .style("z-index", 100);
+        }).on("mouseout", function(){
+          d3.select(self.$el)
+          .style("margin-top", "0px")
+          .style("margin-bottom", "0px")
+          .style("z-index", 100 - (+self.index));
+        }).on("dblclick", self.fuga);
+
+        var color = d3.scaleOrdinal(this.colors);
+
+        var pie = d3.pie()
+        .sort(null)
+        .value(function(d) { return 1; });
+
+        var path = d3.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(radius * 0.6);
+
+        var label = d3.arc()
+        .outerRadius(radius - 40)
+        .innerRadius(radius - 40);
+
+        var arc = g.selectAll(".arc")
+        .data(pie(this.colors))
+        .enter().append("g")
+        .attr("class", "arc");
+
+        arc.append("path")
+        .attr("d", path)
+        // .attr("visibility", "hidden")
+        .attr("fill", function(d) { return d.data; })
+        .on("click", function(d){
+          self.$emit('update:main', d.data);
+          console.log("getComplementary", self.getComplementary(d.data));
+          self.$emit('update:accent', self.getComplementary(d.data));
+        });
+        // .on("mouseover", function(){
+        //   d3.select(this).classed("active", true);
+        // })
+        // .on("mouseout", function(){
+        //   d3.select(this).classed("active", false);
+        // });
+        // .transition()
+        // .delay(function(d, i) {
+        //   return i * 40;
+        // })
+        // .attr("visibility", "visible")
+        //
+        // arc.append("text")
+        // .attr("transform", function(d) { return "translate(" + label.centroid(d) + ")"; })
+        // .attr("dy", "0.35em")
+        // .text(function(d) { return d.data.age; });
+
+      }
+    }
+  });
+
+</script>
+
+<div id="main" class="ui">
+</div>
+
+<!--<script  src="sinhalese/dist/main.js"></script>-->
+
+<script>
+  axios.get("data/tones.json").then(function(res){
+    console.log(res.data);
+    new Vue({
+      el: "#stage",
+      data: {
+        tones: res.data,
+        mainColor: null,
+        accentColor: null
+      },
+      mounted: function(){
+        // setTimeout(function(){
+        //   d3.select(svg).style("transform", "perspective(550px) rotateX(70deg) rotateZ(360deg)");
+        // }, 0);
+        d3.selectAll(".css-3d-holder").each(function(d, i){
+          d3.select(this).style("z-index", 100 - i);
+        });
+      },
+      methods:{
+        brighter: function(colorCode){
+          return this.hex(d3.hsl(colorCode).brighter(0.8).rgb());
+        },
+        hex: function(rgb){
+          return "#" +
+              ("0" + parseInt(rgb.r,10).toString(16)).slice(-2) +
+              ("0" + parseInt(rgb.g,10).toString(16)).slice(-2) +
+              ("0" + parseInt(rgb.b,10).toString(16)).slice(-2);
+        }
+      }
+    });
+  })
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

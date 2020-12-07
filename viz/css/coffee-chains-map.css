@@ -1,0 +1,23 @@
+#map{
+  width: 100%;
+  height: 100%;
+  padding-top:98px;
+}
+.coffee-header{
+  padding-left: 10px;
+  padding-bottom: 3px;
+  position: absolute;
+}
+.lbl-chain{
+  height:40px;
+}
+.lbl-chain img{
+  height:100%;
+}
+.pusher{
+  height:100%;
+  position: relative;
+}
+#chain-selector div{
+  margin-left: 10px;
+}

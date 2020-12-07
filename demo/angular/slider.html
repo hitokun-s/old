@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular Test</title>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.12/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.0.0/rzslider.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.0.0/rzslider.min.css" rel="stylesheet">
+    <script type="text/javascript"
+            src="https://cdn.rawgit.com/hitokun-s/view-source.js/ac2120ce/view-source.js"></script>
+</head>
+<body ng-controller="MyController">
+<div class="container">
+    <h1>{{ title }}</h1>
+    <div class="vs">
+        <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+    </div>
+    <script class="vs">
+        var app = angular.module("myApp", ["rzModule"]);
+        app.controller('MyController', function ($scope, $http) {
+            $scope.title = "Angular slider test";
+            $scope.slider = {
+                value: '2017/01',
+                options: {
+                    showTicksValues: true,
+                    stepsArray: ["2016/12", "2017/01", "2017/02", "2017/03", "2017/04"],
+                    showTicks: true
+                }
+            };
+        });
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="A Social Time-Machine">
+    
+    <meta property="og:image" content="https://hitokun-s.github.io/../images/historip_profile.jpg"/>
+    
+    <meta property="og:description" content="A Social Time-Machine"/>
+    
+    <meta property="og:title" content="Historip - A Social TimeMachine -" />
+    <meta property="og:type" content="article" />
+
+    <title>Historip - A Social TimeMachine - | Hitokun's</title>
+    
+    <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r46/Three.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.0.2/jszip-utils.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.webui-popover/1.2.1/jquery.webui-popover.min.css">
+<script src="https://cdn.jsdelivr.net/jquery.webui-popover/1.2.1/jquery.webui-popover.min.js"></script>
+
+
+
+
+
+<link href="css/historip.css" rel="stylesheet">
+<link rel="shortcut icon" href="image/favicon.png" type="image/png">
+
+<script src="js/gradually.js"></script>
+
+<link href="css/person_graph.css" rel="stylesheet">
+
+<script src="/js/Detector.js"></script>
+<script src="/js/RequestAnimationFrame.js"></script>
+<script src="/js/timetunnel.js"></script>
+<script src="/js/timehandle.js"></script>
+<script src="/js/d3-operatable.js"></script>
+
+<script>
+  //add window.onload event
+  $(function() {
+    $("#frame").height($(window).height() - $("#navbar").height());
+    $("table").addClass("table").addClass("table-bordered")
+  });
+</script>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Hitokun's</a>
+      <img src="image/historip_mini.png">
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="#" id="about">About</a>
+          <div class="webui-popover-content">
+            <h1>How to make a time-machine</h1><p>Historip(13c) is an experimental/hobby version of Historip project, a wikipedia-based timemachine.<br>The project goal is to learn history in effective and enjoyable manner, by analyzing whole histrorical data (people, place, event) of wikipedia or other resources.<br>Historip(13c) focuses on the relationships between famous people living in 13th century.<br>Each link between 2 persons indicates, there is an reference from one to another in their wikipedia pages.<br>In a word, you can see a social graph of famous people.  </p>
+<p>We can see similar projects such as:</p>
+<ul>
+<li><a href="http://www.chronozoom.com/">ChronoZoom</a></li>
+<li><a href="http://pantheon.media.mit.edu/">pantheon</a></li>
+<li><a href="http://kindred.stanford.edu/#">Kindred Britain</a></li>
+<li><a href="https://www.ted.com/talks/frederic_kaplan_how_i_built_an_information_time_machine">Venice Time Machine</a></li>
+</ul>
+
+          </div>
+        </li>
+        <li>
+          <a href="#" id="operation">Operation</a>
+          <div class="webui-popover-content">
+            <h1>Mouse/Pad operation on Network</h1><table>
+<thead>
+<tr>
+<th>operation</th>
+<th>reaction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>drag anyplace</td>
+<td>move network</td>
+</tr>
+<tr>
+<td>left double click in anyplace</td>
+<td>zoom in</td>
+</tr>
+<tr>
+<td>wheel down in anyplace</td>
+<td>zoom in</td>
+</tr>
+<tr>
+<td>right double click in anyplace</td>
+<td>zoom out</td>
+</tr>
+<tr>
+<td>wheel up in anyplace</td>
+<td>zoom out</td>
+</tr>
+<tr>
+<td>mouse over on a person</td>
+<td>show his/her name</td>
+</tr>
+<tr>
+<td>click a person</td>
+<td>show his/her information</td>
+</tr>
+<tr>
+<td>click a friend of the person</td>
+<td>switch him/her</td>
+</tr>
+</tbody>
+</table>
+
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script>
+  $(function(){
+    $('#about, #operation').webuiPopover({width:700, height: 500});
+  })
+</script>
+
+<div id="frame">
+  <div id="tooltip">person name</div>
+    <div id="timetunnel"></div>
+    <div id="graph"></div>
+
+  <style>
+  @font-face {
+    font-family: 'Yanone Kaffeesatz';
+    src: url('/css/font/YanoneKaffeesatz-Bold.ttf') ;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  #livingmes{
+    font-family: 'Yanone Kaffeesatz',arial,serif;
+    position: absolute;
+    top: 10px;
+    z-index: 1;
+    color: black;
+    right: 250px;
+  }
+
+  #livingmes div{
+    height: 50px;
+    display:inline-block;
+  }
+
+  #livingmes img{
+    height: 100%;
+  }
+  #livingcnt{
+    font-size: 3em;
+  }
+</style>
+<div id="livingmes">
+  <div style="float:left;margin: -5px 5px 0px 0px">
+    <span id="livingcnt">314</span>
+  </div>
+  <div>
+    <img src="image/fpl.png">
+  </div>
+</div>
+  <style>
+  #time_indicator{
+    position: fixed;
+    z-index: 3;
+    color: #ccff33;
+    font-size: 30px;
+    font-family:"indicator";
+    bottom: 3px;
+    right: 10px;
+  }
+  #time_info{
+    position: fixed;
+    z-index: 3;
+    color: darkorange;
+    font-size: 30px;
+    font-family:"indicator";
+    bottom: 3px;
+    left: 10px;
+  }
+</style>
+<div id="time_indicator" class="panel-info"></div>
+<div id="time_info" class="panel-info">A TIME STORM OCCURS IN 13 Century!!!</div>
+<script>
+  window.setInterval(function(){
+    $("#time_indicator").text((new Date).toUTCString());
+  }, 1000);
+</script>
+  <style>
+  #back_to_machine{
+    cursor:pointer;
+    bottom: 43px;
+    left: 5px;
+    position: fixed;
+    z-index: 2;
+  }
+</style>
+<div id="back_to_machine"><i class="fa fa-arrow-circle-o-left"></i>Back to Console</div>
+
+    <div id="person_info" class="col-sm-2 mynopadding">
+        <div>
+            <p id="name">name</p>
+            <span id="portrait">
+                </span>
+            <p>
+                <span id="life"> birth - death </span>
+                <button id="btn-wiki" class="btn btn-primary margin-bottom">Wiki</button>
+            </p>
+            <p class="border-bottom"></p>
+            <p id="ocptitle">Occupations</p>
+            <div id="ocplist" class="my-list-group">
+                <a href="#" class="my-list-group-item">
+                    <span class="badge"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="friend_info" class="col-md-1 mynopadding">
+        <p id="friend_title">Related People<span id="friend_cnt"></span></p>
+        <div id="friendlist" class="my-list-group">
+        </div>
+    </div>
+
+  <style>
+  #ht-slider{
+    height: 32px;
+    text-align: center;
+    background: floralwhite; /* same as viz background */
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+  }
+  #ht-slider *{
+    display: inline-block;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  .ht-no-margin{
+    margin-right: -3px;
+  }
+
+  div.ht-item{
+    font-family: sans-serif;
+    font-size: 25px;
+    padding-left: 8px;
+    padding-right: 10px;
+  }
+
+  .ht-item-active span, .ht-item:hover span{
+    background: black !important;
+    color: white;
+  }
+
+  #ht-outer{
+    width: 80%;
+    overflow: hidden;
+    position: relative;
+  }
+  #ht-inner{
+    left:0px;
+    width: 600px;
+    position:absolute;
+    text-align: left;
+  }
+  .ht-item:not(.ht-item-active){
+    cursor: pointer;
+  }
+
+
+
+  .ht-knob{
+    vertical-align: top;
+    width: 4%;
+    text-align: center;
+    cursor: pointer;
+    background: floralwhite !important;
+    font-size: 25px;
+  }
+  .ht-edge{
+    width: 5%;
+  }
+
+  [class^="icon-"], [class*=" icon-"]{
+    line-height: 90%;
+    vertical-align: text-top;
+    background: transparent !important;
+    color: #b45f06;
+  }
+
+</style>
+<script>
+
+  $(function() {
+    $("#ht-slider").click(function(){
+      //pass message "slider in operation" to someone
+      document.dispatchEvent(new Event('sliderOperate'));
+    });
+    $("#ht-moveleft").mousedown(function() {
+      init();
+      downing = true;
+      moveright();
+    });
+    $("#ht-moveleft").mouseup(function() {
+      downing = false;
+      stop();
+    });
+
+    $("#ht-moveright").mousedown(function() {
+      init();
+      downing = true;
+      moveleft();
+    });
+
+    $("#ht-moveright").mouseup(function() {
+      downing = false;
+      stop();
+    });
+    $(".ht-item").click(function() {
+      console.log($(this).text());
+    });
+
+
+  });
+  var timer;
+  var INIT_V = 15;
+  var START_YEAR = 1200;
+  var END_YEAR = 1299;
+  var DEFAULT_IDX = 0; // as default selected index
+  var v = INIT_V;
+  var stopping = false;
+  var downing = false;
+  var moveleft = function() {
+    if (stopping) {
+      v--;
+    }
+    if (v <= 0) {
+      return;
+    }
+    var nowleft = $("#ht-inner").css("left");
+    $("#ht-inner").css("left", parseInt(nowleft) - v);
+    timer = setTimeout(moveleft, 50);
+  }
+  var init = function() {
+    //trigger 'operating' event
+    console.log("trigger!");
+
+    //$.event.trigger({type:"sliderClick"}); // not work...
+    //document.dispatchEvent(new Event('sliderOperate')); //pass message "slider in operation" to someone
+
+    v = INIT_V;
+    stopping = false;
+    //clearTimeout(timer);
+  }
+  var moveright = function() {
+    if (stopping) {
+      v--;
+    }
+    if (v <= 0) {
+      return;
+    }
+    var nowleft = $("#ht-inner").css("left");
+    $("#ht-inner").css("left", parseInt(nowleft) + v);
+    timer = setTimeout(moveright, 50);
+  }
+  var stop = function() {
+    stopping = true;
+  }
+
+  $(function() {
+    for (var i = START_YEAR; i <= END_YEAR; i++) {
+      $("#ht-inner").append($("<div class=\"ht-item ht-no-margin\"><span>" + i + "</span></div>"));
+    }
+    var ttl_width = parseInt($('#ht-inner > div:first').css("width")) * 100;
+    $("#ht-inner").css("width", ttl_width);
+    $(".ht-knob")
+    .mouseleave(function() {
+      if (downing) {
+        stop();
+        downing = false;
+      }
+    });
+    $("#ht-movefirst").click(function() {
+      clearTimeout(timer);
+      $("#ht-inner").css("left", 0);
+    });
+    $("#ht-movelast").click(function() {
+      clearTimeout(timer);
+      var last_child_left = $("#ht-inner > div:last-child").position().left;
+      var offset = last_child_left + $("#ht-inner > div:last-child").width() - $("#ht-outer").width();
+      $("#ht-inner").css("left", -offset);
+    });
+    $('#ht-inner > div').click(function(){
+      $(".ht-item").removeClass("ht-item-active");
+      $(this).addClass("ht-item-active");
+      document.dispatchEvent(new CustomEvent('yearClick', {detail:{ year : $(this).text() }}));
+    });
+    //exec default select
+    $('#ht-inner > div').eq(DEFAULT_IDX).trigger("click");
+  });
+
+</script>
+
+<div id="ht-slider">
+  <div id="ht-movefirst" class="ht-knob ht-no-margin ht-edge"><i class="fa fa-fast-backward"></i></div>
+  <div id="ht-moveleft" class="ht-knob ht-no-margin"><i class="fa fa-step-backward"></i></div>
+  <div id="ht-outer" class="ht-no-margin">
+    <div id="ht-inner">
+    </div>
+  </div>
+  <div id="ht-moveright" class="ht-knob ht-no-margin"><i class="fa fa-step-forward"></i></div>
+  <div id="ht-movelast" class="ht-knob ht-no-margin ht-edge"><i class="fa fa-fast-forward"></i></div>
+</div>
+
+
+</div>
+<script>
+
+  let personOccupationRaw = null;
+  let occupationRaw = null;
+
+  Promise.all([
+    axios.get('data/basic_occupation.zip', {
+      responseType: 'arraybuffer'
+      // responseType: 'blob'
+    }).then(function(res){
+      return JSZip.loadAsync(res.data).then(function (zip) {
+        return zip.file("basic_occupation.csv").async("string").then(d3.csv.parse);
+      });
+    }),
+    axios.get('data/occupation_mst.zip', {
+      responseType: 'arraybuffer'
+      // responseType: 'blob'
+    }).then(function(res){
+      return JSZip.loadAsync(res.data).then(function (zip) {
+        return zip.file("occupation_mst.csv").async("string").then(d3.csv.parse);
+      });
+    })
+  ]).then(function(results){
+    console.log(results);
+
+    personOccupationRaw = results[0];
+    occupationRaw = results[1];
+
+    console.log("json parse done!");
+  });
+
+    var FRAME_COLOR = "#b45f06";
+    var NOBODY_IMAGE = "data:image/jpeg;base64,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";
+
+    //arg should be like "data:image/jpeg;base64,/..."
+    var getSizeOfImgData = function (data) {
+        var tmp_img = $("<img/>").css("display", "none").css("position", "absolute");
+        $("body").append(tmp_img);
+        tmp_img.attr("src", data);
+        var size = {w: tmp_img.width(), h: tmp_img.height()};
+        //tmp_img.remove();
+        return size;
+    }
+
+    $(function () {
+        //add custom event handler
+        $(document).bind('sliderOperate', function (evt) {
+            console.log("catch slider_click event!");
+            force.stop();
+        });
+        $(document).bind('yearClick', function (evt) {
+            console.log('caught year click!:' + evt.detail.year);
+            trip(evt.detail.year);
+        });
+
+        // $(document).on('event', 'selector', function() {}); replaces .live().
+        $(document).on("click", "#friendlist .my-list-group-item", function(){
+          var name = $(this).attr("id");
+          var node = findNodeByKey(name);
+          sel_family.lowlight();
+          sel_family.refreshOnUpload(name);
+          sel_family.highlight();
+          showPersonInfo(node);
+        });
+
+        $("#btn-wiki").click(function () {
+            window.open('http://en.wikipedia.org/?curid=' + sel_family.pid);
+        });
+
+        $(document).bind('layoutEnd', function (evt) {
+            console.log('layoutEnd');
+            //arrage viewBox and force area
+            var hw_ratio = $("#frame").height() / $("#frame").width();
+            svg.attr("height", svg.attr("width") * hw_ratio);
+            var box = svg.attr("viewBox").split(" ").map(Number);
+            box[3] = box[2] * hw_ratio;
+            svg.attr("viewBox", box.join(" "));
+            force.size([box[2], box[3]]);
+            svg.operatable(force.stop, force.start);
+        })
+
+        //set timetunnel
+        $("#timetunnel").height($(window).height());
+        var tunnel = new Timetunnel("timetunnel", "/img/water.jpg");
+        tunnel.start();
+
+        //set  timehandle
+        var handle = new TimeHandle("#frame",
+                {
+                    width: 800,
+                    height: 500,
+                    radius: 230,
+                    baseColor:"#ccff33",
+                    initVal:1250,
+                    showValFontSize:"100px",
+                    ratioPerDeg:0.2,
+                    txtColor:"#ccff33",
+                    min:1200,
+                    max:1299,
+                    onClickHandler:function(){
+                        console.log(handle.getValue());
+                        tunnel.exit(function(){
+                            var dest_year = handle.getValue();
+                            console.log("exit timetunnel! destination year : " + dest_year);
+
+                            $("#timehandle,#timetunnel,.panel-info").fadeOut();
+
+                            $(".ht-item").removeClass("ht-item-active");
+                            var target = $(".ht-item span:contains('" + dest_year + "')").parent();
+                            $("#ht-inner").css("left", - target.position().left);
+                            target.addClass("ht-item-active");
+
+                            trip(dest_year);
+                        });
+                    }
+                }
+        );
+        // centerize time handle
+        $("#timehandle").css("left", ($(window).width() - $("#timehandle").width()) / 2);
+
+        $("#friendlist").css("max-height", $(window).height() - 148);
+
+        $("#back_to_machine").click(function(){
+            force.stop();
+            $("#timehandle,#timetunnel,.panel-info").fadeIn();
+            tunnel.start();
+        });
+    });
+
+
+    var color = d3.scale.category20();
+
+    var default_scale = 1;
+    var window_w = window_h = $("#graph").width();
+    var width = height = window_w * default_scale;
+    var vbox_width = width;
+    var vbox_height = height;
+    var year;
+
+    var svg = d3.select('#graph')
+            .append('svg')
+            .attr("width", width)
+            .attr("height", height)
+            .attr("viewBox", "" + 0 + " " + 0 + " " + vbox_width * 3 + " " + vbox_height * 3);
+
+    var force = d3.layout.force()
+            .linkDistance(function(link, idx) {
+                var handsum = link.source.hands + link.target.hands;
+                if (handsum < 5)
+                    return 30;
+                return Math.sqrt(handsum) * 20 + 20;
+            })
+            .charge(function(node) {
+                return -40 * Math.sqrt(node.hands);
+            })
+            .gravity(.04)
+            .linkStrength(0.1)
+            .size([vbox_width * 3, vbox_height * 2]);
+
+
+    var convLinks = function (nodes, links) {
+        for (var i in links) {
+            var link = links[i];
+            link.source = findNode(nodes, link.source);
+            link.target = findNode(nodes, link.target);
+        }
+    }
+
+    var findNode = function (node) {
+        var nodes = force.nodes();
+        for (var i in nodes) {
+            if (nodes[i].name == node.name)
+                return nodes[i];
+        }
+    }
+    var findNodeByKey = function (name) {
+        var nodes = force.nodes();
+        for (var i in nodes) {
+            if (nodes[i].name == name)
+                return nodes[i];
+        }
+    }
+    var findLink = function (link) {
+        var links = force.links();
+        for (var i in links) {
+            if (links[i].source == link.source && links[i].target == link.target)
+                return links[i];
+            if (links[i].source == link.target && links[i].target == link.source)
+                return links[i];
+        }
+    }
+
+    var removeNode = function (nodes, links, node) {
+        var del_list = [];
+        for (var i in links) {
+            if (links[i].source == node || links[i].target === node) {
+                //links.splice(i, 1);
+                del_list.push(links[i]);
+            }
+        }
+        for (var j in del_list) {
+            for (var i in links) {
+                if (links[i] == del_list[j]) {
+                    links.splice(i, 1);
+                    break;
+                }
+            }
+        }
+
+        for (var i in nodes) {
+            if (nodes[i] === node) {
+                nodes.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    var getConnectCnt = function (links, node) {
+        var cnt = 0;
+        for (var i in links) {
+            if (links[i].source == node || links[i].target == node) {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    var addNodes = function (newNodes) {
+        var nodes = force.nodes();
+        for (var i = 0; i < newNodes.length; i++) {
+            if (!findNode(nodes, newNodes[i].name)) {
+                nodes.push(newNodes[i]);
+            }
+        }
+    }
+
+    var addNode = function (node) {
+        var found = false;
+        var nodes = force.nodes();
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].name == node.name) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            //node.hands = 2;
+            node.weight = 1;
+            nodes.push(node);
+        }
+        //update();
+    }
+
+    var addLink = function (link) {
+        var links = force.links();
+        var s_node = findNodeByKey(link.source);
+        var t_node = findNodeByKey(link.target);
+        if (!s_node || !t_node) {
+            return;
+        }
+        var link = {"source": s_node, "target": t_node};
+        if (!findLink(link)) {
+            links.push(link);
+        }
+    }
+
+    var addLinks = function (newLinks) {
+        links = force.links();
+        for (var i = 0; i < newLinks.length; i++) {
+            var link = newLinks[i];
+            if (link.source == undefined || link.target == undefined) {
+                continue;
+            }
+            if (!findLink(links, link)) {
+                links.push(link);
+            }
+        }
+    }
+
+    var prev_scale = 1;
+
+    function delNodes(newNodes) {
+        var nodes = force.nodes();
+        var links = force.links();
+        var del_nodes = []
+        for (var i in nodes) {
+            var found = false;
+            for (var j in newNodes) {
+                if (newNodes[j].name == nodes[i].name) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                del_nodes.push(nodes[i]);
+            }
+        }
+        for (var i in del_nodes) {
+            removeNode(nodes, links, del_nodes[i]);
+        }
+    }
+
+    var showData = function(graph){
+        delNodes(graph.nodes);
+        console.log("del nodes end.");
+
+        for (var i in graph.nodes) {
+            addNode(graph.nodes[i]);
+        }
+        console.log("add nodes end.");
+
+        for (var j in graph.links) {
+            addLink(graph.links[j]);
+        }
+        console.log("add links end.");
+
+        var nodes = force.nodes();
+        var links = force.links();
+        var del_nodes = [];
+        for (var k in nodes) {
+            var node = nodes[k];
+            var hands = getConnectCnt(links, node);
+            node.hands = hands;
+        }
+        update();
+        console.log("calculation end.");
+    }
+
+
+    function getData() {
+        force.stop();
+        console.log("data load start.");
+
+        d3.json("data/" + String(year).substr(0, 2) + "/" + year + ".json", function (error, graph) {
+            console.log("data load end.");
+            console.log("calculation start.");
+
+//        $("#livingcnt").text(graph.nodes.length);
+            new Grad($("#livingcnt")).start({dest: graph.nodes.length, callback : function(){
+                //showData(graph);
+            }});
+            showData(graph);
+        });
+    }
+
+    var nodeKeyFunc = function (d) {
+        return d.name
+    }
+    var linkKeyFunc = function (l) {
+        if (l.source.name > l.target.name) {
+            return l.source.name + "@" + l.target.name;
+        } else {
+            return l.target.name + "@" + l.source.name;
+        }
+    }
+
+    function showPersonInfo(n) { //arg : node data
+        n.img = n.img.replace(/[\n\r]/g, "");
+        console.log(n.img);
+        //$("#portrait").css("background-image", "url('" + n.img + "')");
+        $("#name").text(n.pname);
+        $("#life").text("AD " + n.birth + " - " + n.death);
+        $("#portrait").css("background-image", "url('" + (n.noImage ? NOBODY_IMAGE : "img/" + n.name + ".jpg") + "')");
+
+        // d3.json("/query_ocp?pid=" + n.name, function (error, data) {
+        //     $("#ocplist").empty();
+        //     $("#ocptitle").text("Occupations (" + data.occupations.length + ")");
+        //     data.occupations.forEach(function (e, i) {
+        //         var ocp = $("<a href=\"#\" class=\"my-list-group-item\"></a>").text(e.name);
+        //         $("#ocplist").append(ocp);
+        //     });
+        // });
+
+        // 'select bo.occupation_id, om.name from basic_occupation bo, occupation_mst om "
+        //" where bo.occupation_id = om.occupation_id and bo.person_id = ".$pid
+
+        var occupations = personOccupationRaw.filter(function(d){
+          return d.person_id == n.name;
+        }).map(function(d){
+          return occupationRaw.find(function(v){
+            return v.occupation_id == d.occupation_id;
+          });
+        });
+        console.log(occupations);
+          $("#ocplist").empty();
+          $("#ocptitle").text("Occupations (" + occupations.length + ")");
+          occupations.forEach(function (e, i) {
+              var ocp = $("<a href=\"#\" class=\"my-list-group-item\"></a>").text(e.name);
+              $("#ocplist").append(ocp);
+          });
+
+
+        var friends = getFriends(n);
+        $("#friendlist").empty();
+        // $("#friendlist").css("height", "");
+        $("#friend_info").css("height", "");
+        friends.nodes.each(function (e) {
+            var img = $("<img/>").attr("src", e.img);
+            var friend = $("<a href=\"#\" id=\"" + e.name + "\" class=\"my-list-group-item\"></a>")
+                    .append(img).append("<div><span>" + e.pname + "</span></div>");
+            $("#friendlist").append(friend);
+        })
+        $("#friend_cnt").text(" (" + friends.nodes.size() + ")");
+    }
+    var sel_node;
+
+    function update() {
+        console.log("update start.");
+
+        sel_family.lowlight();
+
+        var link = svg.selectAll(".link").data(force.links(), linkKeyFunc);
+        var node = svg.selectAll(".node").data(force.nodes(), nodeKeyFunc);
+
+        console.log("data set end.");
+
+        console.log("link append start.");
+        //link.enter().insert("line")
+        link.enter().append("line")
+                .attr("class", "link")
+                .style("stroke-width", function (d) {
+                    return Math.sqrt(d.value);
+                });
+        link.exit().remove();
+        console.log("link append end.");
+
+        console.log("node append start.");
+        var node_root = node.enter().append("g").attr("class", "node");
+
+        //append frame
+        node_root.append("rect")
+                .attr("stroke", FRAME_COLOR)
+                .attr("stroke-width", 2)
+                .attr("fill", "floralwhite")
+                .attr("width", function (d) {
+                    d.w = 10 * Math.sqrt(d.hands + 1);
+                    return d.w + 2;
+                })
+                .attr("height", function (d) {
+                    d.h = d.w;
+                    return d.h + 2;
+                })
+                .attr("x", function (d) {
+                    return -d.w / 2 - 1;
+                })
+                .attr("y", function (d) {
+                    return -d.h / 2 - 1;
+                });
+
+        node_root.append("image")
+                .attr("xlink:href",
+                        function (d) {
+                            if (!d.img || d.img == "no") {
+                                d.noImage = true;
+                                d.img = NOBODY_IMAGE;
+                            }
+                            //calculate width and height in proportion with hands count
+                            //var size = getSizeOfImgData(d.img); //very heavy job!
+                            //var size = {w:20,h:20};
+
+                            //nf:normalization factor of size in length
+                            //var nf = Math.sqrt(100 * d.hands / (size.w * size.h));
+                            //d.w = size.w * nf;
+                            //d.h = size.h * nf;
+                            return d.img;
+                        }
+                )
+                .attr("x", function (d) {
+                    return -d.w / 2;
+                })
+                .attr("y", function (d) {
+                    return -d.h / 2;
+                })
+                .attr("width", function (d) {
+                    return d.w;
+                })
+                .attr("height", function (d) {
+                    return d.h;
+                });
+        node_root.on("click", function (node) {
+            sel_family.lowlight();
+            sel_family.refresh(this, node);
+            sel_family.highlight();
+            showPersonInfo(node, this);//node, dom
+        });
+
+        node_root.on("mouseover", function (node, evt) {
+            $("#tooltip").text(node.pname)
+            .css("left",d3.event.pageX + 20 )
+            .css("top", d3.event.pageY - 10 - 50) //50 : body padding-top
+            .show();
+        });
+        node_root.on("mouseout", function (node, evt) {
+            $("#tooltip").hide();
+        });
+
+        node.exit().remove();
+        console.log("node append end.");
+
+        force.on("tick", function () {
+            link.attr("x1", function (d) {
+                return d.source.x;
+            })
+                    .attr("y1", function (d) {
+                        return d.source.y;
+                    })
+                    .attr("x2", function (d) {
+                        return d.target.x;
+                    })
+                    .attr("y2", function (d) {
+                        return d.target.y;
+                    });
+            node.attr("transform", function (d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
+        });
+        force.on("end", function () {
+            console.log("Force Moving End.");
+        });
+
+        console.log("adjust image order start.");
+
+        //adjust order as lines are always behind images
+        svg.selectAll(".node, .link").sort(function (a, b) {
+            var aIsNode = (a.name !== undefined);
+            var bIsNode = (b.name !== undefined);
+            if (aIsNode && !bIsNode) {
+                return 1;
+            }
+            if (!aIsNode && bIsNode) {
+                return -1;
+            }
+            return 0;
+        });
+        console.log("adjust image order end.");
+
+        sel_family.refreshOnUpload();
+        sel_family.highlight();
+
+        force.start();
+    }
+
+    function trip(_year) {
+        force.stop();
+        year = _year;
+        //$("#year").text(_year);
+        getData();
+    }
+
+    function getFriends(node) {
+        var res = {};
+        var tmp_nodes = [];
+        res.links = svg.selectAll(".link").filter(function (l) {
+            if (l.source == node) {
+                tmp_nodes.push(l.target);
+                return true;
+            }
+            if (l.target == node) {
+                tmp_nodes.push(l.source);
+                return true;
+            }
+            return false;
+        });
+        res.nodes = svg.selectAll(".node").filter(function (_node) {
+            return tmp_nodes.indexOf(_node) > -1;
+        });
+        //res.nodes and res.links are both d3 "selection" object
+        return res;
+    }
+    var sel_family = {
+        refreshOnUpload: function (pid) {
+            if (pid !== undefined) {
+                this.pid = pid;
+            }
+            if (this.pid <= 0) {
+                return;
+            }
+
+            var selection = d3.selectAll(".node").filter(function (d) {
+                return d.name == sel_family.pid;
+            })
+            if (selection.size() == 0) {
+                console.log("He or She Died!!!");
+                this.sel_node = undefined;
+                return;
+            }
+            selection.each(function (d) {
+                sel_family.refresh(this, d);
+            });
+        },
+        refresh: function (maindom, maindata) {
+            this.pid = maindata.name;
+            this.sel_node = d3.select(maindom);
+            this.friends = getFriends(maindata);
+        },
+        highlight: function () {
+            if (!this.sel_node)
+                return;
+            this.paint("red", 3, 1.0);
+        },
+        lowlight: function () {
+            if (!this.sel_node)
+                return;
+            this.paint(FRAME_COLOR, 1.5, 0.3);
+        },
+        paint: function (color, width, linkOpacity) {
+            this.sel_node.selectAll("rect").style("stroke", color).style("stroke-width", width);
+            this.friends.nodes.selectAll("rect").style("stroke", color).style("stroke-width", width);
+            this.friends.links.style("stroke", color).style("stroke-width", width).style("stroke-opacity", linkOpacity);
+        }
+    };
+
+
+    var tgt_pid = 0;
+    function highlight(node_data, node_dom) {
+        if (node_dom) {
+            sel_family.sel_node = d3.select(node_dom);
+
+            d3.select(node_dom).selectAll("rect").style("stroke", "red").style("stroke-width", "3");
+        }
+        var friends = getFriends(node_data);
+        friends.nodes.selectAll("rect").style("stroke", "red").style("stroke-width", "3");
+        friends.links.style("stroke", "red").style("stroke-width", "3");
+
+        sel_family.friends = friends;
+    }
+    function lowlight() {
+        if (sel_family.sel_node === undefined)
+            return;
+        sel_family.sel_node.selectAll("rect").style("stroke", "black").style("stroke-width", "1");
+        sel_family.friends.nodes.selectAll("rect").style("stroke", "black").style("stroke-width", "1");
+        sel_family.friends.links.style("stroke", "black").style("stroke-width", "1");
+    }
+
+</script>
+
+
+<script>
+    $(function () {
+        $("#frame").height($(window).height() - $("#navbar").height());
+        $(document).trigger('layoutEnd');
+    });
+</script>
+<style>
+    -webkit-user-select: none
+
+    ;
+</style>
+    
+
+
+</body>
+</html>

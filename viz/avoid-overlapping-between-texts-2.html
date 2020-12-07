@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Cafe(chain store) Location Map in Japan">
+    <meta name="Keywords" content="cafe,chain,map,location,Japan">
+    
+    
+    <meta property="og:description" content="Cafe(chain store) Location Map in Japan"/>
+    
+    <meta property="og:title" content="exercise" />
+    <meta property="og:type" content="article" />
+
+    <title>exercise | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-providers/1.1.15/leaflet-providers.min.js"></script>-->
+
+<script src="https://npmcdn.com/@turf/turf/turf.min.js"></script>
+
+<h1>exercise</h1>
+
+<style>
+  svg path{
+    fill:lightgrey;
+    stroke:#222;
+    cursor: pointer;
+  }
+  svg text{
+    text-anchor: middle;
+    dominant-baseline: middle;
+    cursor: pointer;
+  }
+  svg path:hover, g.active path {
+    fill:red;
+  }
+
+  .label rect {
+    fill: transparent;
+  }
+  .closest-path{
+    stroke: green;
+  }
+</style>
+
+<svg></svg>
+
+<script>
+
+  // refs about "avoid overlapping between texts"
+  // http://blockbuilder.org/piwodlaiwo/8e011180b006e5c4ad6a7bfc364cf4f7
+
+  //プロジェクション設定
+  var projection = d3
+  .geoMercator() //投影法の指定
+  .scale(400)	//スケール（ズーム）の指定
+  // .rotate([-0.25, 0.25, 0]) //地図を回転する　[x,y,z]
+
+  var map = d3.select("svg")
+  .attr("width", 800)
+  .attr("height", 700);
+
+  d3.json("data/custom.geo.json", drawMaps);
+
+  function drawMaps(geojson) {
+
+    console.log(d3.geoCentroid(geojson));
+
+    projection.center(d3.geoCentroid(geojson));
+
+    var path = d3.geoPath().projection(projection);
+
+    const addClassOnHover = function(selection, className){
+      selection
+      .on("mouseover", function(){
+        d3.select(d3.select(this).node().parentNode).classed(className, true)
+      })
+      .on("mouseout", function(){
+        d3.select(d3.select(this).node().parentNode).classed(className, false)
+      })
+    }
+
+    var country = map.selectAll("g")
+    .data(geojson.features)
+    .enter()
+    .append("g");
+
+    country.append("path")
+    .attr("d", path)  //パスジェネレーターを使ってd属性の値を生成している
+    .on("click", function(d){
+      console.log(d);
+      console.log(path.centroid(d));
+    })
+    .on("mouseover", function(){
+      d3.select(this).classed("active", true)
+    })
+    .on("mouseout", function(){
+      d3.select(this).classed("active", false)
+    });
+
+    // country.append("text")
+    // .attr("x", function(d){
+    //   return path.centroid(d)[0];
+    // })
+    // .attr("y", function(d){
+    //   return path.centroid(d)[1];
+    // }).text(function(d){
+    //   return d.properties.name;
+    // })
+    // .call(addClassOnHover, "active");
+
+    var text = map.selectAll("text")
+    .data(geojson.features)
+    .enter()
+    .append("text")
+    .attr("x", function(d){
+      return path.centroid(d)[0];
+    })
+    .attr("y", function(d){
+      return path.centroid(d)[1];
+    }).text(function(d){
+      return d.properties.name;
+    })
+    .call(addClassOnHover, "active");
+
+    var tgt = geojson.features[0];
+    geojson.features.forEach(function(v, i){
+      if(i == 0)return;
+      tgt = turf.union(tgt, v);
+    })
+
+    console.log(tgt);
+
+    // path要素のd属性は、M***L***L***...Z で１つの線
+
+    // console.log(path.area(tgt[]));
+
+    console.log(_.max(tgt.geometry.coordinates[0], d3.polygonArea));
+
+    tgt.geometry.coordinates[0] = [_.max(tgt.geometry.coordinates[0], d3.polygonArea)];
+    console.log(tgt);
+
+    // map.append("path")
+    // .attr("d", path(tgt))
+    // .attr("stroke", "green")
+
+
+    console.log("---");
+    console.log(hoge(tgt.geometry.coordinates[0][0], path.centroid(geojson.features[0])));
+
+    console.log("===",tgt.geometry.coordinates[0][0].map(projection));
+
+    var continentPathNode = map
+    .append("path")
+    .attr("d", path(tgt))
+    .attr("visibility", "hidden")
+    .node();
+
+    country.append("path").attr("d", function(d){
+      var c = path.centroid(d);
+      // var p = hoge(tgt.geometry.coordinates[0][0].map(projection), c);
+      var p = closestPoint(continentPathNode, c);
+      var str = "M" + c[0] + "," + c[1] + "L" + p[0] + "," + p[1] + "Z";
+      return str;
+    }).classed("closest-path");
+
+    // delete overlapping texts
+    // policy: bigger country has priority to show its text
+
+    var isOverlapped = function(box1,box2){
+      box1.x2 = box1.x + box1.width;
+      box1.y2 = box1.y + box1.height;
+      box2.x2 = box2.x + box2.width;
+      box2.y2 = box2.y + box2.height;
+      var xOverlapped = box2.x < box1.x2 && box2.x2 > box1.x;
+      var yOverlapped = box2.y < box1.y2 && box2.y2 > box1.y;
+      return xOverlapped && yOverlapped;
+    }
+
+    text.each(function(d){
+      var target = this;
+      var tmp = this.getBBox();
+      d.area = path.area(d);
+      var res = text.filter(function(_d){
+        return target != this && isOverlapped(tmp, this.getBBox());
+      });
+      console.log(res.size());
+      if(res.size() > 0){
+        var currentArea = path.area(d);
+        var counterpartArea = path.area(res.filter(function (d, i) { return i == 0}).datum());
+        if(currentArea < counterpartArea){
+          d3.select(this).style("visibility", "hidden");
+        }
+      }
+
+    })
+
+  }
+
+  function hoge(path, point){
+    var line = turf.lineString(path);
+    var pt = turf.point(point);
+    var snapped = turf.nearestPointOnLine(line, pt);
+    console.log("snapped", snapped);
+    return path[snapped.properties.index];
+  }
+
+  function closestPoint(pathNode, point) {
+    var pathLength = pathNode.getTotalLength(),
+        precision = 8,
+        best,
+        bestLength,
+        bestDistance = Infinity;
+
+    // linear scan for coarse approximation
+    for (var scan, scanLength = 0, scanDistance; scanLength <= pathLength; scanLength += precision) {
+      if ((scanDistance = distance2(scan = pathNode.getPointAtLength(scanLength))) < bestDistance) {
+        best = scan, bestLength = scanLength, bestDistance = scanDistance;
+      }
+    }
+
+    // binary search for precise estimate
+    precision /= 2;
+    while (precision > 0.5) {
+      var before,
+          after,
+          beforeLength,
+          afterLength,
+          beforeDistance,
+          afterDistance;
+      if ((beforeLength = bestLength - precision) >= 0 && (beforeDistance = distance2(before = pathNode.getPointAtLength(beforeLength))) < bestDistance) {
+        best = before, bestLength = beforeLength, bestDistance = beforeDistance;
+      } else if ((afterLength = bestLength + precision) <= pathLength && (afterDistance = distance2(after = pathNode.getPointAtLength(afterLength))) < bestDistance) {
+        best = after, bestLength = afterLength, bestDistance = afterDistance;
+      } else {
+        precision /= 2;
+      }
+    }
+
+    best = [best.x, best.y];
+    best.distance = Math.sqrt(bestDistance);
+    return best;
+
+    function distance2(p) {
+      var dx = p.x - point[0],
+          dy = p.y - point[1];
+      return dx * dx + dy * dy;
+    }
+  }
+
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

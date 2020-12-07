@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Floating Bar Chart</title>
+    <script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="../js/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../../js/underscore-min.js"></script>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #graph {
+            /*position: fixed;*/
+            z-index: 10;
+            width: 800px;
+            height: 500px;
+            background-color: white;
+            /*top:0px;*/
+            /*left: 0px;*/
+            font: 10px sans-serif;
+        }
+        .tt {
+            visibility: visible;
+        }
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+        .arc path {
+            stroke: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Floating Bar Chart</h1>
+    <div id="graph"></div>
+</div>
+<script>
+    var svg;
+
+    var margin = {top: 30, right: 40, bottom: 70, left: 50};
+    var width = $("#graph").width() - margin.left - margin.right;
+    var height = $("#graph").height() - margin.top - margin.bottom;
+    var radius = Math.min($("#graph").width(), $("#graph").height()) / 2;
+
+    var showMainGraph = function (data, baseSvg, opt) {
+
+        // スケールと出力レンジの定義
+        var xScale = d3.scale.ordinal().rangeRoundBands([0, opt.width], 0.3); // 幅と余白の比率
+        xScale.domain(data.map(function(d){return d.name;}));
+
+        var yScale = d3.scale.linear()
+                .domain([0,
+                    d3.max(data.map(function (d) {
+                        return d.value;
+                    }))])
+                .range([0, opt.height]);
+
+        // 軸の定義
+        var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient("bottom")
+                .innerTickSize(0)
+                .outerTickSize(0)
+                .tickPadding(10);
+
+        var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .outerTickSize(0)
+                .orient("left");
+
+        var xAxisObj, yAxisObj;
+
+        xAxis.scale(xScale);
+        baseSvg.select(".x").call(xAxis);
+
+        var pathData = [];
+
+        data.forEach(function(d,i){
+            d.x = xScale(d.name);
+            d.width = xScale.rangeBand();
+            d.height = yScale(d.value);
+            d.path = {};
+            d.midx = d.x + d.width/2;
+            if(i == 0){
+                d.y = opt.height - yScale(d.value);
+                d.top = d.y;
+                return;
+            }
+            var prev = data[i - 1];
+            if(d.type > 0){
+                if(prev.type > 0){
+                    d.y = prev.y - d.height;
+                }else{
+                    d.y = prev.y + prev.height - d.height;
+                }
+            }else{
+                if(prev.type > 0){
+                    d.y = prev.y;
+                }else{
+                    d.y = prev.y + prev.height;
+                }
+            }
+            if(prev.type > 0){
+                pathData.push([
+                    {x:prev.midx, y:prev.top},
+                    {x: d.midx, y:prev.top},
+                ])
+            }else{
+                pathData.push([
+                    {x:prev.midx, y:prev.bottom},
+                    {x: d.midx, y:prev.bottom}
+                ])
+            }
+            d.top = d.y;
+            d.bottom = d.top + d.height;
+        });
+
+        var g = baseSvg.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .style("cursor", "pointer")
+                .attr("x", function(d){
+                    return d.x;
+                })
+                .attr("y", function(d){
+                    return d.y;
+                })
+                .attr("width", function(d){
+                    return d.width;
+                })
+                .attr("height", function (d) {
+                    return d.height;
+                })
+                .attr("fill", function (d, i) {
+                    return d.color;
+                })
+                .on("click", function(d){
+                    console.log("clicked!");
+                });
+
+        xAxisObj = baseSvg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + opt.height + ")")
+                .call(xAxis)
+                .selectAll("text")
+                .style("text-anchor", "middle");
+        var xText = xAxisObj.append("text").text("").style("text-anchor", "middle")
+                .attr("transform", "translate(130,40)");
+
+        // y軸をsvgに表示
+//        yAxisObj = baseSvg.append("g")
+//                .attr("class", "y axis")
+//                .call(yAxis);
+//        var yText = yAxisObj.append("text").attr("transform", "translate(0,-10)");
+
+        var line = d3.svg.line()
+                .x(function (d) {return d.x})
+                .y(function (d) {return d.y})
+                .interpolate("cardinal");
+
+        console.log(pathData);
+        baseSvg.selectAll("path.segment")
+                .data(pathData)
+                .enter()
+                .append("path")
+                .attr("d", function (d) {
+                    console.log(d);
+                    return line(d);
+                }).attr({
+                    "stroke-dasharray":"3 3",
+                    stroke:"gray"
+                });
+
+    };
+
+    $(function () {
+        svg = d3.select("#graph").append("svg").attr({
+            class: "tt",
+            width: $("#graph").width(),
+            height: $("#graph").height()
+        });
+        var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var data = [
+            {name: "売上高", value: 1000000, color: "#93C47D", type: 1},
+            {name: "売上原価", value: 500000, color: "#E06666", type: -1},
+            {name: "販管費", value: 250000, color: "#E06666", type: -1},
+            {name: "営業外利益", value: 200000, color: "#6D9EEB", type: 1},
+            {name: "営業外費用", value: 100000, color: "#E06666", type: -1},
+            {name: "特別利益", value: 50000, color: "#6D9EEB", type: 1},
+            {name: "特別損失", value: 100000, color: "#E06666", type: -1},
+            {name: "当期純利益", value: 300000, color: "#6D9EEB", type: -1}
+        ];
+
+        showMainGraph(data, g, {
+            width: width,
+            height: height
+        });
+    })
+
+</script>
+</body>
+</html>

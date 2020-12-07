@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Save variables as formula">
+    <meta name="Keywords" content="formula,functional database,excel,variable">
+    
+    <meta property="og:url" content="https://hitokun-s.github.io/demo/save-variables-as-formula.html"/>
+    <meta property="og:description" content="Save variables as formula"/>
+    
+    <meta property="og:title" content="Save variables as formula" />
+    <meta property="og:type" content="article" />
+
+    <title>Save variables as formula | Hitokun's</title>
+    
+    <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <script src="js/formula.js"></script>
+
+<style>
+    .stage{
+        display: block;
+        padding: 6px 40px 0 8px;
+        border-radius: 5px;
+        border: 1px solid #e8e8e8;
+        background: #fff;
+        width: 600px;
+    }
+    .formula-wrap{
+        display: inline;
+        box-sizing: border-box;
+        text-align: left;
+    }
+    .tag{
+        position: relative;
+        display: inline-block;
+        padding: 2px 10px 4px 10px;
+        margin-right:5px;
+        border-radius: 5px;
+        color: #fff;
+        line-height: 1;
+        background: #41b883;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+    .op{
+        background: white;
+        color: grey;
+    }
+    .num{
+        background: white;
+        color: grey;
+    }
+    .formula-input{
+        position: relative;
+        display: inline-block;
+        min-height: 20px;
+        line-height: 20px;
+        border-top: none;
+        border-right: none;
+        border-left: none;
+        border-bottom: 3px solid black;
+        background: #fff;
+        padding: 1px 0 0 5px;
+        transition: border .1s ease;
+        box-sizing: border-box;
+        margin-bottom: 5px;
+        touch-action: manipulation;
+        outline: 0;
+        width:30px;
+    }
+    .selRow{
+        outline: thick solid red;
+    }
+    table tr{
+        line-height: 3px;
+    }
+    table td{
+        height: 30px;
+        line-height: 30px;
+        padding-top: 2px !important;
+        padding-bottom: 0px !important;
+    }
+    .exp{
+        display: block;
+        font-size: 1.2em;
+        margin-bottom: 4px;
+    }
+    .message{
+        position: absolute !important;
+    }
+</style>
+
+<div class="container">
+    <div class="row" id="app">
+        <h1>Save variables as formula</h1>
+
+        <div class="ui horizontal list">
+            <div class="ui input item">
+                <span class="exp">variable name:</span>
+                <input type="text" v-model="valName">
+                <div class="ui pointing red basic label message" v-show="!valName && errorMessageValName">
+                    {{errorMessageValName}}
+                </div>
+            </div>
+            <div class="item">
+                <span class="exp">formula:  (acceptable input: number, +, -, *, /, (, ), and registered variable name)</span>
+                <div class="stage">
+                    <div class="formula-wrap formula-main">
+                        <input name="formula-input" v-model="searchText" type="text" autocomplete="off" placeholder="" class="formula-input" v-on:keyup.left="left" v-on:keyup.right="right" v-on:keyup.delete="delete" v-on:keyup="all" v-on:keyup.down="down" v-on:keyup.up="up" v-on:keyup.enter="enter">
+                    </div>
+                </div>
+                <div class="ui pointing red basic label message" v-show="errorMessage">
+                    {{errorMessage}}
+                </div>
+            </div>
+            <div class="item">
+                <button class="ui primary button" v-on:click="regist">register</button>
+            </div>
+        </div>
+        <ul>
+            <li>move cursor inside formula => <span class="ui label">left</span><span class="ui label">right</span></li>
+            <li>complete input inside formula => <span class="ui label">enter</span></li>
+            <li>select registered variable inside formula => <span class="ui label">up</span><span class="ui label">down</span>( input some alphabet to filter variables shown )</li>
+            <li>delete => <span class="ui label">backspace</span></li>
+        </ul>
+        
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th>name</th>
+                <th>formula</th>
+                <th>json</th>
+                <th>value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(variable, index) in filter()" v-bind:class="{ 'selRow': selectId == index }">
+                <td>{{variable.name}}</td>
+                <td v-html="variable.formula"></td>
+                <td>{{variable.json}}</td>
+                <td>{{ val(variable.json) }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+
+
+  (function($) {
+    $.fn.getCursorPosition = function() {
+      var input = this.get(0);
+      if (!input) return; // No (input) element found
+      if (document.selection) {
+        // IE
+        input.focus();
+      }
+      return 'selectionStart' in input ? input.selectionStart:'' || Math.abs(document.selection.createRange().moveStart('character', -input.value.length));
+    }
+  })(jQuery);
+    
+  function doGetCaretPosition (oField) {
+
+    // Initialize
+    var iCaretPos = 0;
+
+    // IE Support
+    if (document.selection) {
+
+      // Set focus on the element
+      oField.focus();
+
+      // To get cursor position, get empty selection range
+      var oSel = document.selection.createRange();
+
+      // Move selection start to 0 position
+      oSel.moveStart('character', -oField.value.length);
+
+      // The caret position is selection length
+      iCaretPos = oSel.text.length;
+    }
+
+    // Firefox support
+    else if (oField.selectionStart || oField.selectionStart == '0')
+      iCaretPos = oField.selectionStart;
+
+    // Return results
+    return iCaretPos;
+  }
+  
+  $(function(){
+    
+    new Vue({
+      el: '#app',
+      data: {
+        errorMessageValName: null,
+        errorMessage: null,
+        valName: "",
+        searchText: "",
+        prevPos: 0,
+        selectId: 0,
+        variables: [
+          {name: "a", formula: "<span class=\"tag num\"><span>3</span></span>", json:"3"},
+          {name: "b", formula: "<span class=\"tag num\"><span>3</span></span><span class=\"tag op\"><span>+</span></span><span class=\"tag\"><span>a</span></span>", json:"{\"+\":[3,\"a\"]}"},
+          {name: "c", formula: "<span class=\"tag\"><span>a</span></span><span class=\"tag op\"><span>+</span></span><span class=\"tag op\"><span>(</span></span><span class=\"tag\"><span>b</span></span><span class=\"tag op\"><span>-</span></span><span class=\"tag num\"><span>1</span></span><span class=\"tag op\"><span>)</span></span><span class=\"tag op\"><span>*</span></span><span class=\"tag num\"><span>2</span></span>", json:"{\"+\":[\"a\",{\"*\":[{\"-\":[\"b\",1]},2]}]}"},
+        ],
+        filteredItems:[]
+      },
+      methods: {
+        filter: function(){
+          console.log("filter");
+          var self = this;
+          return this.variables.filter(function(item){
+            return item.name.indexOf(self.searchText) > -1;
+          });
+        },
+        left: function(){
+
+          var pos = $(".formula-input").getCursorPosition();
+
+          if(pos == 0 && this.prevPos == 0){
+            $(".formula-input").prev().before($(".formula-input"));
+            $(".formula-input").focus();
+            $(".formula-input").val("");
+          }
+          this.prevPos = pos;
+        },
+        right: function(){
+          var pos = $(".formula-input").getCursorPosition();
+
+          console.log(pos);
+          if(pos == $(".formula-input").val().length && this.prevPos == $(".formula-input").val().length){
+            if($(".formula-input").next().length > 0){
+              $(".formula-input").next().after($(".formula-input"));
+              $(".formula-input").focus();
+              $(".formula-input").val("");
+            }
+          }
+          this.prevPos = pos;
+        },
+        all: function(e){
+          console.log("all", e);
+          this.errorMessage = null;
+
+          if(e.keyCode == 8){
+            this.delete();
+            return;
+          }
+          if(this.searchText.length == 1 && _.contains(["+","-","*","/","(",")"], this.searchText[0])){
+            this.enter();
+            return;
+          }
+
+          var pos = $(".formula-input").getCursorPosition();
+          this.prevPos = pos;
+        },
+        delete: function(){
+          var pos = $(".formula-input").getCursorPosition();
+          console.log("in delete pos:", pos);
+          if(pos == 0 && this.prevPos == 0){
+            console.log("hey");
+            $(".formula-input").prev().remove();
+          }
+          this.prevPos = pos;
+        },
+        down: function(){
+          console.log("down");
+          if(this.selectId < this.filter().length - 1)
+          this.selectId = this.selectId + 1;
+        },
+        up: function(){
+          console.log("up");
+          if(this.selectId > 0){
+            this.selectId = this.selectId - 1;
+          }
+        },
+        enter: function(){
+          if(_.contains(["+","-","*","/","(",")"], this.searchText)) {
+            console.log("iildf");
+            $(".formula-input").before($("<span class=\"tag op\"><span>" + this.searchText + "</span></span>"));
+          }else if(this.searchText != "" && !isNaN(this.searchText)){
+            console.log("num");
+            $(".formula-input").before($("<span class=\"tag num\"><span>" + this.searchText + "</span></span>"));
+          }else{
+            if(this.filter().length == 0){
+              console.log("invalid!!!");
+              return;
+            }
+            $(".formula-input").before($("<span class=\"tag\"><span>" + this.filter()[this.selectId].name + "</span></span>"));  
+          }
+          this.searchText = "";
+        },
+        regist:function(){
+          
+          if(!this.valName){
+            this.errorMessageValName = "Set variable name!";
+            return;
+          }
+          
+          var html = $(".formula-main .tag").map(function(i,elm){
+            return elm.outerHTML;
+          }).get().join("");
+          console.log(html);
+
+          var arr = $(".formula-main .tag span").map(function(i,elm){
+            return $(elm).text();
+          });
+          var resObj;
+          try{
+            resObj = toObject(createTree(arr));
+            console.log(resObj);
+          }catch(e){
+            this.errorMessage = "Invalid formula!";
+            return;
+          }
+
+          this.variables.push({
+            name: this.valName,
+            formula: html,
+            json: JSON.stringify(resObj)
+          });
+          
+          this.errorMessageValName = null;
+          this.errorMessage = null;
+          this.valName = "";
+          this.searchText = "";
+          
+        },
+        val: function(json){
+          console.log(json);
+          
+          var obj;
+
+          if(typeof json !== 'object'){
+            try{
+              obj = JSON.parse(json);
+            }catch(e){
+              var found = _.find(this.variables, function(v){return v.name == json});
+              return this.val(found.json);
+            }
+            if(!isNaN(obj)){
+              return obj;
+            }
+          }else{
+            obj = json;
+          }
+          var op = Object.keys(obj)[0];
+          
+          var values = obj[op];
+          var left = this.val(values[0]);
+          var right = this.val(values[1]);
+
+          switch(op){
+            case "+": return left + right;
+            case "-": return left - right;
+            case "*": return left * right;
+            case "/": return left / right;
+            default: throw Error;
+          }
+        }
+        
+      }
+    });
+
+    $(".formula-input").focus();
+  });
+  
+  
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

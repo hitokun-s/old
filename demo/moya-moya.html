@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    <meta property="og:image" content="https://hitokun-s.github.io/../image/moya-moya.png"/>
+    
+    
+    
+    <meta property="og:title" content="Moya-moya" />
+    <meta property="og:type" content="article" />
+
+    <title>Moya-moya | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+        body ,nav{
+            background-color:#000 !important;
+        }
+        #comment{
+            background-color: transparent;
+            display:inline-block;
+            margin-left: 35px;
+            color:#ddd;
+            font-size:18px;
+        }
+        #comment button{
+            color:black;
+            margin: 10px;;
+        }
+        footer{
+            color:white;
+        }
+    </style>
+    <script src="js/LinkedList.js"></script>
+    <script src="js/HtCanvas.js"></script>
+    <script src="js/Moyamoya.js"></script>
+
+<div class="container">
+    <div class="row">
+        <div class="pull-left">
+            <canvas id="displayCanvas" width="400px" height="560px">
+                Your browser does not support HTML5 canvas.
+            </canvas>
+        </div>
+        <div id="comment">
+            <h1 class="page-header">Moya-moya</h1>
+            The world is too fuzzy.<br>
+            Sometimes beautiful, sometimes ugly.<br>
+            <button id="seeHer">See the Lady</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    var mosaic;
+    var hiddenDraw = function(imgUrl) {
+        var img = new Image();
+        img.onload = function() {
+            var htCanvas = new HtCanvas(200, 280);
+            mozaic = htCanvas.getMosaic(img, 50);
+        };
+        img.src = imgUrl;
+    };
+    var seeHer = function(cellList) {
+        var diffSum = 0;
+        var dr, dg, db;
+        cellList.map(function(cell) {
+            var tgt = mosaic[cell.i][cell.j];
+            cell.r += 0.01 * (dr = tgt.r - cell.r);
+            cell.g += 0.01 * (dg = tgt.g - cell.g);
+            cell.b += 0.01 * (db = tgt.b - cell.b);
+            diffSum += dr * dr + dg * dg + db * db;
+        });
+        if (diffSum / cellList.length < 2000) {
+            moyamoya.setDelegate(hideHer);
+            console.log("show done");
+        }
+    };
+
+    var hideHer = function(cellList) {
+        var diffSum = 0;
+        var dr, dg, db;
+        cellList.map(function(cell) {
+            cell.r += 0.05 * (dr = cell.bufferR - cell.r);
+            cell.g += 0.05 * (dg = cell.bufferG - cell.g);
+            cell.b += 0.05 * (db = cell.bufferB - cell.b);
+            diffSum += dr * dr + dg * dg + db * db;
+        });
+        if (diffSum / cellList.length < 10) {
+            moyamoya.setDelegate(undefined);
+            console.log("hide done");
+        }
+    };
+
+    var moyamoya
+    $(function() {
+        moyamoya = new Moyamoya("displayCanvas");
+        moyamoya.start();
+        hiddenDraw("image/monalisa.jpg");
+
+        $("#seeHer").on("click", function() {
+            moyamoya.setDelegate(seeHer);
+        });
+    });
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.12/angular.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        /*.percent:after{*/
+        /*content: "%";*/
+        /*}*/
+        .suffix-unit {
+            margin-top: 39px;
+            font-size: 19px;
+        }
+
+        #occupation-selector {
+            height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body ng-controller="MyController">
+<ul id="dropdown1" class="dropdown-content">
+    <li><a href="#!">one</a></li>
+    <li><a href="#!">two</a></li>
+    <li class="divider"></li>
+    <li><a href="#!">three</a></li>
+</ul>
+<nav>
+    <div class="nav-wrapper">
+        <a href="#!" class="brand-logo">Logo</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="sass.html">Sass</a></li>
+            <li><a href="badges.html">Components</a></li>
+            <!-- Dropdown Trigger -->
+            <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <div class="card grey lighten-5 medium">
+                <div class="card-content" ng-switch="step">
+                    <div ng-switch-when="1">
+                        <div class="row"></div>
+                        <div class="card-title col s3">あなたの職種は？</div>
+                        <form>
+                            <div class="input-field col s6" id="occupation-selector">
+                                <select ng-model="occupation" ng-options="x.id as x.name for x in occupations"
+                                        ng-init="occupation=1"></select>
+                            </div>
+                        </form>
+                    </div>
+                    <div ng-switch-when="3">
+                        <h1 class="card-title">あなたは今後の経費に関して、どのように考えていますか？</h1>
+                        <form action="#">
+                            <p class="row">
+                            <div class="col s6">
+                                <input name="group1" type="radio" id="test1" ng-model="expense" ng-value="1"/>
+                                <label class="black-text" for="test1">一定の割合で伸びていく</label>
+                            </div>
+                            <div class="col input-field col s3" ng-show="expense === 1">
+                                <input placeholder="割合（％）を入力" name="first_name2" type="text" class="validate"/>
+                            </div>
+                            <div class="col s1 suffix-unit" ng-show="expense === 1">%</div>
+                            </p>
+                            <p class="row">
+                            <div class="col s6">
+                                <input name="group1" type="radio" id="test2" ng-model="expense" ng-value="2"/>
+                                <label class="black-text" for="test2">具体的な経費を想定している</label>
+                            </div>
+                            <div class="col input-field col s3" ng-show="expense === 2">
+                                <input placeholder="売上高を入力" name="first_name2" type="text" class="validate"/>
+                            </div>
+                            <div class="col s1 suffix-unit" ng-show="expense === 2">円</div>
+                            </p>
+                            <p class="row">
+                                <!--<input class="with-gap" name="group1" type="radio" id="test3"  />-->
+                            <div class="col s12">
+                                <input name="group1" type="radio" id="test3" ng-model="expense" ng-value="3"/>
+                                <label class="black-text" for="test3">過去3年間のトレンドが継続する</label>
+                            </div>
+                            <!--</div>-->
+                            </p>
+                        </form>
+                    </div>
+                    <div ng-switch-when="2">
+                        <h1 class="card-title">あなたは今後の売上高の伸びについて、どのように考えていますか？</h1>
+                        <form action="#">
+                            <p class="row">
+                            <div class="col s6">
+                                <input name="group1" type="radio" id="sales1" ng-model="sales" ng-value="1"/>
+                                <label class="black-text" for="sales1">一定の割合で伸びていく</label>
+                            </div>
+                            <div class="col input-field col s3" ng-show="sales === 1">
+                                <input placeholder="割合（％）を入力" name="first_name2" type="text" class="validate"/>
+                            </div>
+                            <div class="col s1 suffix-unit" ng-show="sales === 1">%</div>
+                            </p>
+                            <p class="row">
+                            <div class="col s6">
+                                <input name="group1" type="radio" id="sales2" ng-model="sales" ng-value="2"/>
+                                <label class="black-text" for="sales2">具体的な売上高を想定している</label>
+                            </div>
+                            <div class="col input-field col s3" ng-show="sales === 2">
+                                <input placeholder="売上高を入力" name="first_name2" type="text" class="validate"/>
+                            </div>
+                            <div class="col s1 suffix-unit" ng-show="sales === 2">円</div>
+                            </p>
+                            <p class="row">
+                                <!--<input class="with-gap" name="group1" type="radio" id="test3"  />-->
+                            <div class="col s12">
+                                <input name="group1" type="radio" id="sales3" ng-model="sales" ng-value="3"/>
+                                <label class="black-text" for="sales3">過去3年間のトレンドが継続する</label>
+                            </div>
+                            <!--</div>-->
+                            </p>
+                        </form>
+                    </div>
+                    <div ng-switch-when="4">
+                        <h1 class="card-title">あなたは今後の設備投資？</h1>
+                        <p class="row">
+                        <div class="col s6">
+                            <input type="radio" id="capital1" ng-model="capital" ng-value="1"/>
+                            <label class="black-text" for="capital1">具体的な設備投資額を入力する</label>
+                        </div>
+                        <div class="col input-field col s3" ng-show="capital === 1">
+                            <input placeholder="設備投資額を入力" type="text" class="validate"/>
+                        </div>
+                        <div class="col s1 suffix-unit" ng-show="capital === 1">円</div>
+                        </p>
+                        <p class="row">
+                        <div class="col s12">
+                            <input type="radio" id="capital2" ng-model="capital" ng-value="2"/>
+                            <label class="black-text" for="capital2">過去3年間のトレンドが継続する</label>
+                        </div>
+                        </p>
+                    </div>
+                    <div ng-switch-when="5">
+                        <h1 class="card-title">あなたは今後の減価償却？</h1>
+                        <p class="row">
+                        <div class="col s6">
+                            <input type="radio" id="depreciation1" ng-model="depreciation" ng-value="1"/>
+                            <label class="black-text" for="depreciation1">具体的な減価償却費を入力する</label>
+                        </div>
+                        <div class="col input-field col s3" ng-show="depreciation === 1">
+                            <input placeholder="減価償却費を入力" type="text" class="validate"/>
+                        </div>
+                        <div class="col s1 suffix-unit" ng-show="depreciation === 1">円</div>
+                        </p>
+                        <p class="row">
+                        <div class="col s12">
+                            <input type="radio" id="depreciation2" ng-model="depreciation" ng-value="2"/>
+                            <label class="black-text" for="depreciation2">過去3年間のトレンドが継続する</label>
+                        </div>
+                        </p>
+                    </div>
+                    <div ng-switch-when="6">
+                        <h1 class="card-title">運転資本の見通し？</h1>
+                        <p class="row">
+                        <div class="col s12">
+                            <input type="radio" id="working-capital1" ng-model="workingCapital" ng-value="1"/>
+                            <label class="black-text" for="working-capital1">過去3年間の対売上高/売上原価比率を維持する</label>
+                        </div>
+                        </p>
+                        <p class="row">
+                        <div class="col s12">
+                            <input type="radio" id="working-capital2" ng-model="workingCapital" ng-value="2"/>
+                            <label class="black-text" for="working-capital2">直近年度の対売上高/売上原価比率を使用する</label>
+                        </div>
+                        </p>
+                    </div>
+                    <div ng-switch-when="7">
+                        <h1 class="card-title">配当政策？</h1>
+                        <p class="row">
+                        <div class="col s12">
+                            <input type="radio" id="dividend-policy1" ng-model="dividendPolicy" ng-value="1"/>
+                            <label class="black-text" for="dividend-policy1">配当性向を一定にする</label>
+                        </div>
+                        </p>
+                        <p class="row">
+                        <div class="col s12">
+                            <input type="radio" id="dividend-policy2" ng-model="dividendPolicy" ng-value="2"/>
+                            <label class="black-text" for="dividend-policy2">年度ごとに個別に設定する</label>
+                        </div>
+                        </p>
+                    </div>
+                    <div ng-switch-default>
+                        <h1 class="card-title">登録完了！</h1>
+                    </div>
+                </div>
+                <div class="card-action right-align" ng-if="step < 8">
+                    <a class="waves-effect waves-light btn" href="#" ng-click="stepUp()">次へ</a>
+                    <a class="waves-effect waves-light btn grey" href="#">キャンセル</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('select').material_select();
+    });
+    var app = angular.module("myApp", []);
+    app.controller('MyController', ['$scope', '$http', function ($scope, $http) {
+        $scope.occupations = [
+            {id: 1, name: "職種１"},
+            {id: 2, name: "職種２"},
+            {id: 3, name: "職種３"},
+            {id: 4, name: "職種４"},
+            {id: 5, name: "職種５"},
+            {id: 6, name: "職種６"},
+            {id: 7, name: "職種７"},
+            {id: 8, name: "職種８"},
+            {id: 9, name: "職種９"},
+            {id: 10, name: "職種１０"},
+        ]
+        $scope.step = 1;
+        $scope.stepUp = function () {
+            $scope.step++;
+        }
+        $scope.stepDown = function () {
+            $scope.step--;
+        }
+    }]);
+</script>
+</body>
+</html>

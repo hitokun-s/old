@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Investors" />
+    <meta property="og:type" content="article" />
+
+    <title>Investors | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/keytable/2.3.1/js/dataTables.keyTable.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.semanticui.min.css">-->
+<!--<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.semanticui.min.css">-->
+
+<style>
+    #example{
+        background: lightgreen;
+        padding:10px;
+    }
+    table.dataTable td.focus {
+        outline: 2px solid green;
+        /*outline-offset: -3px;*/
+    }
+    tr td:nth-child(1),
+    tr td:nth-child(2),
+    tr td:nth-child(6),
+    tr td:nth-child(7) {
+        background: #ddffdd;
+    }
+    .focus input{
+        outline: none !important;
+        border: none !important;
+        width: 100% !important;
+    }
+    
+    table th, table td {
+        padding-top: 5px !important;
+        padding-bottom: 4px !important;
+    }
+    select#sel-round {
+        height:48px !important;
+    }
+
+    p.right.floated {
+        float: right;
+        margin-right: 0.25em;
+    }
+    .total{
+        font-size: 3em;
+        font-weight: bold;
+        margin: 8px;
+    }
+</style>
+
+<div id="example" class="container">
+    <h1>Investors</h1>
+
+    
+        <p class="right floated">Total Capital:<span class="total">{{ total | currency }}</span></p>
+    
+
+    <span>Select Round:</span>
+    <select id="sel-round" class="ui search dropdown" v-on:change="sel()" v-model="selRound">
+        <option value="">All</option>
+        <option v-for="round in rounds" :value="round">{{round}}</option>
+    </select>
+    
+    <table id="dt" class="ui celled table" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>Round</th>
+            <th>Name</th>
+            <th>Common</th>
+            <th>Preferred</th>
+            <th>2017 Equity Plan</th>
+            <th>Total</th>
+            <th>Ratio(%)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item, index) in items">
+            <td>{{ item.round }}</td>
+            <td>{{ item.name }}</td>
+            <td :data-order="item.common" @dblclick="item.focus.common = true;focus($event, item);" v-bind:class="{ focus: item.focus.common }">
+                {{item.focus.common ? null : item.common | currency  }}
+                <input v-if="item.focus.common === true" v-model="item
+                .common" @keyup.enter="item.focus.common=false;setOrder($event);" @blur="item.focus.common=false;">
+            </td>
+            <td :data-order="item.preferred" @dblclick="item.focus.preferred = true;focus($event, item);" v-bind:class="{ focus: item.focus.preferred }">
+                {{item.focus.preferred ? null : item.preferred | currency }}
+                <input v-if="item.focus.preferred == true" v-model="item.preferred" @keyup.enter="item.focus.preferred=false;setOrder($event);" @blur="item.focus.preferred=false;">
+            </td>
+            <td :data-order="item.equityPlan" @dblclick="item.focus.equityPlan = true;focus($event, item);" v-bind:class="{ focus: item.focus.equityPlan }">
+                {{item.focus.equityPlan ? null : item.equityPlan | currency }}
+                <input v-if="item.focus.equityPlan == true" v-model="item.equityPlan" @keyup.enter="item.focus.equityPlan=false;setOrder($event);" @blur="item.focus.equityPlan=false;">
+            </td>
+            <td :data-order="sum(item)">{{ sum(item) | currency }}</td>
+            <td :data-order="ratio(item)">{{ ratio(item) }} %</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+
+    var rounds = ["round 1","round 2","round 3","round 4"];
+    var investors = _.range(10).map(function(){
+      return faker.name.findName();
+    });
+    
+
+  var example = new Vue({
+    el: '#example',
+    data: {
+      selRound: "",
+      rounds: rounds,
+      items: _.range(50).map(function(){
+        return {
+          focus: {common: false, preferred: false, equityPlan: false},
+          round: rounds[_.random(0, rounds.length - 1)],
+          name: investors[_.random(0, investors.length - 1)],
+          common: faker.random.number(),
+          preferred: faker.random.number(),
+          equityPlan: faker.random.number()
+        };
+      })
+    },
+    filters: {
+      currency: function (value) {
+        if(!value) return null;
+        return value.toLocaleString();
+      }
+    },
+    methods: {
+        focus: function(e, item){
+          console.log(item.focus.common);
+          console.log(e.target);
+          setTimeout(function(){
+            var input = $(e.target).find("input");
+            console.log("input", input);
+            input.show();
+            input.focus();
+          }, 100);
+          
+        },
+      sum: function(item){
+          return parseInt(item.common) + parseInt(item.preferred) + parseInt(item.equityPlan);
+      },
+      ratio: function(item){
+        return Number((100 * this.sum(item) / this.total).toFixed(2));
+      },
+      sel: function(){
+        table.column(0).search(this.selRound).draw();
+      },
+      setOrder: function(e){
+        table.row($(e.target).closest("tr")[0]).invalidate().draw();
+      }
+    },
+    computed: {
+      total: function () {
+        var res = 0;
+        var self = this;
+        this.items.forEach(function(item){
+          res += self.sum(item);
+        });
+        return res;
+      }
+    }
+  });
+    
+var table;  
+  $(document).ready(function () {
+    table = $('#dt').DataTable({
+//      keys: true
+    });
+    console.log(table);
+
+  });
+  
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

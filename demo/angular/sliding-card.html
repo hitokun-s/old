@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Sliding Card</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.12/angular.min.js"></script>
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/angular-touch/1.5.8/angular-touch.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/angular-carousel/1.0.1/angular-carousel.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/angular-carousel/1.0.1/angular-carousel.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        /*.percent:after{*/
+        /*content: "%";*/
+        /*}*/
+        .suffix-unit {
+            margin-top: 39px;
+            font-size: 19px;
+        }
+
+        #occupation-selector {
+            height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body ng-controller="MyController">
+<div class="container">
+    <div class="row">
+
+        <div slider-helper class="col s6" id="sales3">
+            <div class="card medium">
+                <div class="card-content">
+                    <div class="card-title center-align">
+                        <button ng-disabled="index() == 0" class="btn-floating btn-small waves-effect waves-light grey lighten-1 left"
+                           ng-click="prev()"><i class="material-icons">keyboard_arrow_left</i></button>
+                        <span>Graph Tiitle</span>
+                        <button ng-disabled="index() == slides.length - 1" class="btn-floating btn-small waves-effect waves-light grey lighten-1 right"
+                           ng-click="next()"><i class="material-icons">keyboard_arrow_right</i></button>
+                    </div>
+                    <div class="card-body">
+                        <ul rn-carousel class="finn-carousel">
+                            <li ng-repeat="slide in slides" ng-bind-html="slide | unsafe">
+                                <!--<p>{{slide.title}}</p>-->
+                                {{slide}}
+                                <!--<div ng-bind-html="slide"></div>-->
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-action blue-grey lighten-5">
+                        <button class="btn"><i class="material-icons left">file_download</i>Save</button>
+                        <button class="btn"><i class="material-icons left">share</i>Share</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        var app = angular.module("myApp", ["angular-carousel"]);
+        app.controller('MyController', ['$scope', '$http', function ($scope, $http) {
+            $scope.texts = ["text1", "text2", "text3"];
+            console.log($scope);
+        }]);
+
+        app.filter('unsafe', function($sce) { return $sce.trustAsHtml; });
+
+        app.directive("sliderHelper", function () {
+            return {
+                restrict: "EA",
+                scope: true,
+                link: function ($scope, elm, attr) {
+                    var scope = angular.element($(elm).find(".finn-carousel")[0]).scope();
+                    $scope.next = function () {
+                        if($scope.canNext()){
+                            scope.nextSlide();
+                        }else{
+                            Materialize.toast($scope.cannotNextMessage || "Cannot go next!", 4000);
+                        }
+                    }
+                    $scope.prev = function () {
+                        scope.prevSlide();
+                    }
+                    $scope.index = function(){
+                        return scope.carouselIndex;
+                    }
+                }
+            }
+        });
+
+        $('#sales3').ready(function () {
+            var scope = angular.element($('#sales3')[0]).scope();
+
+            var injector = angular.element($('#sales3')[0]).injector();
+            var sce = injector.get('$sce');
+
+            scope.canNext = function(){
+                scope.cannotNextMessage = "hmm..";
+                return false;
+            }
+
+            scope.slides = [
+//                {title: "test1"},
+//                {title: "test2"},
+//                {title: "test3"},
+                "<h1>test</h1>",
+                    "<h1>test2</h1>",
+                    "<h1>test3</h1>",
+            ]
+            scope.$apply();
+        })
+
+
+    </script>
+    <style>
+        .finn-carousel {
+            height: 100px;
+        }
+    </style>
+</body>
+</html>

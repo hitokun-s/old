@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Turbulance" />
+    <meta property="og:type" content="article" />
+
+    <title>Turbulance | Hitokun's</title>
+    
+    <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <script type="text/javascript" src="js/imgUtil.js"></script>
+
+<script>
+
+    //used for tubulance effect
+    var getBiLinearedImg = function (img, k) {
+        var w = img.width();
+        var h = img.height();
+        var res = new PixImage(w, h);
+        var partImg = img.getPartImage(0, 0, Math.floor(w / k), Math.floor(h / k));
+        for (var i = 0; i < w; i++) {
+            for (var j = 0; j < h; j++) {
+
+                var p = {x: i / k, y: j / k}
+                //xf:x integer floor, yf:y integer floor
+                //xc:x integer ceil, yc:y integer ceil,
+                var xf = Math.floor(p.x), xc = xf + 1;
+                var yf = Math.floor(p.y), yc = yf + 1;
+                var fracX = p.x - xf;
+                var fracY = p.y - yf;
+
+                if (xc >= partImg.width())console.log("!!!!!!!!!!");
+
+                var ff = fracX * fracY;
+                var cf = (1 - fracX) * fracY;
+                var fc = fracX * (1 - fracY);
+                var cc = (1 - fracX) * (1 - fracY);
+
+                var getValue = function (key) {
+                    var rgbff = partImg.getRGB(xf, yf);
+                    var rgbfc = partImg.getRGB(xf, yc);
+                    var rgbcf = partImg.getRGB(xc, yf);
+                    var rgbcc = partImg.getRGB(xc, yc);
+                    return Math.floor(rgbff[key] * cc + rgbcf[key] * fc + rgbfc[key] * cf + rgbcc[key] * ff);
+                }
+                res.setRGB(i, j, {r: getValue("r"), g: getValue("g"), b: getValue("b"), alpha: 255});
+            }
+        }
+        return res;
+    }
+    var getMerged = function (img_arr, ratio_arr) {
+        var w = img_arr[0].width();
+        var h = img_arr[0].height();
+        var res = new PixImage(w, h);
+
+        var sum = 0;//ratio_sum
+        ratio_arr.forEach(function (v) {
+            sum += v;
+        });
+
+        for (var i = 0; i < w; i++) {
+            for (var j = 0; j < h; j++) {
+                var r = 0, g = 0, b = 0;
+                img_arr.forEach(function (img, idx) {
+                    var c = img.getRGB(i, j);
+                    r += c.r * ratio_arr[idx];
+                    g += c.g * ratio_arr[idx];
+                    b += c.b * ratio_arr[idx];
+                });
+                res.setRGB(i, j, {r: Math.floor(r / sum), g: Math.floor(g / sum), b: Math.floor(b / sum), alpha: 255});
+            }
+        }
+        return res;
+    }
+    var getSmoothImg = function (img) {
+        var w = img.width();
+        var h = img.height();
+        var res = new PixImage(w, h);
+        for (var i = 0; i < w; i++) {
+            for (var j = 0; j < h; j++) {
+                var sum_r = 0, sum_g = 0, sum_b = 0;
+                for (var p = -23; p <= 23; p++) {
+                    for (var q = -23; q <= 23; q++) {
+                        var c = img.getRGB(i + p, j + q);
+                        sum_r += c.r;
+                        sum_g += c.g;
+                        sum_b += c.b;
+                    }
+                }
+                res.setRGB(i, j, {
+                    r: Math.floor(sum_r / 2209),
+                    g: Math.floor(sum_g / 2209),
+                    b: Math.floor(sum_b / 2209),
+                    alpha: 255
+                });
+            }
+        }
+        return res;
+    }
+    window.onload = function () {
+
+        if (!window.console) {
+            window.console = {
+                log: function (msg) {
+                }
+            };
+        }
+
+        canvas = document.getElementById('canvas');
+        if (!canvas || !canvas.getContext) {
+            return false;
+        }
+        ctx = canvas.getContext('2d');
+        var w = canvas.width = 300;
+        var h = canvas.height = 300;
+
+        var myImage = new PixImage(w, h);
+
+        //create random grayscale image
+        var img = new PixImage(ctx.getImageData(0, 0, w, h));
+        for (var i = 0; i < w; i++) {
+            for (var j = 0; j < h; j++) {
+                var val = Math.floor(Math.random() * 256)
+                myImage.setRGB(i, j, {r: val, g: val, b: val, alpha: 255});
+            }
+        }
+        var k = 64;
+        var img_arr = [], ratio_arr = [];
+        while (k >= 1) {
+            var bimg = getBiLinearedImg(myImage, k);
+            img_arr.push(bimg);
+            ratio_arr.push(k);
+            k /= 2;
+        }
+        var mist_img = getMerged(img_arr, ratio_arr);
+        mist_img = getSmoothImg(mist_img);
+
+        ctx.putImageData(mist_img.getImageData(), 0, 0);
+    }
+    function getImg() {
+        $("#canvas_img").attr("src", canvas.toDataURL("image/jpeg"));
+    }
+</script>
+<h1>Turbulance</h1>
+<div style="width:300px;height:300px;text-align: center;margin-left: auto;margin-right: auto">
+    <canvas id="canvas"></canvas>
+</div>
+<button onclick="getImg()">getImg</button>
+<img id="canvas_img">
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

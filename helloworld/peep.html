@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="peep - Adventure of HelloWorld" />
+    <meta property="og:type" content="article" />
+
+    <title>peep - Adventure of HelloWorld | Hitokun's</title>
+    
+    <!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+            #canvas{
+                width:100%;
+            }
+        </style>
+        <div id="content">
+            <p>I got peeped!</p>
+            <div class="text-center">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+        <script>
+            window.requestAnimFrame = (function() {
+                return  window.requestAnimationFrame ||
+                        window.webkitRequestAnimationFrame ||
+                        window.mozRequestAnimationFrame ||
+                        function(callback) {
+                            window.setTimeout(callback, 1000 / 60);
+                        };
+            })();
+
+            var TEXT = "HELLO WORLD!";
+
+            // velocity vector of hole center 
+            var v = {x: 2, y: 1.2};
+
+            // hole position and radius
+            var p = {x: 0, y: 0, r: 0};
+
+            $(function() {
+                var c = document.getElementById('canvas');
+                c.width = $("#canvas").width();
+                c.height = c.width / 2;
+                ctx = c.getContext('2d');
+
+                // adjust font size as the text fits to canvas width 
+                var temp_font_size = c.height / 3;
+                ctx.font = 'italic ' + temp_font_size + 'pt Calibri';
+                var ratio = c.width / ctx.measureText(TEXT).width;
+                var font_size = ~~temp_font_size * ratio;
+                ctx.font = 'italic ' + font_size + 'pt Calibri';
+
+                p.r = ~~(c.height / 4); // arbitrary
+                p.x = p.y = p.r; // start from left-top corner
+
+                var draw = function() {
+                    // ctx.clearRect(0, 0, w, h); // not necessary
+                    ctx.fillStyle = 'lightgray';
+                    ctx.fillRect(0, 0, c.width, c.height);
+                    ctx.fillStyle = 'black';
+                    ctx.fillText(TEXT, 0, (c.height + font_size) / 2);
+
+                    ctx.beginPath();
+                    // ctx.fillStyle = 'transparent'; // not necessary
+                    ctx.lineWidth = 5;
+                    ctx.strokeStyle = 'black';
+                    ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+                    ctx.stroke();
+                    ctx.globalCompositeOperation = 'destination-in';
+                    ctx.fill();
+                    ctx.globalCompositeOperation = 'source-over'; // set default
+                };
+
+                (function animate() {
+                    p.x += v.x;
+                    p.y += v.y;
+                    if (p.x <= p.r || c.width - p.x <= p.r) {
+                        v.x = -v.x;
+                    }
+                    if (p.y <= p.r || c.height - p.y <= p.r) {
+                        v.y = -v.y;
+                    }
+                    draw();
+                    requestAnimFrame(animate);                
+                })();
+            });
+        </script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

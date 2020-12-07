@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Export SVG as image" />
+    <meta property="og:type" content="article" />
+
+    <title>Export SVG as image | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css" rel="stylesheet">
+<script type="text/javascript" src="http://canvg.github.io/canvg/rgbcolor.js"></script>
+<script type="text/javascript" src="http://canvg.github.io/canvg/StackBlur.js"></script>
+<script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script> 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/javascript-canvas-to-blob/3.7.0/js/canvas-to-blob.js"></script>
+<script src="https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <script type="text/javascript" src="https://cdn.rawgit.com/exupero/saveSvgAsPng/gh-pages/saveSvgAsPng.js"></script>
+
+<h1>Export SVG as image</h1>
+<div id="chart1"></div>
+<button class="ui button primary" onclick="saveImage()">save image</button>
+<canvas id="canvas" width="1127px" height="320px"></canvas>
+<a href="#" id="hiddenPng">
+
+<script>
+    var chart1 = c3.generate({
+        bindto: '#chart1',
+        data: {
+            columns: [
+                ['data1', 30, 200, 100, 400, 150, 250],
+                ['data2', 50, 20, 10, 40, 15, 25]
+            ]
+        }
+    });
+    var saveImage = function(){
+        //var svgText = document.getElementsByTagName('svg')[0].innerHTML;
+        //canvg('canvas', svgText, {scaleWidth:2, scaleHeight:2 });
+        
+        var svg = document.getElementsByTagName('svg')[0];
+//        var w = svg.getAttribute("width");
+//        var h = svg.getAttribute("height");
+//
+//        var canvas = document.createElement("canvas");
+//        canvas.setAttribute("width", w + "px");
+//        canvas.setAttribute("height", h + "px");
+//        
+//        console.log(canvas);
+//        
+//        document.body.appendChild(canvas);
+
+//        saveSvgAsPng(document.getElementsByTagName("svg")[0], "diagram.png");
+//        return;
+
+        function readTextFile(file) {
+            var rawFile = new XMLHttpRequest();
+            var allText = '';
+            rawFile.open("GET", file, false);
+            rawFile.onreadystatechange = function () {
+                if(rawFile.readyState === 4) {
+                    if(rawFile.status === 200 || rawFile.status == 0) {
+                        allText = rawFile.responseText;
+                    }
+                }
+            };
+            rawFile.send(null);
+            return allText;
+        }
+
+        var svg_style = readTextFile('https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css');
+        var all_style = svg_style.replace(/\r?\n|\r/g,'').split('}');
+        all_style.forEach(function(el) {
+            if (el.trim() != '') {
+                var full_rule_string = el.split('{');
+                var selector = full_rule_string[0].trim();
+                var all_rule = full_rule_string[1].split(';');
+                all_rule.forEach(function (elem) {
+                    if (elem.trim() != '') {
+                        var attr_value = elem.split(':');
+                        
+                        var prop = attr_value[0].trim();
+                        var value = attr_value[1].trim();
+
+                        d3.selectAll(selector).each(function(d, i){
+                            if(!this.getAttribute(prop) && !this.style[prop]){
+                                d3.select(this).style(prop + '', value + '');
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        saveSvgAsPng(document.getElementsByTagName("svg")[0], "diagram.png");
+        return;
+
+        $.get("https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css", function(d){
+            console.log(d);
+            d = d.replace(/}/g, '}\n');
+            
+            var svgDiv = $("svg");
+            svgDiv.prepend("\n<style type='text/css'></style>");
+            svgDiv.find("style").html("\n<![CDATA[" + d + "]]>\n");
+
+//            saveSvgAsPng(document.getElementsByTagName("svg")[0], "diagram.png");
+
+            var canvas = document.getElementsByTagName('canvas')[0];
+            var svg = document.getElementsByTagName('svg')[0];
+//            var ctx = canvas.getContext('2d');
+////            ctx.scale(1, 1);
+//            ctx.drawSvg(document.getElementsByTagName('svg')[0].outerHTML);
+//            canvas.toBlob(function(blob) {
+//                saveAs(blob, "test.png");
+//            }, "image/png");
+
+            canvg(canvas, svg.outerHTML);
+            var theImage = canvas.toDataURL('image/png');
+            $("#hiddenPng").attr('href', theImage);
+            $("#hiddenPng").click();
+        });
+        
+        
+        var canvas = document.getElementsByTagName('canvas')[0];
+        
+//        canvg(canvas, svg.outerHTML);
+//        var theImage = canvas.toDataURL('image/png');
+//        $("#hiddenPng").attr('href', theImage);
+//        $("#hiddenPng").click();
+//        return;
+        
+        var ctx = canvas.getContext('2d');
+        ctx.scale(1, 1);
+//        ctx.drawSvg(document.getElementsByTagName('svg')[0].innerHTML);
+        ctx.drawSvg(svg.outerHTML);
+        canvas.toBlob(function(blob) {
+            saveAs(blob, "test.png");
+        }, "image/png");
+//        ctx.scale(6/13, 6/13);
+    }
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

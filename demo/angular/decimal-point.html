@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Decimal Point</title>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.12/angular.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <script>
+        var app = angular.module("myApp", []);
+
+    </script>
+</head>
+<body ng-controller="MyController">
+<input type="number" pattern='[+\-]?\d*' ng-model="hoge" maxLength="8" minlength="1" ng-keydown="handleKeydown($event)">
+<input type="number" step="1" ng-pattern='[0-9]*' ng-model="hoge2" maxLength="8" minlength="1">
+
+<script>
+
+    app.controller('MyController', ['$scope', '$http', function($scope, $http) {
+
+        $scope.hoge = 0;
+        $scope.hoge2 = 0;
+        $scope.handleKeydown = function(event) {
+            console.log(event.which);
+            if (event.which == 190) {
+                event.returnValue = false;
+            }
+        }
+        
+        $scope.$watch("hoge2", function(){
+            console.log($scope.hoge2.$error);
+        })
+    }]);
+
+</script>
+</body>
+</html>

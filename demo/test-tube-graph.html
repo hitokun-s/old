@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="test tube graph" />
+    <meta property="og:type" content="article" />
+
+    <title>test tube graph | Hitokun's</title>
+    
+    <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+<link href="https://cdn.rawgit.com/tyleryasaka/semantic-ui-range/5154d879/range.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdn.rawgit.com/tyleryasaka/semantic-ui-range/5154d879/range.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+    div [class*="left floated"] {
+        float: left;
+        margin-left: 1em;
+    }
+    #range1, #range2{
+        width:300px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <h1>test tube graph</h1>
+        <div class="left floated">
+            <canvas id="canvas" width="240px" height="260px">
+                Your browser does not support HTML5 canvas.
+            </canvas>
+        </div>
+        <div class="left floated">
+            <p>Left test tube:</p>
+            <div class="ui range" id="range1"></div>
+            <p>Right test tube:</p>
+            <div class="ui range" id="range2"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+
+        var h1,h2,ratio1 = 0.5,ratio2 = 0.5;
+        
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = "#57a08b";
+        ctx.fillRect(0, 0, 240, 260);
+
+        var img = new Image();
+        img.src='img/test_tube.png';
+
+        img.onload = function () {
+            draw();
+        };
+        
+        var draw = function(){
+            
+            ctx.fillStyle = "#57a08b";
+            ctx.fillRect(0, 0, 240, 260);
+
+            ctx.drawImage(img, 50, 50);
+
+            ctx.beginPath();
+            ctx.fillStyle = "yellow";
+            ctx.globalAlpha = 0.5;
+            ctx.arc(65, 202, 9, Math.PI, 0, true);
+            ctx.fill();
+            h1 = (202 - 50) * ratio1;
+            ctx.fillRect(65 - 9, 202 - h1, 18, h1);
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.fillStyle = "red";
+            ctx.globalAlpha = 0.4;
+            ctx.arc(170, 202, 9, Math.PI, 0, true);
+            ctx.fill();
+            h2 = (202 - 50) * ratio2;
+            ctx.fillRect(170 - 9, 202 - h2, 18, h2);
+            ctx.closePath();
+        };
+
+        $('#range1').range({
+            min: 0,
+            max: 100,
+            start: 50,
+            onChange: function(val){
+                ratio1 = val / 100;
+                draw();
+            }
+        });
+
+        $('#range2').range({
+            min: 0,
+            max: 100,
+            start: 50,
+            onChange: function(val){
+                ratio2 = val / 100;
+                draw();
+            }
+        });
+    });
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Starbucks Location Map in Japan">
+    <meta name="Keywords" content="starbucks,map,location,Japan">
+    <meta property="og:image" content="https://hitokun-s.github.io/img/coffee-chains-map-jp.png"/>
+    
+    <meta property="og:description" content="Starbucks Location Map in Japan"/>
+    
+    <meta property="og:title" content="Starbucks Location Map in Japan" />
+    <meta property="og:type" content="article" />
+
+    <title>Starbucks Location Map in Japan | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-providers/1.1.15/leaflet-providers.min.js"></script>
+
+<h1>Starbucks Location Map in Japan</h1>
+
+<div id="map" style="width: 100%; height: 900px"></div>
+<script>
+    $(function () {
+        
+//        var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+//            maxZoom: 14,
+//            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+//        });
+//
+//        var map = L.map('map').addLayer(tiles);
+
+//        L.geoJson(geoJsonData, {
+//            onEachFeature: function (feature, layer) {
+//                layer.bindPopup(feature.properties.popup);
+//            }
+//        });
+//        markers.addLayer(geoJsonLayer);
+//        map.addLayer(markers);
+//        map.fitBounds(markers.getBounds());
+
+//        var map = L.map('map').setView([35.671062, 139.758496], 6);
+
+//        L.tileLayer(
+//                'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+//                    attribution: '&copy; ' + mapLink + ' Contributors',
+//                    maxZoom: 18,
+//                }).addTo(map);
+        
+        // How to create MapBox Light style OSM map?
+        // refs: https://www.mapbox.com/studio/styles/mapbox/light-v9/share/
+
+        var baseLayer = L.tileLayer(
+                'https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaGl0b2t1biIsImEiOiJjaXVqYnd0NXUwMGRwMm9tc3RvcGZ1ZDZ5In0.Q4wyiiGDLH_lTi3zzFcAtA', {
+                    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
+                    maxZoom: 18,
+                });
+
+//        L.tileLayer.provider('CartoDB.Positron').addTo(map);
+        
+        d3.csv("data/starbucks.csv", function(data){
+            var stores = data.map(function(d){
+//                var marker = new L.marker([d.lat, d.lng]);
+//                var marker = L.circleMarker([d.lat, d.lng], {weight:2});
+                var marker = L.circle([d.lat, d.lng], 500, {
+                    color: '#3388ff',
+                    fillColor: '#3388ff',
+                    fillOpacity: 1
+                }).bindPopup(d.name);
+                return marker;
+            });
+
+            var stores = L.layerGroup(stores);
+
+            var map = L.map('map', {
+                center: [37.8, 138],
+                zoom: 6,
+                layers: [baseLayer, stores]
+            });
+            
+        });
+    });
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

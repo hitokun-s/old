@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Auto Shape" />
+    <meta property="og:type" content="article" />
+
+    <title>Auto Shape | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+    circle:hover, #child:hover {
+        cursor: pointer;
+    }
+    #mother {
+        border: 1px solid black;
+    }
+    svg { overflow:visible !important; }
+</style>
+
+<div class="container">
+    <h1>Demo: Auto Shape</h1>
+    <p>At first, click the triangle to show operation frame.</p>
+    <ul>
+        <li>You can drag the triangle itself.</li>
+        <li>You can transfform the triangle by dragging red circles.</li>
+        <li>You can rotate the triangle by dragging green circles.</li>
+    </ul>
+    <svg id="mother" width="1000" height="800">
+        <g class="wrapper" overflow="visible" transform="translate(300,200) rotate(30)">
+            <svg id="child" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" x="-100" y="-100" width="200" height="200" preserveAspectRatio="none" overflow="visible" viewBox="0 0 200 200">
+                <path d="m 0,0 200,100 -100,100" id="path" style="fill-rule:nonzero;stroke:black"/>
+            </svg>
+        </g>
+        <g class="focusg" visibility="hidden">
+            <svg id="focussvg" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" x="-100" y="-100" width="200" height="200" preserveAspectRatio="none" overflow="visible">
+            </svg>
+        </g>
+    </svg>
+</div>
+<script>
+    var dragoff = function () {
+        d3.selectAll(".wrapper,.focusg").on("mousedown.drag", null);
+    };
+    var rad = function (deg) {
+        return deg * Math.PI / 180;
+    }
+    var deg = function (rad) {
+        return rad * 180 / Math.PI;
+    }
+    var getTransform = function (d) {
+        return "translate(" + d.translate.x + "," + d.translate.y + ") "
+                + "rotate(" + d.rotate.deg + ") ";
+    };
+
+    var resetPointers = function () {
+
+    };
+
+    var rotater = d3.behavior.drag()
+            .on("drag", function (d) {
+                d3.select(".focusg").datum().operating = true;
+                var p = d3.mouse(this);
+                p = {x: p[0], y: p[1]};
+
+                var x = d3.select(this).attr("cx");
+                var y = d3.select(this).attr("cy");
+
+                var w = d3.select("#child").attr("width");
+                var h = d3.select("#child").attr("height");
+
+                var tmpdeg = Math.atan((h / 2 - p.y) / (w / 2 - p.x));
+                var orideg = Math.atan((y - h / 2) / (x - w / 2));
+                var _d = d3.select(".wrapper").datum();
+                _d.rotate.deg += deg(tmpdeg - orideg);
+                d3.select(".wrapper").attr("transform", getTransform(_d));
+                d3.select(".focusg").attr("transform", getTransform(_d));
+            }).on("dragend", function (d) {
+                d3.select(".wrapper").call(draglistener);
+                d3.select(".focusg").call(draglistener_focus);
+            });
+    var draglistener = d3.behavior.drag()
+            .on("drag", function (d) {
+                d.translate.x += d3.event.dx;
+                d.translate.y += d3.event.dy;
+                d3.select(this).attr("transform", getTransform(d));
+                d3.select(".focusg").attr("transform", getTransform(d));
+                console.log(d3.event);
+            });
+    var draglistener_focus = d3.behavior.drag()
+            .on("drag", function (d) {
+                d.dragging = true;
+                var d = d3.select(".wrapper").datum();
+                d.translate.x += d3.event.dx;
+                d.translate.y += d3.event.dy;
+                d3.select(".wrapper").datum(d);
+                d3.select(".wrapper").attr("transform", getTransform(d));
+                d3.select(".focusg").attr("transform", getTransform(d));
+                console.log(d3.event);
+            });
+
+    var transformer_right = d3.behavior.drag()
+            .on("dragstart", function (d) {
+                d.dist = 0;
+            })
+            .on("drag", function (d) {
+                d3.select(".focusg").datum().operating = true;
+                var dx = d3.event.dx;
+                d.x += dx;
+                d.dist += dx;
+                d.box.w += dx;
+                d3.selectAll(".rline").attr("cx", d.box.w);
+                d3.selectAll(".vline").attr("cx", d.box.w / 2);
+                d3.select("#focus-rect").attr("width", d.box.w);
+                d3.select("#child").attr("width", d.box.w);
+
+            }).on("dragend", function (d) {
+
+                d3.selectAll("#focussvg, #child").attr({
+                    x: -d.box.w / 2,
+                    width: d.box.w
+                });
+
+                var dd = d3.select(".wrapper").datum();
+                dx = Math.cos(rad(dd.rotate.deg)) * d.dist / 2;
+                dy = Math.sin(rad(dd.rotate.deg)) * d.dist / 2;
+                dd.translate.x += dx;
+                dd.translate.y += dy;
+
+                d3.select(".wrapper").attr("transform", getTransform(dd));
+                d3.select(".focusg").attr("transform", getTransform(dd));
+
+                d3.select(".wrapper").call(draglistener);
+                d3.select(".focusg").call(draglistener_focus);
+            });
+    var transformer_left = d3.behavior.drag()
+            .on("dragstart", function (d) {
+                d.x = 0;
+                d.dist = 0;
+                d.initx = -d.box.w / 2;
+            })
+            .on("drag", function (d) {
+                d3.select(".focusg").datum().operating = true;
+                var dx = d3.event.dx;
+                d.x += dx;
+                d.dist += dx;
+                d.box.w -= dx;
+                d3.selectAll(".lline").attr("cx", d.x);
+                d3.selectAll(".vline").attr("cx", d.x + d.box.w / 2);
+                d3.select("#focus-rect").attr({
+                    x: d.x,
+                    width: d.box.w
+                });
+                d3.select("#child").attr({
+                    x: d.initx + d.dist,
+                    width: d.box.w
+                });
+            }).on("dragend", function (d) {
+
+                d3.selectAll("#focussvg, #child").attr({
+                    x: -d.box.w / 2,
+                    width: d.box.w
+                });
+                d3.select("#focus-rect").attr({
+                    x: 0,
+                    width: d.box.w
+                });
+
+                var dd = d3.select(".wrapper").datum();
+                dx = Math.cos(rad(dd.rotate.deg)) * d.dist / 2;
+                dy = Math.sin(rad(dd.rotate.deg)) * d.dist / 2;
+                dd.translate.x += dx;
+                dd.translate.y += dy;
+
+                d3.select(".wrapper").attr("transform", getTransform(dd));
+                d3.select(".focusg").attr("transform", getTransform(dd));
+
+                d3.selectAll(".lline").attr("cx", 0);
+                d3.selectAll(".rline").attr("cx", d.box.w);
+                d3.selectAll(".vline").attr("cx", d.box.w / 2);
+
+                d3.select(".wrapper").call(draglistener);
+                d3.select(".focusg").call(draglistener_focus);
+            });
+    var transformer_top = d3.behavior.drag()
+            .on("dragstart", function (d) {
+                d.y = 0;
+                d.dist = 0;
+                d.inity = -d.box.h / 2;
+            })
+            .on("drag", function (d) {
+                d3.select(".focusg").datum().operating = true;
+                var dy = d3.event.dy;
+                d.y += dy;
+                d.dist += dy;
+                d.box.h -= dy;
+                d3.select(this).attr("cy", d.y);
+                d3.selectAll(".tline").attr("cy", d.y);
+                d3.selectAll(".hline").attr("cy", d.y + d.box.h / 2);
+                d3.select("#focus-rect").attr({
+                    y: d.y,
+                    height: d.box.h
+                });
+                d3.select("#child").attr({
+                    y: d.inity + d.dist,
+                    height: d.box.h
+                });
+            }).on("dragend", function (d) {
+                d3.selectAll("#focussvg, #child").attr({
+                    y: -d.box.h / 2,
+                    height: d.box.h
+                });
+                d3.select("#focus-rect").attr({
+                    y: 0,
+                    height: d.box.h
+                });
+
+                var dd = d3.select(".wrapper").datum();
+                dx = -Math.sin(rad(dd.rotate.deg)) * d.dist / 2;
+                dy = Math.cos(rad(dd.rotate.deg)) * d.dist / 2;
+                dd.translate.x += dx;
+                dd.translate.y += dy;
+
+                d3.select(".wrapper").attr("transform", getTransform(dd));
+                d3.select(".focusg").attr("transform", getTransform(dd));
+
+                d3.selectAll(".tline").attr("cy", 0);
+                d3.selectAll(".bline").attr("cy", d.box.h);
+                d3.selectAll(".hline").attr("cy", d.box.h / 2);
+
+                d3.select(".wrapper").call(draglistener);
+                d3.select(".focusg").call(draglistener_focus);
+            });
+    var transformer_bottom = d3.behavior.drag()
+            .on("dragstart", function (d) {
+                d.dist = 0;
+            })
+            .on("drag", function (d) {
+                d3.select(".focusg").datum().operating = true;
+                var dy = d3.event.dy;
+                d.y += dy;
+                d.dist += dy;
+                d.box.h += dy;
+                d3.selectAll(".bline").attr("cy", d.box.h);
+                d3.selectAll(".hline").attr("cy", d.box.h / 2);
+                d3.selectAll("#focus-rect,#child").attr("height", d.box.h);
+            }).on("dragend", function (d) {
+                ;
+                console.log(this);
+                d3.selectAll("#focussvg, #child").attr({
+                    y: -d.box.h / 2,
+                    height: d.box.h
+                });
+
+                var dd = d3.select(".wrapper").datum();
+                dx = -Math.sin(rad(dd.rotate.deg)) * d.dist / 2;
+                dy = Math.cos(rad(dd.rotate.deg)) * d.dist / 2;
+                dd.translate.x += dx;
+                dd.translate.y += dy;
+
+                d3.select(".wrapper").attr("transform", getTransform(dd));
+                d3.select(".focusg").attr("transform", getTransform(dd));
+
+                d3.select(".wrapper").call(draglistener);
+                d3.select(".focusg").call(draglistener_focus);
+            });
+    var defocus = function (selector) {
+        d3.select(".focusg").attr({
+            visibility: "hidden"
+        });
+    }
+
+    var getDatum = function (sel) {
+        var trans = d3.select(sel).attr("transform");
+        var regex = /translate\((\d+),(\d+)\)/;
+        var match = regex.exec(trans);
+        var regex2 = /rotate\((\d+)\)/;
+        var match2 = regex2.exec(trans);
+        var res = {
+            translate: {x: ~~match[1], y: ~~match[2]},
+            rotate: {deg: ~~match2[1]}
+        };
+        return res;
+    };
+    //selector : g wrapper of target svg
+    var focus = function (selector) {
+        d3.select(selector).datum(getDatum(selector));
+
+        console.log(d3.select(selector).datum());
+
+        var elm = d3.select(selector.querySelectorAll("svg")[0]);
+        var d = {
+            x: ~~elm.attr("x"),
+            y: ~~elm.attr("y"),
+            w: ~~elm.attr("width"),
+            h: ~~elm.attr("height")
+        }
+        console.log(d);
+        d3.select("#focussvg").datum(d);
+        d3.select(".focusg").attr({
+            transform: d3.select(selector).attr("transform"),
+            visibility: "visible"
+        });
+        var focusg = d3.select("#focussvg").attr({
+            x: d.x,
+            y: d.y,
+            width: d.w,
+            height: d.h,
+            overflow: "visible"
+        });
+        d3.select(".focusg").call(draglistener_focus);
+        d3.select(".focusg").on("mousedown", function (_d) {
+            _d.dragging = false;
+            _d.operating = false;
+        }).on("mouseup", function (_d) {
+            console.log("mouseup");
+            if (!_d.dragging && !_d.operating) {
+                //Coming here means this is simple click not drag.
+                defocus(this);
+            }
+        });
+        d3.select("#focus-rect").attr({
+            width: d.w,
+            height: d.h,
+            stroke: "red",
+            "stroke-width": 1,
+            fill: "transparent",
+            overflow: "visible"
+        });
+        d3.select(".hline.lline").datum({x: 0, box: d}).attr({
+            cx: 0, cy: d.h / 2, r: 5, fill: "red"
+        }).call(transformer_left);
+        focusg.append("circle").datum({x: d.w, box: d}).attr({
+            cx: d.w, cy: d.h / 2, r: 5, fill: "red",
+            class: "right hline rline"
+        }).call(transformer_right);
+        focusg.append("circle").datum({y: 0, box: d}).attr({
+            cx: d.w / 2, cy: 0, r: 5, fill: "red",
+            class: "top tline vline"
+        }).call(transformer_top);
+        focusg.append("circle").datum({y: d.h, box: d}).attr({
+            cx: d.w / 2, cy: d.h, r: 5, fill: "red",
+            class: "bottom bline vline"
+        }).call(transformer_bottom);
+
+        var tl = focusg.append("circle").datum({x: 0, y: 0, box: d}).attr({
+            cx: 0, cy: 0, r: 5, fill: "green",
+            class: "rotater-tl tline lline"
+        }).call(rotater);
+
+        var bl = focusg.append("circle").datum({x: 0, y: d.h, box: d}).attr({
+            cx: 0, cy: d.h, r: 5, fill: "green",
+            class: "rotater-bl bline lline"
+        }).call(rotater);
+
+        var br = focusg.append("circle").datum({x: d.w, y: d.h, box: d}).attr({
+            cx: d.w, cy: d.h, r: 5, fill: "green",
+            class: "rotater-br bline rline"
+        }).call(rotater);
+
+        var tr = focusg.append("circle").datum({x: d.w, y: 0, box: d}).attr({
+            cx: d.w, cy: 0, r: 5, fill: "green",
+            class: "rotater-tr tline rline"
+        }).call(rotater);
+
+        d3.selectAll("circle").on("mousedown", dragoff);
+
+    }
+    $(function () {
+        var w = ~~d3.select("#child").attr("width");
+        var h = ~~d3.select("#child").attr("height");
+//                d3.select("#child").attr({x: -100, y: -100, width: w, height: h});
+//                d3.select(".wrapper").datum({
+//                    translate:{x:300, y:200},
+//                    rotate:{deg:30}
+//                }).attr("transform","translate(300,200) rotate(30)");
+
+        d3.selectAll(".wrapper").on("click", function (d) {
+            console.log(this);
+            focus(this);
+        }).call(draglistener);
+
+        d3.select(".focusg").datum({});
+        d3.select("#focussvg").append("rect").attr("id", "focus-rect");
+        d3.select("#focussvg").append("circle").attr(
+                "class", "left hline lline");
+    });
+
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

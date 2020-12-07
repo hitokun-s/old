@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Coffee Chains Location Map in Japan">
+    <meta name="Keywords" content="coffee,cafe,chain,map,location,Japan">
+    <meta property="og:image" content="https://hitokun-s.github.io/viz/img/coffee-chains-map-jp.png"/>
+    <meta property="og:url" content="https://hitokun-s.github.io/viz/coffee-chains-map-jp.html"/>
+    <meta property="og:description" content="Coffee Chains Location Map in Japan"/>
+    
+    <meta property="og:title" content="Coffee Chain Locations in Japan" />
+    <meta property="og:type" content="article" />
+
+    <title>Coffee Chain Locations in Japan | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+
+<script src="https://d3js.org/d3-queue.v3.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+    
+    
+<style>
+    body{
+        padding-top: 10px;
+    }
+    .bio{
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+    }
+    #btn-sidebar{
+        position: absolute;
+        right:0px;
+        cursor: pointer;
+    }
+</style>
+<div class="ui thin fixed inverted menu mobile only">
+    <div class="menu">
+        <div  class="item">Hitokun's</div>
+    </div>
+    <div id="btn-sidebar" class="ui right floated"><i class="icon large grey content"></i></div>
+</div>
+<!--<div id="navbar" class="ui thin vertical inverted {{ isMobile ? 'top':'left visible'}} sidebar menu">-->
+<div id="navbar" class="ui thin vertical inverted left visible sidebar menu">
+    <a class="item">
+        <h2>Hitokun's</h2>
+    </a>
+    <div id="breadcrumb">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="item"><i class="right chevron icon divider"></i>{{ item.name }}</a>
+        </template>
+    </div>
+    <div class="bio mobile hidden">
+        <a href="/about.html" class="item">
+            About
+        </a>
+        <a href="/contact.html" class="item">
+            Contact
+        </a>
+    </div>
+</div>
+<!--<div id="content" class="pusher" style="{{ isMobile ? 'padding-top: 40px !important;' : ''}}">-->
+<div id="content" class="pusher">
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-providers/1.1.15/leaflet-providers.min.js"></script>-->
+
+<link href="css/coffee-chains-map.css" rel="stylesheet">
+
+<div class="coffee-header">
+    <h1>Coffee Chain Locations in Japan</h1>
+    <div id="chain-selector">
+        <div class="ui checkbox mobile hidden" v-for="chain in chains">
+            <input type="checkbox" :id="chain" :value="chain" checked="true" v-model="checkedChains" v-on:click="clicked" onclick="hoge(this.id, this.checked)">
+            <label :for="chain" class="lbl-chain"><img :src="'img/'+chain+'.png'" alt=""></label>
+        </div>
+        <div class="sui checkbox mobile only" v-for="chain in chains">
+            <input type="checkbox" :id="chain" :value="chain" checked="true" v-model="checkedChains" v-on:click="clicked">
+            <label :for="chain" class="lbl-chain">{{chain}}</label>
+        </div>
+    </div>    
+</div>
+
+<div id="map"></div>
+<link rel="stylesheet" href="https://openlayers.org/en/v4.0.1/css/ol.css" type="text/css">
+<script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
+
+<script>
+
+</script>
+<script src="js/coffee-chains-map.js"></script>
+</div>
+<script>
+
+    var mediaManager = {
+        data: {
+            windowSize: 0,
+        },
+        methods: {
+            setWindowSize: function(){
+                this.windowSize = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+            }
+        },
+        created: function(){
+            this.setWindowSize();
+        },
+        computed: {
+            isMobile: function(){
+                return  this.windowSize < 768;
+            }
+        }
+    };
+    
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            }
+        },
+        components: {
+        }
+    });
+    var navbar = new Vue({
+        el: '#navbar',
+        mixins: [mediaManager],
+    });
+    // var content = new Vue({
+    //     el: "#content",
+    //     mixins: [mediaManager]
+    // });
+    
+    window.onresize = function() {
+        content.setWindowSize(); // 変数windowSizeが共有されているので、どれか1個を呼ぶだけでいい。
+    };
+    $("#btn-sidebar").click(function(){
+        $('.ui.sidebar').sidebar('toggle');    
+    });
+    
+</script>
+
+    
+
+
+</body>
+</html>

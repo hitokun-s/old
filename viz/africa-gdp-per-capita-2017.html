@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Map of African countries GDP per capita">
+    <meta name="Keywords" content="Africa,GDP,GDP per capita,map">
+    
+    
+    <meta property="og:description" content="Map of African countries GDP per capita"/>
+    
+    <meta property="og:title" content="Africa GDP per capita(2017)" />
+    <meta property="og:type" content="article" />
+
+    <title>Africa GDP per capita(2017) | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+    
+    
+<style>
+    .bio{
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+    }
+    #btn-sidebar{
+        position: absolute;
+        right:0px;
+        cursor: pointer;
+    }
+    .my-sidebar{
+        width: 120px;
+        height: 100%;
+        background: #428bca;
+        position: absolute;
+        left: 0px;
+        padding-left: 5px;
+    }
+    body{
+        padding-left: 120px;
+    }
+
+    #content{
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+    }
+    .my-sidebar a{
+        color: white;
+    }
+    .my-title{
+        color: white;
+    }
+    .bio{
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+    }
+</style>
+
+<!--<div id="navbar" class="ui thin vertical inverted {{ isMobile ? 'top':'left visible'}} sidebar menu">-->
+<div class="my-sidebar">
+    <a class="my-title">
+        <h2>Hitokun's</h2>
+    </a>
+    <!--<div id="breadcrumb">-->
+        <!--<template v-for="item in getMenu()">-->
+            <!--<a :href="item.path" class="item"><i class="right chevron icon divider"></i>{{ item.name }}</a>-->
+        <!--</template>-->
+    <!--</div>-->
+    <div class="bio">
+        <a href="/about.html">
+            About
+        </a>
+        <a href="/contact.html">
+            Contact
+        </a>
+    </div>
+</div>
+<!--<div id="content" class="pusher" style="{{ isMobile ? 'padding-top: 40px !important;' : ''}}">-->
+<div id="content">
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
+
+<p class="title">Africa GDP per capita(2017)</p>
+<span class="source"><a href="https://en.wikipedia.org/wiki/List_of_African_countries_by_GDP_(PPP)_per_capita">source</a></span>
+<style>
+    #map{
+      /*width: 100%;*/
+      height: 900px;
+      margin-bottom: 10px;
+    }
+    svg path{
+      stroke:#fff;
+      stroke-width: 1px;
+    }
+    svg text{
+        text-anchor: middle;
+        dominant-baseline: middle;
+    }
+    .label{
+        text-align: center;
+    }
+    .leaflet-container {
+      background-color:rgba(255,0,0,0.0);
+    }
+    .leaflet-container path{
+      fill-opacity: 1;
+      fill: lightgrey;
+    }
+  .source{
+    position: absolute;
+    top: 3px;
+    right: 5px;
+  }
+  .title{
+    padding-top: 3px;
+    padding-left: 6px;
+  }
+</style>
+
+<div id="map"></div>
+
+<script>
+
+  var dict = [
+      ["Republic of the Congo", "Republic of Congo"]
+  ]
+
+  var map = new L.Map("map", {
+    'center': [0, 0],
+    'zoom': 2,
+    zoomDelta: 0.5,
+    zoomSnap: 0.5,
+    fullscreenControl: true
+  });
+
+  d3.json("data/africa.geo.json", function(res){
+
+    function projectPoint(x, y) {
+      var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+      this.stream.point(point.x, point.y);
+    }
+
+    var transform = d3.geoTransform({point: projectPoint});
+    var path = d3.geoPath().projection(transform);
+
+    var layer = new L.GeoJSON(res, {
+      style: {
+        fill: "transparent",
+        opacity: 1,
+        "fill-opacity": 1,
+        background: "#fff"
+      }
+    }).addTo(map);
+    map.fitBounds(layer.getBounds()); // Fit map to bounds of geojson
+    // map.setZoom(3);
+
+    layer.eachLayer(function(l) {
+      d3.select(l._path).datum(l.feature);
+    });
+    d3.select("#map").select("svg").selectAll("path").on("click", function(d){
+      console.log(d);
+    });
+
+    var featureElement = d3.select("#map").select("svg").append("g").selectAll("text")
+    .data(res.features)
+    .enter()
+    .append("text")
+    .text(function(d){
+      return d.properties.name;
+    });
+
+    function update() {
+      featureElement.attr("x", function(d){
+        return path.centroid(d)[0];
+      })
+      .attr("y", function(d){
+        return path.centroid(d)[1];
+      });
+    }
+    update();
+    map.on("zoom", update);
+    map.on("move", update);
+
+    d3.tsv("data/africa_gdp_data_2017.tsv", function(countries){
+      console.log(countries);
+      countries = countries.filter(function(c){
+        var found = _.find(res.features, function(feature){
+          return feature.properties.admin == c.Nation || feature.properties.name == c.Nation || feature.properties.name_long == c.Nation;
+        });
+        if(!found){
+          console.log("not found:", c.Nation);
+        }
+        return found;
+      });
+      d3.selectAll("path").each(function(d){
+        var found = _.find(countries, function(c){
+          return d.properties.admin == c.Nation || d.properties.name == c.Nation || d.properties.name_long == c.Nation;
+        });
+        if(found){
+          d.properties.gdp_per_capita = +found["GDP (PPP) per capita (2017)"];
+        }
+      });
+
+      var min = _.min(countries, function(c){return +c["GDP (PPP) per capita (2017)"]})["GDP (PPP) per capita (2017)"];
+      var max = _.max(countries.filter(function(c){return !isNaN(c["GDP (PPP) per capita (2017)"])}), function(c){return +c["GDP (PPP) per capita (2017)"]})["GDP (PPP) per capita (2017)"];
+      min = +min;
+      max = +max;
+      console.log("min",min);
+      console.log("max",max);
+
+      // var color = d3.scaleThreshold()
+      // .domain(d3.range(+min, +max))
+      // .range(d3.schemeBlues[+max]);
+
+      // var colorScale = d3.scaleSequential(d3["interpolateCool"])
+      // .domain([min, max]);
+
+      var colorScheme = d3.schemeBlues[7];
+      // colorScheme.unshift("#eee")
+      var colorScale = d3.scaleThreshold()
+      .domain([5001, 10001, 15001, 20001, 25001, 30001, 35001])
+      .range(colorScheme);
+
+      // Legend\
+      var svg = d3.select(map.getContainer()).append("svg")
+      .attr("width", 150)
+      .attr("height", 200)
+      .style("position", "absolute")
+      .style("right", "0px")
+      .style("z-index", 500);
+      var g = svg.append("g")
+      .attr("class", "legendThreshold")
+      .attr("transform", "translate(20,30)");
+
+      g.append("text")
+      .attr("class", "caption")
+      .attr("x", 0)
+      .attr("y", -25)
+      .text("International")
+      .style("text-anchor", "start")
+
+      g.append("text")
+      .attr("class", "caption")
+      .attr("x", 0)
+      .attr("y", -10)
+      .text("Dollars")
+      .style("text-anchor", "start");
+
+      var labels = ['~5000', '~10000', '~15000', '~20000', '~25000', '~30000', '~35000'];
+      var legend = d3.legendColor()
+      .labels(function (d) { return labels[d.i]; })
+      .shapePadding(4)
+      .labelOffset(25)
+      .scale(colorScale);
+      svg.select(".legendThreshold").call(legend);
+
+
+      d3.selectAll("path").style("fill", function(d){
+        console.log(colorScale(d.properties.gdp_per_capita));
+        return colorScale(d.properties.gdp_per_capita);
+      })
+    });
+
+  });
+
+</script>
+</div>
+<script>
+
+    var mediaManager = {
+        data: {
+            windowSize: 0,
+        },
+        methods: {
+            setWindowSize: function(){
+                this.windowSize = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+            }
+        },
+        created: function(){
+            this.setWindowSize();
+        },
+        computed: {
+            isMobile: function(){
+                return  this.windowSize < 768;
+            }
+        }
+    };
+    
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            }
+        },
+        components: {
+        }
+    });
+    var navbar = new Vue({
+        el: '#navbar',
+        mixins: [mediaManager],
+    });
+    // var content = new Vue({
+    //     el: "#content",
+    //     mixins: [mediaManager]
+    // });
+    
+    window.onresize = function() {
+        content.setWindowSize(); // 変数windowSizeが共有されているので、どれか1個を呼ぶだけでいい。
+    };
+    $("#btn-sidebar").click(function(){
+        $('.ui.sidebar').sidebar({});
+    });
+    
+</script>
+
+    
+
+
+</body>
+</html>

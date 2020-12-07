@@ -1,0 +1,46 @@
+<% title = "vue-canvas" %>
+<% dependsOn(["vue.v2"]); %>
+
+<style>
+  .demo {
+    font-size: 20px;
+    background: yellow;
+    padding: 10px;
+    border: 1px black solid;
+  }
+
+  .demo:before {
+      content: "※ ";
+      color: red;
+      background: #000;
+      font-weight: bold;
+      font-size: 20px;
+      padding: 10px;
+  }    
+</style>
+<script type="text/javascript" src="js/vue-canvas.js"></script>
+
+<h1><%= title %></h1>
+<div class="container">
+  <text class="demo">ABCDE</text>
+    <canvas id="canvas" v-canvas bg="img/world.svg" width="600" height="400">
+      <g x="10" y="30">
+        <img src="img/icon.png" /><text class="demo">{{ mes }}</text>
+      </g>
+    </canvas>
+</div>
+<script>
+  
+  var vc = new Vue({
+    el: '#canvas',
+    data: {
+      mes: "ABCDE!"
+    }
+  });
+  
+  setInterval(function(){
+    vc.mes = new Date().toString();
+  }, 5000);
+  
+</script>
+

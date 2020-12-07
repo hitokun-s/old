@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Demos" />
+    <meta property="og:type" content="article" />
+
+    <title>Demos | Hitokun's</title>
+    
+    <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <h1><i class="student icon"></i>Demos</h1>
+
+<div class="row">
+    <div class="ui link cards">
+        
+        <a href="skeleton-sphere.html" class="card ui raised">
+            <div class="image">
+                <img src="/demo/img/skeleton-sphere.png">
+            </div>
+            <div class="content">
+                <div class="header">Skeleton Sphere</div>
+                <div class="description">Skeleton Sphere by p5.js</div>
+            </div>
+        </a>
+        
+        <a href="logarithmic_spiral.html" class="card ui raised">
+            <div class="image">
+                <img src="/demo/img/logarithmic_spiral.png">
+            </div>
+            <div class="content">
+                <div class="header">Logarithmic Spiral</div>
+                <div class="description">Logarithmic Spiral by p5.js</div>
+            </div>
+        </a>
+        
+        <a href="auto-shape.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/auto_shape.png">
+            </div>
+            <div class="content">
+                <div class="header">Auto Shape</div>
+                <div class="description">You can move/transform a triangle as powerpoint</div>
+            </div>
+        </a>
+        
+        <a href="circle-by-circles.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/circle_by_circles.png">
+            </div>
+            <div class="content">
+                <div class="header">Circle by Circles</div>
+                <div class="description">Generate circles to make a big circle!</div>
+            </div>
+        </a>
+        
+        <a href="art-by-yoko-ono.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/d3_operatable.png">
+            </div>
+            <div class="content">
+                <div class="header">Art by Yoko Ono</div>
+                <div class="description">d3.js library for GoogleMap-like operation.</div>
+            </div>
+        </a>
+        
+        <a href="butterfly.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/butterfly.png">
+            </div>
+            <div class="content">
+                <div class="header">Butterfly</div>
+                <div class="description">Butterfly telling your browser supporting CSS3 or not.</div>
+            </div>
+        </a>
+        
+        <a href="flyingraph.html" class="card ui raised">
+            <div class="image">
+                <img src="image/flyingraph.png">
+            </div>
+            <div class="content">
+                <div class="header">Flyingraph</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="secret-of-1-71.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/secret_of_1_71.png">
+            </div>
+            <div class="content">
+                <div class="header">Secret of 1/71</div>
+                <div class="description">Mathematical God hides an art in the answer of 1/71</div>
+            </div>
+        </a>
+        
+        <a href="time-handle.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/time_handle.png">
+            </div>
+            <div class="content">
+                <div class="header">Time Handle</div>
+                <div class="description">A Handle Component of Time Machine</div>
+            </div>
+        </a>
+        
+        <a href="time-tunnel.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/time_tunnel.png">
+            </div>
+            <div class="content">
+                <div class="header">Time Tunnel</div>
+                <div class="description">A Tunnel Component of Time Machine</div>
+            </div>
+        </a>
+        
+        <a href="turbulance.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/turbulance.png">
+            </div>
+            <div class="content">
+                <div class="header">Turbulance</div>
+                <div class="description">Generative turbulance dynamically</div>
+            </div>
+        </a>
+        
+        <a href="super-balls.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/super_balls.png">
+            </div>
+            <div class="content">
+                <div class="header">Super Ball</div>
+                <div class="description">Bounding and Piling!</div>
+            </div>
+        </a>
+        
+        <a href="treeview.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Treeview</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="moya-moya.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/moya_moya.png">
+            </div>
+            <div class="content">
+                <div class="header">Moya Moya</div>
+                <div class="description">This world is too fuzzy...</div>
+            </div>
+        </a>
+        
+        <a href="rader-chart.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/rader_chart.png">
+            </div>
+            <div class="content">
+                <div class="header">Rader Chart</div>
+                <div class="description">Controllable Rader Chart by d3.js</div>
+            </div>
+        </a>
+        
+        <a href="path-between-two-svg.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Path between two SVG</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="stacked-cards.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Stacked Cards</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="finance-sheet.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Finance Sheet</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="dreamland.html" class="card ui raised">
+            <div class="image">
+                <img src="../images/dreamland.png">
+            </div>
+            <div class="content">
+                <div class="header">Dreamland</div>
+                <div class="description">Twitter data visualization</div>
+            </div>
+        </a>
+        
+        <a href="pyramid-graph-with-pattern.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Pyramid graph with pattern</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="business-man-graph.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Business man graph</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="ct-scan-graph.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">CT scan graph</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="ct-scan-man-graph.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">CT scan man graph</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="test-tube-graph.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">test tube graph</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="track-run-graph.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">track run graph</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="liquid-in-circle-graph.html" class="card ui raised">
+            <div class="image">
+                <img src="img/liquid-in-circle-graph.png">
+            </div>
+            <div class="content">
+                <div class="header">Liquid in Circle Graph</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="angular" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Angular Demos</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="canvas" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Canvas Demos</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="investors.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Investors</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="save-variables-as-formula.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">save variables as formula</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="python-syntax-checker.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Python Syntax Checker</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="chat-ui-demo.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Chat UI</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+        <a href="chart/index.html" class="card ui raised">
+            <div class="image">
+                <img src="https://dummyimage.com/600x400/000/fff">
+            </div>
+            <div class="content">
+                <div class="header">Chart</div>
+                <div class="description"></div>
+            </div>
+        </a>
+        
+    </div>
+</div>
+
+
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

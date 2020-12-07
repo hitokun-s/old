@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pie Chart</title>
+    <script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="../js/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../../js/underscore-min.js"></script>
+    <style>
+        #graph {
+            /*position: fixed;*/
+            z-index: 10;
+            width: 800px;
+            height: 600px;
+            background-color: white;
+            /*top:0px;*/
+            /*left: 0px;*/
+            font: 10px sans-serif;
+            border: solid 2px black;
+        }
+        .tt {
+            visibility: visible;
+        }
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+        .arc path {
+            stroke: #fff;
+        }
+        .arc text{
+            font-size: 2em;
+        }
+
+    </style>
+</head>
+<body>
+<div id="graph"></div>
+<script>
+    var svg;
+
+    var margin = {top: 30, right: 40, bottom: 100, left: 100};
+    var width = $("#graph").width() - margin.left - margin.right;
+    var height = $("#graph").height() - margin.top - margin.bottom;
+    var radius = Math.min($("#graph").width(), $("#graph").height()) / 2;
+
+    var showMainGraph = function (data, baseSvg, opt) {
+
+        var arc = d3.svg.arc().outerRadius(radius - 10).innerRadius(0);
+
+        var parseDate = d3.time.format("%Y年%m月期").parse;
+        data.forEach(function(v,i){
+            v.monthStr = v.month;
+            v.month = parseDate(v.month);
+        });
+
+        baseSvg.selectAll("*").remove();
+        var pie = d3.layout.pie()
+                .startAngle(0).endAngle(Math.PI * 2)
+                .value(function(d) {
+                    return d.total;
+                }).sort(null);
+
+        baseSvg.attr("transform", "translate(" + radius + "," + radius + ")");
+        var g = baseSvg.selectAll(".arc")
+                .data(pie(data))
+                .enter().append("g")
+                .attr("class", "arc");
+        var color = d3.scale.category20();
+        g.append("path")
+                .attr("d", arc)
+                .attr("fill", function(d, i) {
+                    return color(i);
+                });
+        g.append("text")
+                .attr("transform", function(d) {
+                    d.innerRadius = 0;
+                    d.outerRadius = radius;
+                    return "translate(" + arc.centroid(d) + ")";
+                })
+                .attr("dy", ".35em")
+                .style("text-anchor", "middle")
+                .text(function(d, i) {
+                    return d.data.monthStr;
+                });
+    };
+
+    $(function () {
+        svg = d3.select("#graph").append("svg").attr({
+            class: "tt",
+            width: $("#graph").width(),
+            height: $("#graph").height()
+        });
+        var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var data = [
+            {
+                "month": "2013年01月期",
+                "total":128
+            },
+            {
+                "month": "2013年03月期",
+                "total":500
+            },
+            {
+                "month": "2013年02月期",
+                "total":230
+            },
+        ]
+
+        showMainGraph(data, g, {
+            width: width,
+            height: height
+        });
+    })
+
+</script>
+</body>
+</html>

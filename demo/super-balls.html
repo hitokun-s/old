@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Piled Particle" />
+    <meta property="og:type" content="article" />
+
+    <title>Piled Particle | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.4/processing.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/0.9.7/processing.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <script type="text/javascript">
+    var p;
+    window.onload = function() {
+        var canvas = document.getElementsByTagName('canvas')[0];
+
+  // Processing のソースコードが書かれた script 要素
+        var codeElm = document.getElementById('processing-code');
+  // 要素の内容を取得する
+        var code = codeElm.textContent || codeElm.innerText;
+        p = Processing(canvas, code);
+        $(codeElm).remove();
+    };
+    
+    function message(msg) {
+        document.getElementById('total_time').innerHTML = msg;
+    }
+
+  </script>
+<script id="processing-code" type="application/processing">
+
+int w = 400;
+int h = 800;
+float g = 0.1;
+float e = 0.8;//反発係数
+float e2 = 0.7;
+void setup(){
+   size(w, h);
+   //noStroke();//アウトラインなし
+   frameRate(300);
+   //noLoop();//drawを1回だけ実行
+}
+
+ArrayList circles = new ArrayList();
+int ttt = 0;
+
+void draw(){
+    ttt++;
+    if(ttt < 10000 && ttt % 100 == 0){
+        int r = random(10,40);
+        circles.add(new Circle(random(r,400 - r), h, r));
+    }
+    if(ttt % 100 == 0){
+        for (int i = 0; i < circles.size(); i ++){
+            Circle c = circles.get(i);
+            if(c.life > 2200 && c.moving){
+                c.stop();
+            }else if(circles.get(i).life > 400){
+                c.Vx *= 0.8;
+                c.Vy *= 0.8;
+            }
+        }
+    }
+    background();
+    for (int i = 0; i < circles.size(); i ++){
+        circles.get(i).display();
+    }
+    message(ttt);
+}
+
+float dot(Vector v1,Vector v2){
+    return (v1.x * v2.x + v1.y * v2.y); 
+}
+
+Vector sum(Vector v1, Vector v2){
+    return new Vector(v1.x + v2.x, v1.y + v2.y);
+}
+
+Vector diff(Vector v1, Vector v2){
+    return new Vector(v1.x - v2.x, v1.y - v2.y);
+}
+
+Vector times(Vector v1, int t){
+    return new Vector(v1.x * t, v1.y * t);
+}
+
+class Vector{
+    float x,y;
+    Vector(float _x, float _y){
+        x = _x;
+        y = _y;
+    }    
+}
+
+class Circle{
+    boolean existing = false;
+    boolean moving = true;
+    int life = 0;
+    int stick = 0;
+    int r,x,y,Xo,Yo,pre_x,pre_y,pre_x2,pre_y2;
+    int t = 0;
+    float Vx = 0;
+    float Vy = 0;
+    float Vyo = 0;
+    Circle(int _xo, int _yo, int _r){
+        Xo = _xo;
+        x = Xo;
+        y = _yo;
+        Yo = _yo;
+        r = _r;
+    }
+    void display(){
+        life++;
+        if(moving)move();
+        fill(255, 0, 0);
+        ellipse(x, h - y, 2*r, 2*r);//y座標は反転
+    }
+    void move(){
+        t++;
+        Vy = Vyo - g * t;
+        x += Vx;
+        y = Yo +  Vyo * t - g * t * t / 2;
+        if(y <= r){
+            t = 0;
+            Yo = r;
+            y = r;
+            Vyo = -Vy * (e-0.1);
+            Vx *= 0.8;
+        }
+        if(x <= r){
+            Vx = -Vx * e;
+            x = r;
+            if(y > r)stick = 0;
+        }
+        if(w - x <= r){
+            Vx = -Vx * e;
+            x = w - r;
+            if(y > r)stick = 0;
+        }
+        for (int i = 0; i < circles.size(); i++){
+            Circle c = circles.get(i);
+            if(this == c)continue;
+            //if(c.moving)continue;
+            if(closeTo(c) && mustBounceTo(c)){
+                x -= Vx;//ここがミソかも。
+                y -= Vy;//ここがミソかも。
+                bounceOff(c);
+                //break;
+            }
+        }
+        checkStick();
+        pre_x2 = pre_x;
+        pre_y2 = pre_y;
+        pre_x = x;
+        pre_y = y;
+    }
+    void checkStick(){
+        if(abs(y - pre_y2) <= 2  && abs(x - pre_x2) <= 2){
+            stick++;
+            if(stick > 500)stop();
+        }else{
+            stick = 0;
+        } 
+    }
+    boolean closeTo(Circle c){
+        if(sq(x - c.x) + sq(y - c.y) <= sq(r + c.r)){
+            Vector v = times(new Vector(x - c.x, y - c.y), (r + c.r)/dist(x, y, c.x, c.y));
+            x = c.x + v.x;
+            y = c.y + v.y;
+            return true;
+        }else{
+            return false;
+        }
+    }
+    boolean mustBounceTo(Circle c){
+        return dot(diff(getv(), c.getv()), new Vector(c.x - x, c.y - y)) > 0;
+        //return dot(diff(getv(), c.getv()), new Vector(c.x - x, c.y - y)) > 0 &&
+        //dot(diff(c.getv(), getv()), new Vector(x - c.x, y - c.y)) > 0;
+    }
+    void bounceOff(Circle c){
+        float d = dist(x, y, c.x, c.y);
+        
+        if(c.moving){        
+            Vector base = new Vector((x - c.x)/d, (y - c.y)/d);
+            Vector after = sum(times(times(base, dot(diff(c.getv(), getv()), base)), 2*c.r/(r + c.r)), getv());
+            Vector c_after = sum(times(times(base, dot(diff(getv(), c.getv()), base)), 2*r/(r + c.r)), c.getv());
+        
+            Vx = after.x;
+            Vy = after.y;
+        
+            c.Vx = c_after.x;
+            c.Vy = c_after.y;
+            c.Vyo = c.Vy;
+            c.Yo = c.y;
+            c.t = 0;
+        }else{
+            Vector v = new Vector(c.x - x, c.y - y);
+            Vector after = diff(getv(), times(v, 2 * dot(getv(),v)/(sq(v.x) + sq(v.y))));
+            Vx = after.x * (e - 0.2);
+            Vy = after.y * (e - 0.2);
+        }
+
+        Vyo = Vy;
+        Yo = y;
+        t = 0;
+    }
+    Vector getv(){
+        return new Vector(Vx, Vy);
+    }
+    void stop(){
+        if(abs(Vx)>1 || abs(Vy)>1)return;
+        moving = false;
+        Vx = 0;
+        Vy = 0;
+    }
+}
+</script>
+
+<h1>Piled Particle</h1>
+<span id="total_time"></span>
+
+<div>
+    <canvas width="400" height="800"></canvas>
+</div>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

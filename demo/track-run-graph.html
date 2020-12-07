@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="track run graph" />
+    <meta property="og:type" content="article" />
+
+    <title>track run graph | Hitokun's</title>
+    
+    <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+<link href="https://cdn.rawgit.com/tyleryasaka/semantic-ui-range/5154d879/range.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdn.rawgit.com/tyleryasaka/semantic-ui-range/5154d879/range.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.0.13/fontfaceobserver.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+<style>
+    div [class*="left floated"] {
+        float: left;
+        margin-left: 1em;
+    }
+    #range{
+        width:300px;
+        margin-bottom: 10px;
+    }
+    .slider{
+        width:400px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <h1>track run graph</h1>
+        <div class="left floated">
+            <canvas id="canvas" width="500px" height="500px">
+                Your browser does not support HTML5 canvas.
+            </canvas>
+        </div>
+        <div class="left floated">
+            <h2>Set Value:</h2>
+            <div class="ui segment">
+                <div class="slider"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var load = function(imgPaths){
+        
+        var promises = imgPaths.map(function(v){
+            var d = $.Deferred();
+            var img = new Image();
+            img.src = v;
+            img.onload = function(){
+                d.resolve(img);
+            };
+            return d.promise();
+        });
+        return Promise.all(promises);
+    };
+    
+    $(function() {
+        
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+
+        var draw = function(ctx, x, y, width, height, point) {
+            
+            var OFFSET = 3;
+            var mainColor = "#5ca793";
+            var bgColor = "#f3f3f5";
+
+            var outerRadius = height / 2;
+            var innerRadius = outerRadius - 15;
+            var radius = (outerRadius + innerRadius) / 2;
+            var innerWidth = width - height;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // imnportant for anti-aliasing!
+            
+            ctx.save();
+            ctx.translate(x, y);
+
+            ctx.beginPath();
+            ctx.strokeStyle = bgColor;
+            ctx.lineWidth = 15;
+            ctx.arc(outerRadius , outerRadius, radius, Math.PI / 2, - Math.PI / 2, false);
+            ctx.lineTo(outerRadius + innerWidth, 7.5);
+            ctx.arc(width - outerRadius , outerRadius, radius, - Math.PI / 2, Math.PI / 2, false);
+            ctx.lineTo(outerRadius, height - 7.5);
+            ctx.stroke()
+            
+            load([
+                "img/runner_right_colored.png",
+                "img/runner_right_grey.png",
+                "img/runner_left_colored.png",
+                "img/runner_left_grey.png"
+            ]).then(function(imgs){
+                
+                var w = imgs[0].width;
+                var h = imgs[0].height;
+
+                var imgRunnerRightColored = imgs[0];
+                var imgRunnerRightGrey    = imgs[1];
+                var imgRunnerLeftColored  = imgs[2];
+                var imgRunnerLeftGrey     = imgs[3];
+                
+                var runnerInterval = (innerWidth - w) / 4;
+                
+                for(var i = 0;i < 10;i++){
+                    if(i < 5){
+                        var img = i + 1 <= point ? imgRunnerRightColored : imgRunnerRightGrey;
+                        ctx.drawImage(img, outerRadius + runnerInterval * i, - h + OFFSET);    
+                    }else{
+                        var img = i + 1 <= point ? imgRunnerLeftColored : imgRunnerLeftGrey;
+                        var j = i - 5;
+                        ctx.drawImage(img, width - outerRadius - w - runnerInterval * j, height - 15 - h + OFFSET);
+                    }
+                }
+
+                // main graph
+                ctx.beginPath();
+                ctx.strokeStyle = mainColor;
+                ctx.moveTo(outerRadius, 7.5);
+                ctx.lineTo(outerRadius + w + runnerInterval * ((point >= 5 ? 5 : point) - 1), 7.5);
+                if(point > 5){
+                    ctx.arc(width - outerRadius , outerRadius, radius, - Math.PI / 2, Math.PI / 2, false);
+                    var j = point - 5;
+                    ctx.lineTo(outerRadius + innerWidth - ( w + runnerInterval * ((j >= 5 ? 5 : j) - 1)), height - 7.5);
+                }
+                ctx.stroke();
+                
+                // edges
+                ctx.beginPath();
+                ctx.fillStyle = mainColor;
+                ctx.ellipse(outerRadius, 7.5, 6, 7.5, 0, Math.PI / 2, - Math.PI / 2, false);
+                ctx.fill();
+                ctx.beginPath();
+                if(point <= 5){
+                    ctx.ellipse(outerRadius + w + runnerInterval * (point - 1), 7.5, 6, 7.5, 0, - Math.PI / 2, Math.PI / 2, false);
+                }else{
+                    var j = point - 5;
+//                    ctx.lineTo(outerRadius + innerWidth - ( w + runnerInterval * ((j >= 5 ? 5 : j) - 1)), height - 7.5);
+                    ctx.ellipse(outerRadius + innerWidth - ( w + runnerInterval * ((j >= 5 ? 5 : j) - 1)), height - 7.5, 6, 7.5, 0, Math.PI / 2, - Math.PI / 2, false);
+                }
+                ctx.fill();
+                
+                ctx.restore();
+            });
+            
+        };
+
+        var font = new FontFaceObserver('Roboto', {
+            weight: 400
+        });
+
+        font.load().then(function () {
+            console.log('Font is available');
+
+            $( ".slider" ).slider({
+                max: 10,
+                min: 1,
+                step: 1,
+                create: function( event, ui ) {
+                    draw(ctx, 50, 50, 300, 100, 1);
+                },
+                stop: function( event, ui ) {
+                    draw(ctx, 50, 50, 300, 100, ui.value);
+                }
+            });
+            
+        });
+    });
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

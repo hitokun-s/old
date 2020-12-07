@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular Test</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.12/angular.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">-->
+    <!--<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>-->
+    <!--<script src="https://code.angularjs.org/1.2.19/angular.min.js"></script>-->
+    <!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
+    <!--<script src="//cdn.jsdelivr.net/angular.bootstrap/0.11.0/ui-bootstrap-tpls.min.js"></script>-->
+    <script>
+        var app = angular.module("myApp", [ 'ui.bootstrap' ]);
+//        app.controller('testAppController1', function ($scope) {
+////            this.message = "First App 1";
+//            $scope.message = "First App 1";
+//        });
+    </script>
+</head>
+<body ng-controller="MyController">
+<form>
+    <!--<input type="text" id="keywd" ng-model="keywd" uib-typeahead="keywd for keywd in keywds | filter:$viewValue | limitTo: 7" />-->
+    <input type="text" id="keywd" ng-model="keywd" uib-typeahead="keywd for keywd in getCandidates($viewValue) | limitTo: 7" />
+</form>
+<script>
+    app.factory("States", function(){
+        var states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Dakota", "North Carolina", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
+
+        return states;
+
+    });
+    app.controller('MyController', ['$scope', '$http', function($scope, $http) {
+
+        // auto complete
+        $scope.getCandidates = function($value){
+            return $http.get('../data/vendor.json', {}).then(function(response){
+                return response.data.map(function(d){return d.name;});
+            });
+        }
+    }]);
+</script>
+</body>
+</html>

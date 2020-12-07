@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Double Choice Radio Button Group">
+    
+    
+    
+    <meta property="og:description" content="Double Choice Radio Button Group"/>
+    
+    <meta property="og:title" content="Double Choice Radio Button Group" />
+    <meta property="og:type" content="article" />
+
+    <title>Double Choice Radio Button Group | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/deep-diff/0.3.3/deep-diff.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsondiffpatch/0.2.4/jsondiffpatch.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsondiffpatch/0.2.4/jsondiffpatch-formatters.min.js"></script>
+<link href="https://cdn.rawgit.com/benjamine/jsondiffpatch/0fe51f88/public/formatters-styles/html.css" rel="stylesheet">
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <script type="text/javascript" src="https://cdn.rawgit.com/hitokun-s/view-source.js/ac2120ce/view-source.js"></script>
+
+<h1>Double Choice Radio Button Group</h1>
+
+<h3>Jquery way</h3>
+<div>
+    <input type="radio" name="rd1" class="rd">
+    <input type="radio" name="rd2" class="rd">
+    <input type="radio" name="rd3" class="rd">
+    <input type="radio" name="rd4" class="rd">
+    <input type="radio" name="rd5" class="rd">
+</div>
+<script>
+    $(function () {
+        $(".rd").click(function () {
+            var res = $(".rd").filter(function (i, v) {
+                return v.checked;
+            });
+            console.log(res);
+            if (res.length > 2) {
+                $(".rd").prop("checked", false);
+                this.checked = true;
+            }
+        });
+    });
+</script>
+
+<h3>Angular way</h3>
+
+<div ng-app="myApp">
+    <div ng-controller="myController">
+        <p>Compared objects</p>
+        <div ng-repeat="color in colors">
+            {{color | json}}
+        </div>
+
+        <label ng-repeat="color in colors">
+            <input type="radio" ng-model="selection[$index]" ng-value="color" ng-click="hoge($index)">
+            {{color.id}}
+        </label>
+        <br>
+        <button class="ui button" ng-disabled="compared.length != 2" ng-click="compare()">compare!</button>
+        <div ng-bind-html="diffHtml"></div>
+    </div>
+</div>
+
+<script>
+    angular.module('myApp', [])
+            .controller('myController', ['$scope', '$sce', function ($scope, $sce) {
+                $scope.colors = [
+                    {
+                        id: 1,
+                        code: "red",
+                        old: 23,
+                    },
+                    {
+                        id: 2,
+                        code: "green",
+                        old: 23,
+                    },
+                    {
+                        id: 3,
+                        code: "green",
+                        old: 46,
+                    }
+                ];
+                $scope.selection = [null, null, null];
+                $scope.compared = [];
+                $scope.hoge = function (index) {
+                    var selected = $scope.selection.filter(function (v) {
+                        return v;
+                    });
+                    var count = selected.length;
+                    if(count != 2){
+                        $scope.compared = [];
+                        $scope.diffHtml = null;
+                    }
+                    if (count > 2) {
+                        $scope.selection.forEach(function (v, i) {
+                            if (v && i != index) {
+                                $scope.selection[i] = null;
+                            }
+                        });
+                    }else if(count == 2){
+                        $scope.compared = selected;
+                    }
+                }
+                $scope.compare = function(){
+
+                    var delta = jsondiffpatch.diff($scope.compared[0], $scope.compared[1]);
+                    $scope.diffHtml = $sce.trustAsHtml(jsondiffpatch.formatters.html.format(delta));
+
+                    var differences = DeepDiff($scope.compared[0], $scope.compared[1]);
+                    console.log(differences);
+                }
+            }]);
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

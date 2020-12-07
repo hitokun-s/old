@@ -1,0 +1,22 @@
+
+<div id="partial" ng-controller="partialController">
+    <p>{{hoge}}</p>
+
+</div>
+<script class="partial">
+    console.log("partial");
+    console.log(app);
+    app.$apply();
+    app.$digest();
+    app.controller("partialController", function($scope){
+        console.log("partialController");
+        $scope.hoge = 123;
+    });
+//    app.controllerProvider.register('partialController', [
+//        '$scope', '$compile',
+//        function($scope ,$compile) {
+//            $scope.hoge = 123;
+//        }
+//    ]);
+</script>
+

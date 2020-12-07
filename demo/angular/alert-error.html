@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Alert Error</title>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.12/angular.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <script>
+        var app = angular.module("myApp", []);
+        var global = {
+            errors:[]
+        };
+
+        app.factory("Global", function() {
+            return global;
+        });
+
+    </script>
+</head>
+<body ng-controller="MyController">
+<button ng-click="addError()">add error</button>
+<button ng-click="reflect()">areflect</button>
+<div ng-repeat="err in errors">
+    content: {{ err }}
+</div>
+
+<script>
+    var errors = [];
+    var cnt = 0 ;
+    app.controller('MyController', ['$scope', '$http', "Global", function($scope, $http, Global) {
+        $scope.global = Global;
+        $scope.errors = errors;
+        $scope.addError = function(){
+//            Global.errors.push("error:" + (++cnt))  ;
+            errors.push("error:" + (++cnt))  ;
+        }
+        $scope.$watch("errors", function(){});
+        $scope.reflect = function(){
+
+        }
+
+    }]);
+
+</script>
+</body>
+</html>

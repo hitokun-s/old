@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Polar Area Diagram（鶏頭図）" />
+    <meta property="og:type" content="article" />
+
+    <title>Polar Area Diagram（鶏頭図） | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<style>
+    svg{
+        width:480px;
+        height:480px;
+        background-color:#ffffff;
+    }
+    .pie{
+        /*stroke:white;*/
+        /*stroke-width:4px;*/
+        opacity:0.4;}
+    .label{
+        fill:black;
+        font-size:10px;
+        text-anchor:middle;
+    }
+    div [class*="left floated"] {
+        float: left;
+        margin-left: 1em;
+    }
+</style>
+
+<h1>Polar Area Diagram（鶏頭図）</h1>
+<div class="left floated">
+    <p>SVG:</p>
+    <svg id="graph"></svg>
+</div>
+<div class="left floated">
+    <p>Canvas (based on area):</p>
+    <canvas id="canvas2" width="480" height="480"></canvas>
+</div>
+
+<script>
+    // HTMLファイルで設定した#graphの要素の幅、高さを取得する
+    var svgEle = document.getElementById("graph");
+    var svgWidth = getComputedStyle( svgEle, null)
+            .getPropertyValue("width");
+    var svgHeight = getComputedStyle( svgEle, null)
+            .getPropertyValue("height");
+
+    svgWidth = parseFloat( svgWidth );   // 整数に変換する
+    svgHeight = parseFloat( svgHeight ); // 整数に変換する
+
+    var arrData = [
+        { location : "東京" , value : 10 },
+        { location : "横浜" , value : 40 },
+        { location : "大阪" , value : 60 },
+        { location : "京都" , value : 20 },
+        { location : "千葉" , value :100 }
+    ];
+
+    var inRadius = 64; 				// 内円の半径
+    var ouRadius = inRadius  ; 	// 内円＋ずれの半径
+
+//    var radiusScale = d3.scale.sqrt().range([0, radiusMax]);
+    var pie = d3.layout.pie();
+    pie.value(function (){ return 1; });
+    var pieData = pie(arrData);
+    
+    console.log("pieData", pieData);
+
+    var color = d3.scale.category10();
+    
+    var colors = [
+            "#f9b233",
+            "#87c1b3",
+            "#585077",
+            "#f47245",
+            "#0d3c55",
+            "#c9de00",
+            "#ef8b2c",
+            "#c7e89e",
+            "#9ec100",
+            "#6cc4a5",
+            "#117899",
+            "#c02e1d"
+    ];
+    
+    // 鶏頭図のサイズを指定
+    var arc = d3.svg.arc()
+            .innerRadius(inRadius)
+            .outerRadius(function(d){
+                return ouRadius + d.data.value; 
+            })
+
+    // 鶏頭図を描画
+    d3.select("#graph")
+            .selectAll("path")
+            .data(pieData)
+            .enter()
+            .append("path")
+            .attr("class","pie")
+            .attr("d",arc)
+            .attr("fill",function(d,i){
+                return color(i);
+            })
+            .attr("transform", "translate(" + svgWidth / 2 + ", " + svgHeight / 2 + ")");
+
+    // 文字を描画
+    d3.select("#graph")
+            .selectAll("text")
+            .data(pieData)
+            .enter()
+            .append("text")
+            .attr("class","label")
+            .attr("transform",function(d,i){
+                console.log(d);
+                var c = arc.centroid(d);	  // 扇形の重心を計算
+                var x = c[0] + svgWidth  / 2; // Ｘ座標を読み出す
+                var y = c[1] + svgHeight / 2; // Ｙ座標を読み出す
+                return "translate(" + x + ", " + y + ")";
+            })
+            .text(function(d,i){
+                return d.data.location + "(" + d.data.value + ")";
+            });
+    
+    // ============================== Canvas ================================
+    
+    var drawFan = function(ctx, x, y, outerRadius, innerRadius, startAngle, endAngle, option){
+        option || (option = {});
+        ctx.fillStyle = option.fillStyle;
+        ctx.beginPath();
+        ctx.arc(x, y, outerRadius, startAngle, endAngle, false);
+        ctx.arc(x, y, innerRadius, endAngle, startAngle, true);
+        ctx.closePath();
+//        ctx.stroke();
+        ctx.fill();
+        
+        if(option.text){
+            var textRadius = (outerRadius + innerRadius) / 2;
+            var textAngle = (startAngle + endAngle) / 2;
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.font = "bold 20px Roboto";
+            var lineHeight = ctx.measureText('M').width;
+            ctx.fillText(option.text, x + textRadius * Math.cos(textAngle), y + textRadius * Math.sin(textAngle) + lineHeight / 2);
+        }
+    };
+    
+    // 面積ベース
+    
+    // データ最大値をM、最大半径をmaxRadius、内径をinnerRadiusとする（MのoutRadius = maxRadius）
+    // このときの扇型面積比において、M:= maxRadius ** 2 - innerRadius ** 2 に相当
+    // あるデータ値AのoutRadius = Math.sqrt( (maxRadius ** 2 - innerRadius ** 2) * A / M + innerRadius ** 2 )
+    
+    var drawPolarAreaDiagram = function(ctx, x, y, maxRadius, innerRadius, data){
+        ctx.translate(x, y);
+        var maxValue = _.max(data, function(d){return d.value}).value;
+        var angleUnit = Math.PI * 2 / data.length;
+        var startAngle = - Math.PI / 2;
+        data.forEach(function(d, i){
+            var outerRadius = Math.sqrt( (Math.pow(maxRadius, 2) - Math.pow(innerRadius, 2)) * d.value / maxValue + Math.pow(innerRadius, 2));
+            drawFan(ctx, 0, 0, outerRadius, innerRadius, startAngle, startAngle + angleUnit, {
+                fillStyle: color(i),
+                text: d.value
+            });
+            startAngle += angleUnit;
+        });
+        ctx.restore();
+    };
+    
+    var canvas2 = document.getElementById('canvas2');
+    var ctx2 = canvas2.getContext('2d');
+    drawPolarAreaDiagram(ctx2, canvas2.width / 2, canvas2.height / 2, canvas2.width / 2, 60, arrData);
+    
+    
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

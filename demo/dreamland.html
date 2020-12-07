@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="What is the Language of Dreamland ?" />
+    <meta property="og:type" content="article" />
+
+    <title>What is the Language of Dreamland ? | Hitokun's</title>
+    
+    <!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <!--<link type="text/css" rel="stylesheet" href="../css/bootstrap_custom.css">-->
+<link type="text/css" rel="stylesheet" href="css/demo.css">
+
+<style id="src-css">
+    #stage {
+        position: relative;
+        width: 100%;
+        height: 600px;
+        background-image: url("img/gray.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    svg {
+        opacity: 0.6;
+        width: 100%;
+        height: 100%;
+    }
+
+    rect {
+        opacity: 0.4;
+    }
+
+    /*            #img-surfer{
+                    position:absolute;
+                    width:100%;
+                    opacity: 0.5;
+                }*/
+</style>
+<div id="content">
+
+    <button id="update" class="pull-right">update(demo)</button>
+    <div id="src-html" class="text-center">
+        <h1>What is the Language of Dreamland? [demo]</h1>
+        <br>
+        <div id="stage">
+            <!--<img id="img-surfer" src="img/gray.jpg"/>-->
+            <svg></svg>
+        </div>
+        <h3>About twitter data used for this visualization</h3>
+        <table class="table table-bordered">
+            <tr>
+                <td>search keywords</td>
+                <td>
+                    'bali' and ('wave' or 'surfer' or 'surfing' or 'dreamland')<br>
+                    'バリ' and ('波' or 'サーファ' or 'サーフィン' or 'ドリームランド')
+                </td>
+            </tr>
+            <tr>
+                <td>tweeted time range</td>
+                <td>Jun 3 - Jun 10</td>
+            </tr>
+            <tr>
+                <td>number of tweets</td>
+                <td><b>873</b> tweets</td>
+            </tr>
+            <tr>
+                <td>number of laguages</td>
+                <td><b>14</b> languages</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script id="src-js">
+
+    $("#content").wrap("<div class='container'><div class='row'><div class='col-centered col-lg-10'>");
+
+    var data = {
+        name: '',
+        children: [
+            {
+                name: "",
+                children: [
+                    {name: "Indonesian", "size": 431},
+                    {
+                        name: '',
+                        children: [
+                            {"name": "English", "size": 334},
+                            {
+                                name: '',
+                                children: [
+                                    {"name": "Japanese", "size": 92},
+                                    {
+                                        name: '',
+                                        children: [
+                                            {"name": "Undetermined", "size": 54},
+                                            {
+                                                name: '',
+                                                children: [
+                                                    {"name": "Tagalog", "size": 11},
+//                                                            {
+//                                                                name: "",
+//                                                                children: [
+                                                    {"name": "Haitian", "size": 2},
+                                                    {"name": "Arabic", "size": 1},
+                                                    {"name": "Korean", "size": 3},
+                                                    {"name": "Russian", "size": 4},
+                                                    {"name": "Estonian", "size": 2},
+                                                    {"name": "Swedish", "size": 3},
+                                                    {"name": "Turkish", "size": 4},
+                                                    {"name": "Polish", "size": 2},
+                                                    {"name": "Portuguese", "size": 1},
+                                                    {"name": "Slovak", "size": 1},
+//                                                                ]
+//                                                            },
+                                                ]
+                                            }
+                                        ]
+                                    }
+
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name: "",
+                children: []
+            },
+        ]
+    };
+
+    var colors = d3.scale.category20();
+
+    $(function () {
+
+        var svg = d3.select("svg");
+
+
+        var treemap = d3.layout.treemap()
+                .size([parseInt(svg.style("width")), parseInt(svg.style("height"))])
+                .sticky(false).mode('slice-dice');
+        ;
+        var treemapData = treemap.value(function (d) {
+            return d.size
+        }).nodes(data);
+
+        var refresh = function (_data) {
+            console.log("refresh");
+            var _treemapData = treemap.value(function (d) {
+                return d.size
+            }).nodes(_data);
+
+            var g = svg.selectAll("g")
+                    .data(_treemapData)
+                    .transition()
+                    .duration(1500)
+            g.select("rect")
+                    .attr("x", function (d) {
+                        return d.x;
+                    })
+                    .attr("y", function (d) {
+                        return d.y;
+                    })
+                    .attr("width", function (d) {
+                        return d.dx;
+                    })
+                    .attr("height", function (d) {
+                        return d.dy;
+                    });
+            g.select("text").attr("x", function (d) {
+                return d.x + 7
+            })
+                    .attr("y", function (d) {
+                        return d.y + 22
+                    });
+        };
+
+        $("#update").click(function () {
+            refresh({
+                name: '',
+                children: [
+                    {"name": "in", "size": 1000},
+                    {"name": "en", "size": 830},
+                    {"name": "ar", "size": 369},
+                    {"name": "tl", "size": 75},
+                    {"name": "tr", "size": 40},
+                    {"name": "und", "size": 57},
+                    {"name": "pt", "size": 32},
+                    {"name": "es", "size": 21},
+                    {"name": "fr", "size": 21},
+                    {"name": "de", "size": 26},
+                    {"name": "ja", "size": 15},
+                    {"name": "ht", "size": 13}
+                ]
+            });
+        });
+
+        console.log(treemapData);
+        var boxGroup = svg.selectAll("g") //Boxグループを追加
+                .data(treemapData)
+                .enter()
+                .append("g");
+        var box = boxGroup.append('rect')
+                .attr({
+                    fill: "none",
+                    stroke: "black",
+                    "stroke-width": 1
+                })
+                .attr("x", function (d) {
+                    return d.x
+                })
+                .attr("y", function (d) {
+                    return d.y
+                })
+                .attr("width", function (d) {
+                    return d.dx
+                })
+                .attr("height", function (d) {
+                    return d.dy
+                })
+                .attr("fill", function (d, i) {
+                    return colors(i);
+                });
+        var text = boxGroup.append('text').text(function (d) {
+            return d.name;
+        })
+                .attr("x", function (d) {
+                    return d.x + 7
+                })
+                .attr("y", function (d) {
+                    var rect_height = d.dy;
+                    return rect_height < 20 ? d.y + rect_height - 1 : d.y + 22;
+                })
+                .attr("font-size", function (d) {
+                    var rect_height = d.dy;
+                    return Math.min(rect_height, 20);
+                })
+                .attr("stroke-width", function (d) {
+                    var rect_height = d.dy;
+                    return rect_height < 20 ? 1 : 2;
+                })
+                .attr({
+                    stroke: "black"
+                })
+        // add outer frame
+        svg.append("rect").attr({
+            x: 0,
+            y: 0,
+            width: svg.style("width"),
+            height: svg.style("height"),
+            stroke: "black",
+            "stroke-width": 3,
+            fill: "none"
+        })
+    });
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

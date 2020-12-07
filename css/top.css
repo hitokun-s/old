@@ -1,0 +1,90 @@
+body {
+  background: linear-gradient(#C5F0FF, #003C66); }
+
+.title {
+  position: absolute;
+  padding: 0 8px;
+  color: #003C66; }
+
+.main-box, .bar {
+  fill: transparent; }
+
+.stage {
+  text-align: center;
+  width: 100%;
+  height: 100%; }
+
+.catch-copy {
+  text-anchor: middle;
+  fill: #fff; }
+
+#svg-bg {
+  /*position: absolute;*/
+  width: 100%;
+  height: 100%;
+  /*top: 0;*/
+  /*left: 0;*/
+  /*z-index: -1;*/ }
+
+text .obj {
+  fill: yellow; }
+
+text .const {
+  fill: #A3FF69; }
+
+text .class {
+  fill: lightgoldenrodyellow; }
+
+.line-i {
+  stroke: yellow;
+  stroke-width: 2px;
+  fill: transparent; }
+
+.line-contact {
+  stroke: yellow;
+  stroke-width: 2px;
+  fill: transparent; }
+
+.text-about {
+  fill: yellow;
+  dominant-baseline: middle;
+  cursor: pointer; }
+  .text-about:hover {
+    fill: orange; }
+
+marker {
+  fill: yellow; }
+
+.text-contact {
+  fill: yellow;
+  dominant-baseline: middle;
+  cursor: pointer; }
+  .text-contact:hover {
+    fill: orange; }
+
+.menu {
+  position: absolute;
+  z-index: 1;
+  font-size: 15px; }
+  .menu ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0 auto; }
+  .menu li {
+    display: inline-block;
+    margin-right: 15px;
+    width: 99px;
+    text-align: left; }
+  .menu.top {
+    right: 0; }
+    .menu.top a {
+      color: #003C66; }
+  .menu.bottom {
+    bottom: 0;
+    left: 30px; }
+    .menu.bottom a {
+      color: #C5F0FF; }
+  .menu .fa, .menu .fas {
+    margin-right: 5px; }
+
+/*# sourceMappingURL=top.css.map */

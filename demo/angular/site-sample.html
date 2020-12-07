@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MyApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.12/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.12/angular-route.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.4.12/angular-resource.min.js"></script>
+
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.3/ui-bootstrap-tpls.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.22/HTMLImports.min.js"></script>
+
+    <script>
+        var app = angular.module("MyApp", ['ngRoute', 'ngResource'], function($controllerProvider) {
+            app.controllerProvider = $controllerProvider;
+        });
+    </script>
+</head>
+<body>
+<h1>Include sample</h1>
+
+
+<div ng-controller="MyController">
+    MyController
+    <div ng-repeat="module in modules">
+        <div ng-include="module"></div>
+    </div>
+</div>
+
+<div ng-view></div>
+
+<script>
+
+
+    var itemService;
+    if(Math.random() >= 0.1){
+        itemService = ['$q', function($q){
+            return { get : function(){
+                var deferred = $q.defer();
+                deferred.resolve([]);
+                return {
+                    $promise : deferred.promise
+                }
+            }};
+        }];
+    }else{
+        itemService = ['$resource', function($resource) {
+            return $resource(
+                    '../data/items.json',
+                    {},
+                    {
+                        get: {method: 'GET', isArray: true}, // apiの戻り値が配列の場合は「isArray: true」を指定する
+                    }
+            );
+        }]
+    }
+    app.factory('Item', itemService);
+
+    app.config(['$routeProvider',
+        function($routeProvider) {
+            $routeProvider.
+            when('/', {
+                // ダッシュボード
+                templateUrl: 'test.html',
+                controller: 'testController'
+            }).
+            when('/hoge', {
+                // ダッシュボード
+                templateUrl: 'hoge.html',
+                controller: 'hogeController'
+            }).
+            otherwise({
+                redirectTo: '/'
+            });
+        }
+    ]);
+
+    // viewパーツhtml内の<script>はそのままでは実行されないので、手動で実行してやる。
+    // そのサインとして、<script reload>...というように、「reload」属性を足しておく必要がある。
+    app.directive('reload', ["$q", function($q) {
+        return {
+            restrict: 'EAC',
+            scope: true,
+            link: function(scope, elm, attr) {
+                console.log(attr);
+                var code = elm.text();
+                var f = new Function(code);
+                f();
+            }
+        };
+    }]);
+
+    app.controller('MyController', ['$scope', '$http', 'Item', function($scope, $http, Item) {
+        $scope.modules = ["module2.html"];
+        $scope.hoge = 123;
+        console.log(Item.get());
+        Item.get().$promise.then(function(items) {
+            $scope.items = items;
+            console.log(items);
+        }).catch(function(data, status) {
+            console.log(data);
+        });
+    }]);
+    app.controller('testController', ['$scope', '$http', function($scope, $http) {
+        $scope.hoge = 1;
+    }]);
+    app.controller('hogeController', ['$scope', '$http', function($scope, $http) {
+        $scope.hoge = "hoge";
+    }]);
+//    app.controller('headerController', ['$scope', '$http', function($scope, $http) {
+//        $scope.hoge = "hoge";
+//    }]);
+</script>
+</body>
+</html>
+

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Liquid in Circle Graph">
+    
+    <meta property="og:image" content="https://hitokun-s.github.io/demo/img/liquid-in-circle-graph.png"/>
+    
+    <meta property="og:description" content="Liquid in Circle Graph"/>
+    
+    <meta property="og:title" content="liquid in circle graph" />
+    <meta property="og:type" content="article" />
+
+    <title>liquid in circle graph | Hitokun's</title>
+    
+    <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+<link href="https://cdn.rawgit.com/tyleryasaka/semantic-ui-range/5154d879/range.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdn.rawgit.com/tyleryasaka/semantic-ui-range/5154d879/range.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+<style>
+    div [class*="left floated"] {
+        float: left;
+        margin-left: 1em;
+    }
+    #range{
+        width:300px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <h1>liquid in circle graph</h1>
+        <div class="left floated">
+            <canvas id="canvas" width="280px" height="350px">
+                Your browser does not support HTML5 canvas.
+            </canvas>
+        </div>
+        <div class="left floated">
+            <canvas id="canvas2" width="280px" height="350px">
+                Your browser does not support HTML5 canvas.
+            </canvas>
+        </div>
+        <div class="left floated">
+            <p id="indication">Ratio: <b>{{ ratio }}</b> %</p>
+            <div class="ui range" id="range"></div>
+        </div>
+    </div>
+    <br>
+    <div class="row" style="clear: left">
+        <p>'ratio' is corresponding to the water area precisely. Details: <a href="https://github.com/hitokun-s/playground-math/blob/master/liquid_in_circle.py">here.</a></p>
+    </div>
+</div>
+
+<script>
+    
+    var diff = 0;
+    var ratio = 0;
+
+    $.getJSON("data/liquid_in_circle.json", function(data) {
+        console.log(data);
+
+        // 単位円に対する波
+        var wave = function(x){
+//            diff = ratio * 2 - 1;
+            return Math.sin(Math.PI * x) / 8 + diff;
+        };
+        
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+
+        var canvas2 = document.getElementById('canvas2');
+        var ctx2 = canvas2.getContext('2d');
+        
+        var img = new Image();
+        img.src = "img/drop2x.png";
+        img.onload = function(){
+            
+            var draw = function(ctx, x, y, R){
+                
+                var innerRadius = R * 100 / 127;
+
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.lineWidth = 1;
+                ctx.fillStyle = "lightblue";
+
+                ctx.save();
+                ctx.translate(x, y);
+
+                ctx.beginPath();
+
+                ctx.moveTo(-innerRadius, - wave(-1) * innerRadius);
+                for(var i = -innerRadius + 1; i <= innerRadius;i++){
+                    ctx.lineTo(i, - wave(parseFloat(i) / innerRadius) * innerRadius);
+                }
+                ctx.lineTo(innerRadius, innerRadius);
+                ctx.lineTo(-innerRadius, innerRadius);
+                ctx.fill();
+
+                ctx.beginPath();
+
+                ctx.arc(0, 0, innerRadius, 0, Math.PI * 2, false);
+                ctx.globalCompositeOperation = 'destination-in';
+                ctx.fill();
+                ctx.globalCompositeOperation = 'source-over'; // set default
+                ctx.drawImage(img, - R * 123 / 127, - R * 215 / 127, R * 2, img.height * R * 2 / img.width);
+
+                ctx.restore();
+            };
+
+            $('#range').range({
+                min: 0,
+                max: 100,
+                start: 50,
+                onChange: function(val){
+                    ratio = val / 100;
+                    indication.ratio = val;
+                    var target = _.min(data, function(d){
+                        return Math.abs(ratio - d[1]);
+                    });
+                    diff = target[0];
+                    console.log("diff", diff);
+                    console.log("ratio", target[1]);
+                    draw(ctx, 140, 220, 127);
+                    draw(ctx2, 140, 220, 80);
+                }
+            });
+        };
+        
+    });
+
+    var indication = new Vue({
+        el: '#indication',
+        data: {
+            ratio: 50
+        }
+    });
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="CT scan man graph" />
+    <meta property="og:type" content="article" />
+
+    <title>CT scan man graph | Hitokun's</title>
+    
+    <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+<link href="https://cdn.rawgit.com/tyleryasaka/semantic-ui-range/5154d879/range.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdn.rawgit.com/tyleryasaka/semantic-ui-range/5154d879/range.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+    div [class*="left floated"] {
+        float: left;
+        margin-left: 1em;
+    }
+    #range1, #range2, #range3{
+        width:300px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <h1>CT scan man graph</h1>
+        <div class="left floated">
+            <canvas id="canvas" width="140px" height="320px">
+                Your browser does not support HTML5 canvas.
+            </canvas>
+        </div>
+        <div class="left floated">
+            <canvas id="canvas2" width="240px" height="320px">
+                Your browser does not support HTML5 canvas.
+            </canvas>
+        </div>
+        <div class="left floated">
+            <p>Left body:</p>
+            <div class="ui range" id="range1"></div>
+            <p>Right body 1:</p>
+            <div class="ui range" id="range2"></div>
+            <p>Right body 2:</p>
+            <div class="ui range" id="range3"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function rgbToHex(r, g, b) {
+        return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function hexToRgb(hex) {
+        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+//        return result ? {
+//            r: parseInt(result[1], 16),
+//            g: parseInt(result[2], 16),
+//            b: parseInt(result[3], 16)
+//        } : null;
+        return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
+    }
+    
+    var subtractRGB = function(arr1, arr2){
+        return [arr1[0] - arr2[0], arr1[1] - arr2[1], arr1[2] - arr2[2]].map(function(v){
+            return v >= 0 ? v : 0;
+        });
+    };
+
+    var ratio1, ratio2, ratio3 = 0.5;
+    
+    $(function() {
+        
+        var h;
+        var canvas = document.getElementById('canvas');
+        var canvas2 = document.getElementById('canvas2');
+        var ctx = canvas.getContext('2d');
+        var ctx2 = canvas2.getContext('2d');
+
+//        var img = new Image();
+//        img.src='img/ctscan.png';
+
+        var imgBk = new Image();
+        imgBk.src='img/ctscan.png';
+
+        var pattern;
+
+        imgBk.onload = function () {
+            console.log("bk image height: " + imgBk.height);
+            draw();
+        };
+        
+        var leftColors = ["#5ca793", "#74b7a5"];
+        var rightColors = ["#575070", "#6a627f", "#756e8e"];
+
+        var draw = function() {
+
+//            ctx2.imageSmoothingEnabled = true; // not working
+            
+            var w = 120;
+            var h = imgBk.height * 120 / imgBk.width;
+            
+            ctx.width = ctx2.width = w;
+            ctx.height = ctx2.height = h;
+            canvas.width = canvas2.width = w;
+            canvas.height = canvas2.height = h;
+
+            var targetHeight1 = h * ratio1;
+            var targetHeight2 = h * ratio2;
+            var targetHeight3 = h * ratio3;
+            
+            ctx2.clearRect(0,0, w, h);
+            ctx2.drawImage(imgBk, 0, 0, w, h);
+
+            var src = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
+            
+            // target color: 99d6c4
+            for (var i = 0; i < src.data.length; i=i+4) {
+                
+                var pixelIdx = i / 4;
+                var w = pixelIdx % canvas2.width;
+                var h = canvas2.height - parseInt(pixelIdx / canvas2.width);
+                
+                var hex = rgbToHex(src.data[i], src.data[i+1], src.data[i+2]);
+                
+                if(src.data[i+3] != 1){  
+//                if(hex == "e8e8e8"){  
+                    // #e8e8e8（= (232, 232, 232)）との差分を引く（ことで骨の部分を濃くする）
+//                    if(h < targetHeight1 && w <= canvas2.width / 2){
+                    var baseColor, c;
+                    if(w <= canvas2.width / 2){
+                        baseColor = h < targetHeight1 ? leftColors[0] : leftColors[1];
+                        c = subtractRGB(hexToRgb(baseColor), subtractRGB([232,232,232], [src.data[i], src.data[i+1], src.data[i+2]]));
+                        src.data[i] = c[0];
+                        src.data[i+1] = c[1];
+                        src.data[i+2] = c[2];
+                    }
+                    if(w > canvas2.width / 2){
+                        if(h > targetHeight2){
+                            baseColor = rightColors[2];
+                        }else if(h > targetHeight3){
+                            baseColor = rightColors[1];
+                        }else{
+                            baseColor = rightColors[0];
+                        }
+                        console.log(subtractRGB([232,232,232], [src.data[i], src.data[i+1], src.data[i+2]]));
+                        c = subtractRGB(hexToRgb(baseColor), subtractRGB([232,232,232], [src.data[i], src.data[i+1], src.data[i+2]]));
+                        src.data[i] = c[0];
+                        src.data[i+1] = c[1];
+                        src.data[i+2] = c[2];
+                    }
+                }else{
+                    // important for smoothing!!!
+                    console.log("no data!");
+                    src.data[i] = 255;
+                    src.data[i+1] = 255;
+                    src.data[i+2] = 255;
+                    src.data[i+3] = 1;
+                }
+                
+            }
+
+            ctx2.putImageData(src, 0, 0);
+
+            var tmp = new Image();
+            tmp.src = canvas2.toDataURL();
+            tmp.onload = function(){
+                ctx.drawImage(tmp,0,0);
+            }
+            
+        };
+
+        $('#range1').range({
+            min: 0,
+            max: 100,
+            start: 50,
+            onChange: function(val){
+                ratio1 = val / 100;
+//                draw();
+            }
+        });
+
+        $('#range2').range({
+            min: 0,
+            max: 100,
+            start: 75,
+            onChange: function(val){
+                ratio2 = val / 100;
+                if(ratio3 > ratio2){
+                    $('#range3').range('set value', 100 * ratio2);
+                }
+            }
+        });
+
+        $('#range3').range({
+            min: 0,
+            max: 100,
+            start: 25,
+            onChange: function(val){
+                ratio3 = val / 100;
+                if(ratio3 > ratio2){
+                    $('#range2').range('set value', 100 * ratio3);
+                }
+            }
+        });
+
+        $("#range1,#range2, #range3").mouseup(function(){
+            draw();
+        });
+    });
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

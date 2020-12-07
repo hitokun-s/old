@@ -1,0 +1,69 @@
+body{
+    font-family:  "Hiragino Kaku Gothic ProN", "游ゴシック", YuGothic, Meiryo, sans-serif;
+}
+
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+
+#header{
+    position: absolute;
+    height: 30px;
+    width: 100%;
+    top:0px;
+    background-color: black;
+    color:white;
+    z-index:2;
+}
+#logo{
+    font-family: impact;
+    margin-top:0px;
+    font-size: 23px;
+    color:white;
+}
+
+a.social {
+    display: inline-block;
+    width: 30px;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    color: #fff;
+}
+a.social:hover {
+    color: #ff0;
+}
+.twitter {
+    background: #33CCFF;
+}
+.twitter:hover {
+    background: #13ACDF;
+}
+.facebook {
+    background: #3B5998;
+}
+.facebook:hover {
+    background: #1B3978;
+}
+
+#content{
+    padding-top: 40px;
+}
+
+#btn-source{
+    position:absolute;
+    top:40px;
+    right:15px;
+    border:1px solid;
+    border-radius:4px;
+    padding-left:5px;
+    padding-right:5px;
+    cursor:pointer;
+}
+
+#btn-source:hover{
+    background-color: black;
+    color:white;
+}

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Stacked Card Design">
+    <meta name="Keywords" content="stacked,card,design">
+    
+    
+    <meta property="og:description" content="Stacked Card Design"/>
+    
+    <meta property="og:title" content="Stacked Card" />
+    <meta property="og:type" content="article" />
+
+    <title>Stacked Card | Hitokun's</title>
+    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+        body{
+            background-color: #eee;
+        }
+        .card-holder, .card-holder2{
+            position: relative;
+            margin-top: 50px;
+            height:220px;
+        }
+        .card{
+            width:300px;
+            height:200px;
+            background-color: white;
+            padding:10px 20px 10px 20px;
+            border:2px solid black;
+            position: absolute;
+        }
+        .card:nth-child(2){
+            z-index: -1;
+            transform: translate(10px,-10px);
+        }
+        .card:nth-child(3){
+            z-index: -2;
+            transform: translate(20px,-20px);
+        }
+        .btn-next, .btn-next2{
+            position: absolute;
+            bottom:10px;
+            right:10px;
+        }
+        .btn-back, .btn-back2{
+            position: absolute;
+            bottom:10px;
+            left:10px;
+        }
+    </style>
+
+<div class="container">
+    <h1>Stacked Cards</h1>
+    <div class="card-holder">
+        <div class="card">
+            <h1>This is card 1.</h1>
+            <div>This is description.</div>
+            <button class="btn btn-primary pull-right btn-next">NEXT</button>
+        </div>
+        <div class="card">
+            <h1>This is card 2.</h1>
+            <div>This is description.</div>
+            <button class="btn btn-primary pull-right btn-next">NEXT</button>
+            <button class="btn btn-default pull-left btn-back">BACK</button>
+        </div>
+        <div class="card">
+            <h1>This is card 3.</h1>
+            <div>This is description.</div>
+            <button class="btn btn-default pull-left btn-back">BACK</button>
+        </div>
+    </div>
+    <h1>Stacked Cards with 3D paging</h1>
+    <div class="card-holder2">
+        <div class="card">
+            <h1>This is card 1.</h1>
+            <div>This is description.</div>
+            <button class="btn btn-primary pull-right btn-next2">NEXT</button>
+        </div>
+        <div class="card">
+            <h1>This is card 2.</h1>
+            <div>This is description.</div>
+            <button class="btn btn-primary pull-right btn-next2">NEXT</button>
+            <button class="btn btn-default pull-left btn-back2">BACK</button>
+        </div>
+        <div class="card">
+            <h1>This is card 3.</h1>
+            <div>This is description.</div>
+            <button class="btn btn-default pull-left btn-back2">BACK</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    // as library source (not used in this page)
+    function StackedCard($holder, $members){
+        var stack = [];
+        var currIdx = 0;
+        $members.forEach(function(member){
+            $holder.append(member);
+        });
+        this.holder = $holder;
+        this.next = function(){
+            console.log("go to next card!");
+            var elm = $members[currIdx];
+            elm.css({
+                perspective: "200px",
+                "transform-origin": "left",
+                transform: "perspective(1000px) rotateY(-90deg)"
+            });
+            elm.on("transitionend", function(){
+                stack.push(elm.detach());
+                elm.off("transitionend");
+                $holder.find(".btn-prev").show();
+            });
+            currIdx++
+            return $members[currIdx];
+        }
+        this.prev = function(){
+            var elm = stack.pop();
+            elm.hide();
+            $holder.prepend(elm);
+            elm.css({
+                perspective: "200px",
+                "transform-origin": "left",
+                transform: "perspective(1000px) rotateY(-90deg)"
+            });
+            elm.show();
+            elm.css({
+                transition: "transform 0.3s linear",
+                perspective: "200px",
+                "transform-origin": "left",
+                transform: "perspective(1000px) rotateY(0deg)"
+            });
+            elm.on("transitionend", function(){
+                elm.css({
+                    transition: "",
+                    perspective: "",
+                    "transform-origin": "",
+                    transform: ""
+                });
+                elm.off("transitionend");
+            });
+            currIdx--;
+            if(currIdx == 0){
+                $holder.find(".btn-prev").hide();
+            }
+            return $members[currIdx];
+        }
+        this.addPrevButton = function(btnHtml){
+            $holder.append(btnHtml);
+            $holder.find(".btn-prev").hide();
+            $holder.find(".btn-prev").click(this.prev);
+        }
+        return this;
+    }
+
+    $(".card").css({
+        transition: "transform 0.3s linear"
+    });
+
+    var stack = [];
+    $(".btn-next").click(function(){
+       var elm = $(this).closest(".card").detach();
+        stack.push(elm);
+    });
+    $(".btn-back").click(function(){
+        $(".card-holder").prepend(stack.pop());
+    });
+
+    var stack2 = [];
+    $(".btn-next2").click(function(){
+        var elm = $(this).closest(".card");
+        elm.css({
+            transition: "transform 0.3s linear",
+            perspective: "200px",
+            "transform-origin": "left",
+            transform: "perspective(1000px) rotateY(-90deg)"
+        });
+        elm.on("transitionend", function(){
+            stack2.push(elm.detach());
+            elm.off("transitionend");
+        });
+    });
+    $(".btn-back2").click(function(){
+        var elm = stack2.pop();
+        elm.hide();
+        $(".card-holder2").prepend(elm);
+        elm.css({
+            perspective: "200px",
+            "transform-origin": "left",
+            transform: "perspective(1000px) rotateY(-90deg)"
+        });
+        elm.show();
+        elm.css({
+            transition: "transform 0.3s linear",
+            perspective: "200px",
+            "transform-origin": "left",
+            transform: "perspective(1000px) rotateY(0deg)"
+        });
+        elm.on("transitionend", function(){
+            elm.css({
+                transition: "",
+                perspective: "",
+                "transform-origin": "",
+                transform: ""
+            });
+            elm.off("transitionend");
+        });
+    });
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

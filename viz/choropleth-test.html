@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Visualizations" />
+    <meta property="og:type" content="article" />
+
+    <title>Visualizations | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.2/leaflet.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <p>leaflet + leaflet label</p>
+<div id="map0" class="map"></div>
+
+<p>leaflet + mapbox(light-v9)</p>
+<div id="map1" class="map"></div>
+
+<p>leftlet + d3.js label</p>
+<div id="map2" class="map"></div>
+
+<p>pure d3.js</p>
+<div id="map3" class="map"></div>
+
+<style>
+    .map{
+        height: 400px;
+        margin-bottom: 10px;
+    }
+    svg path{
+      stroke:#fff;
+      stroke-width: 0.5px;
+    }
+    svg text{
+        text-anchor: middle;
+        dominant-baseline: middle;
+    }
+    .label{
+        text-align: center;
+    }
+    #map3 svg{
+        background: #ddd;
+    }
+    #map3 path{
+        stroke-opacity: 1;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: rgb(51, 136, 255);
+        fill-opacity: 0.2;
+        fill-rule: evenodd;
+    }
+    #map3 g{
+      font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+    }
+</style>
+<script>
+  var maps = ["map0", "map1","map2"].map(function(id){
+    return new L.Map(id, {
+      'center': [0, 0],
+      'zoom': 2
+    });
+  });
+
+  var createOnEachFeature = function(map){
+    return function(feature, layer) {
+      var label = L.marker(layer.getBounds().getCenter(), {
+        icon: L.divIcon({
+          className: 'label',
+          html: feature.properties.name,
+          iconSize: [100, 40]
+        })
+      }).addTo(map);
+    }
+  }
+
+  var map;
+  d3.json("data/africa.geo.json", function(res){
+
+    // map 1
+    map = maps[0]
+    var layer = new L.GeoJSON(res, {
+      onEachFeature:createOnEachFeature(map)
+    }).addTo(map);
+    map.fitBounds(layer.getBounds()); // Fit map to bounds of geojson
+    map.setZoom(3);
+    layer.eachLayer(function(l) {
+      console.log("l", l);
+      d3.select(l._path).datum(l.feature);
+    });
+    d3.select("#map0").select("svg").selectAll("path").on("click", function(d){
+      console.log(d);
+      d3.select(this).style("fill", "red");
+    });
+
+    // map2
+    map = maps[1];
+    var accessToken = 'pk.eyJ1IjoiaGl0b2t1biIsImEiOiJjaXVqYnd0NXUwMGRwMm9tc3RvcGZ1ZDZ5In0.Q4wyiiGDLH_lTi3zzFcAtA';
+    var mapboxUrl = 'https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
+    var grayscale = L.tileLayer(mapboxUrl, {id: 'light-v9', attribution: '', maxZoom: 20, accessToken: accessToken});
+    grayscale.addTo(map);
+    var layer = new L.GeoJSON(res).addTo(map);
+    map.fitBounds(layer.getBounds());
+    map.setZoom(3);
+
+
+    //位置→座標変換
+    function projectPoint(x, y) {
+      var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+      this.stream.point(point.x, point.y);
+    }
+    //緯度経度->パスジェネレーター関数作成
+    var transform = d3.geoTransform({point: projectPoint});
+    var path = d3.geoPath().projection(transform);
+
+    // map3
+    map = maps[2]
+    var layer = new L.GeoJSON(res, {}).addTo(map);
+    map.fitBounds(layer.getBounds()); // Fit map to bounds of geojson
+    layer.eachLayer(function(l) {
+      console.log("l", l);
+      d3.select(l._path).datum(l.feature);
+    });
+    d3.select("#map2").select("svg").selectAll("path").on("click", function(d){
+      console.log(d);
+      d3.select(this).style("fill", "red");
+    });
+
+    var featureElement = d3.select("#map2").select("svg").append("g").selectAll("text")
+    .data(res.features)
+    .enter()
+    .append("text")
+    .text(function(d){
+      return d.properties.name;
+    });
+    function update() {
+      featureElement.attr("x", function(d){
+        return path.centroid(d)[0];
+      })
+      .attr("y", function(d){
+        return path.centroid(d)[1];
+      });
+    }
+    update();
+    map.on("zoom", update);
+    map.on("move", update);
+    map.setZoom(3);
+
+    // pure d3.js
+    (function(){
+      var projection = d3.geoMercator().scale(400);
+      var map = d3.select("#map3").append("svg")
+      .style("width", "100%")
+      .style("height", $(".map").height());
+      var g = map.append("g");
+
+      projection.center(d3.geoCentroid(res));
+      var path = d3.geoPath().projection(projection);
+
+      var country = g.selectAll("path")
+      .data(res.features)
+      .enter()
+      .append("g");
+      country.append("path")
+      .attr("d", path);
+
+      // var drag = d3.drag()
+      // // .on('start', drag_start)
+      // .on('drag', function(d){
+      //   projection.invert([d3.event.x, d3.event.y]);
+      // });
+      // drag(map);
+
+      var initFontSize = parseFloat(g.style("font-size"));
+      var initStrokeWitdh = parseFloat(g.style("stroke-width"));
+      console.log("initFontSize", initFontSize);
+
+      const zoom = d3.zoom()
+      .on('zoom', function(){
+        g.style("font-size", initFontSize / d3.event.transform.k + "px");
+        country.style('stroke-width', initStrokeWitdh / d3.event.transform.k + "px !important");
+
+        console.log("transform.k", d3.event.transform.k);
+        console.log(country.style("stroke-width"));
+        console.log("initStrokeWitdh", initStrokeWitdh);
+        console.log("initStrokeWitdh / d3.event.transform.k", initStrokeWitdh / d3.event.transform.k);
+
+        g.attr('transform', d3.event.transform) // updated for d3 v4
+      });
+      map.call(zoom);
+
+      g.selectAll("text")
+      .data(res.features)
+      .enter()
+      .append("text")
+      .text(function(d){
+        return d.properties.name;
+      })
+      .attr("x", function(d){
+        return path.centroid(d)[0];
+      })
+      .attr("y", function(d){
+        return path.centroid(d)[1];
+      });
+
+    })();
+
+
+
+  })
+
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

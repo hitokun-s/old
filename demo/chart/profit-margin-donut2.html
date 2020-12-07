@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profit Margin Donut Chart</title>
+    <script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+    <script type="text/javascript" src="../js/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../../js/underscore-min.js"></script>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/google-tracking.js"></script>
+    <style>
+        body{
+            min-width: 960px;
+        }
+
+        .arc path {
+            stroke: #fff;
+        }
+
+        .axis path,
+        .axis line{
+            fill: none;
+            stroke: black;
+        }
+
+        .line{
+            fill: none;
+            stroke: blue;
+            stroke-width: 2px;
+        }
+
+        .tick text{
+            font-size: 12px;
+        }
+
+        .tick line{
+            opacity: 0.2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Profit Margin Donut Chart</h1>
+    <div id="graph" class="row"></div>
+</div>
+<template id="tmpl-stage">
+    <div class="panel col-sm-12">
+        <div></div>
+    </div>
+</template>
+<script>
+
+    var margin = {top: 80, right: 10, bottom: 40, left: 70};
+
+    var color = d3.scale.category10();
+
+    var pie = d3.layout.pie()
+            .startAngle(0).endAngle(Math.PI * 2)
+            .value(function (d) {
+                return d.value;
+            }).sort(null);
+
+    // data条件：name,totalプロパティをもつ
+    var showBarChart = function (data, baseSvg, opt) {
+
+        var maxSales = _.max(data, function(d){
+            return d.sales;
+        }).sales;
+
+        // スケールと出力レンジの定義
+        var xScale = d3.scale.ordinal().rangeRoundBands([0, opt.width], 0.3); // 幅と余白の比率
+        xScale.domain(data.map(function(d){return d.name;}));
+
+        var yScale = d3.scale.linear()
+                .domain([0,
+                    d3.max(data.map(function (d) {
+                        return d.total;
+                    })) + 200])
+                .range([opt.height, 0]);
+
+        // 軸の定義
+        var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient("bottom")
+                .innerTickSize(-opt.height)
+                .outerTickSize(0)
+                .tickPadding(10);
+
+        var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .orient("left")
+                .innerTickSize(- opt.width)
+                .outerTickSize(0)
+                .tickPadding(10);
+
+        var xAxisObj, yAxisObj;
+
+        xAxis.scale(xScale);
+        baseSvg.select(".x").call(xAxis);
+
+        // 普通の棒グラフ
+//        var g = baseSvg.selectAll(".bar")
+//                .data(data)
+//                .enter().append("rect")
+//                .attr({
+//                    class: "bar",
+//                    fill: "orange"
+//                })
+//                .style("cursor", "pointer")
+//                .attr("transform", function (d) {
+//                    return "translate(" + xScale(d.name) + "," + yScale(d.total) + ")";
+//                })
+//                .attr("width", xScale.rangeBand())
+//                .attr("height", function (d) {
+//                    return opt.height - yScale(d.total);
+//                });
+
+        var g = baseSvg.selectAll(".bar")
+                .data(data)
+                .enter().append("g")
+                .attr("class", "bar")
+                .attr("transform", function (d) {
+                    return "translate(" + (xScale(d.name) + xScale.rangeBand()/2) + "," + yScale(d.total) + ")";
+                }).each(function (d) {
+                    showDonut(d, d3.select(this), 100 * Math.sqrt(d.sales / maxSales));
+                });
+
+        xAxisObj = baseSvg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + opt.height + ")")
+                .call(xAxis)
+                .selectAll("text")
+                .style("text-anchor", "middle");
+        var xText = xAxisObj.append("text").text("").style("text-anchor", "middle")
+                .attr("transform", "translate(130,40)");
+
+        // y軸をsvgに表示
+        yAxisObj = baseSvg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+        var yText = yAxisObj.append("text").attr("transform", "translate(0,-10)").text("売上高").style("text-anchor", "end")
+
+    };
+
+    var showDonut = function(oriData, baseSvg, radius){
+//        var tmpRadius = radius * Math.sqrt(oriData.sales / maxTotal);
+        var arc = d3.svg.arc().outerRadius(radius).innerRadius(radius - 30);
+
+        var data;
+        var red = d3.rgb("lightcoral").toString();
+        var blue = d3.rgb("lightblue").darker(0.5).toString();
+        if(oriData.profit > 0){
+            data = [
+                {name:"profit", value: oriData.profit, color: blue},
+                {name:"", value: oriData.sales - oriData.profit, color:"lightgrey"},
+            ]
+        }else{
+            data = [
+                {name:"", value: oriData.sales + oriData.profit, color:"lightgrey"},
+                {name:"profit", value: -oriData.profit, color: red}
+            ]
+        }
+
+        var g = baseSvg.selectAll(".arc")
+                .data(pie(data))
+                .enter().append("g")
+                .attr("class", "arc");
+
+        g.append("path")
+                .attr("d", arc)
+                .style("opacity", 0)
+                .attr("fill", function (d, i) {
+                    return d.data.color;
+                }).transition().duration(1000).style("opacity", 1);
+
+        baseSvg.append("text").attr("font-size", 40)
+                .attr("fill", oriData.profit > 0 ? blue : red)
+                .attr("transform", "translate(0," +  (- radius - 10) + ")")
+                .style("text-anchor", "middle")
+                .text(~~(oriData.profit * 100 / oriData.sales) + "%");
+
+    }
+
+    var data = [
+        {
+            name:"2013",
+            total:300,
+            sales: 300,
+            profit: 40
+        },
+        {
+            name:"2014",
+            total:200,
+            sales: 200,
+            profit: -40
+        },
+        {
+            name:"2015",
+            total:400,
+            sales: 400,
+            profit: 50
+        }
+    ]
+
+    $(function () {
+
+        var elm = $.tmpl($('#tmpl-stage'));
+        $("#graph").append(elm);
+
+        var w = $(".panel").width();
+        var h = $(".panel").width()/2;
+
+        var svg = d3.select(elm[0]).append("svg").attr({
+            width: w,
+            height: h,
+        }).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        
+        console.log("height", h - margin.top - margin.bottom);
+        console.log("h", h);
+
+        showBarChart(data, svg, {
+            width: w - margin.left - margin.right,
+            height: h - margin.top - margin.bottom
+        });
+    })
+
+</script>
+</body>
+</html>

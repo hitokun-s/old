@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Infographic Components for vue-canvas" />
+    <meta property="og:type" content="article" />
+
+    <title>Infographic Components for vue-canvas | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.0.13/fontfaceobserver.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <script type="text/javascript" src="/tool/js/vue-canvas.js"></script>
+
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<style>
+
+</style>
+
+<h1>Infographic Components for vue-canvas</h1>
+
+<canvas id="canvas" v-canvas width="500px" height="400px">
+    <v-score :score="score1" x="100" y="100" light-direction="left"></v-score>
+    <v-score :score="score2" x="200" y="100" light-direction="right"></v-score>
+    <v-baloon title="hoge" amount="12.34" x="100" y="200" direction="left"></v-baloon>
+    <!--<v-meter ratio="0.6" x="100" y="300"></v-meter>-->
+    <!--<v-meter ratio="0.2" x="150" y="300"></v-meter>-->
+    <!--<v-meter ratio="0.8" x="200" y="300"></v-meter>-->
+    <!--<v-meter ratio="0.1" x="250" y="300"></v-meter>-->
+    <!--<v-meter ratio="0.9" x="300" y="300"></v-meter>-->
+    <v-meter v-for="index in meterCount" :x="100 + 50 * index" y="300" :ratio="0.2 + index * 0.1"></v-meter>
+    <v-baloon-with-score :score="score1" x="300" y="150"></v-baloon-with-score>
+</canvas>
+
+<script type="text/javascript">
+    
+    console.log("start!");
+
+  Vue.component('v-meter', Vue.extend({
+    props: ["ord", "ratio", "x", "y"],
+    methods: {
+      draw: function (ctx, done) {
+        
+        var ratio = parseFloat(this.ratio);
+        var x = parseInt(this.x);
+        var y = parseInt(this.y);
+        
+        ctx.beginPath();
+        ctx.strokeStyle = "#e8e8e8";
+        ctx.lineWidth = 5;
+        ctx.arc(x, y, 17.5, 0, Math.PI*2, false);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.strokeStyle = "#117899";
+        ctx.arc(x, y, 17.5, - Math.PI / 2, Math.PI * (2 * ratio - 0.5), false);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.fillStyle = "#2b5568";
+        ctx.arc(x, y, 4, 0, Math.PI*2, false);
+        ctx.fill();
+
+        ctx.save();
+        ctx.translate(x, y); // 回転の処理前に原点を移動
+        ctx.rotate(Math.PI * 2 * ratio);
+
+        ctx.beginPath();
+        ctx.moveTo(-3, 0);
+        ctx.lineTo(0, -12);
+        ctx.lineTo(3, 0);
+        ctx.fill();
+
+        ctx.restore();
+        done();
+      }
+    }
+  }));
+
+  Vue.component('v-baloon-with-score', Vue.extend({
+    props: ["ord", "score", "x", "y", "lightDirection"],
+    template: '<v-canvas-wrapper><v-score :score="score" :x="parseInt(x) + 25" :y="y - 45" light-direction="left" ord="2"></v-score>'
+    + '<v-baloon title="hoge" :amount="score" :x="x" :y="y" direction="left" ord="1"></v-baloon></v-canvas-wrapper>',
+    methods: {
+      onRendered: function(ctx, done){
+        console.log("onRendered");
+      }
+    }
+  }));
+
+  Vue.component('v-score', Vue.extend({
+    props: ["ord", "score", "x", "y", "lightDirection"],
+    methods: {
+      draw: function (ctx, done) {
+        
+        var score = this.score;
+        var x = parseInt(this.x);
+        var y = parseInt(this.y);
+        var lightDirection = this.lightDirection;
+        
+        if(lightDirection){
+          ctx.fillStyle = "rgba(91, 91, 91, 0.3)";
+          if(lightDirection == "left"){
+            ctx.fillRect(x + 3, y - 18 , 80, 15);
+          }else{
+            ctx.fillRect(x - 3, y - 18 , 80, 15);
+          }
+        }
+
+        var lColor,dColor;
+        if(score >= 0){
+          lColor = "#c0e072";
+          dColor = "#91c532";
+        }else{
+//            lColor = "#ed7d3e";
+          lColor = "rgb(241,151,101)";
+          dColor = "#e55d27";
+        }
+
+        ctx.fillStyle = lColor;
+        ctx.fillRect(x, y - 15, 80, 15);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "Bold 14px Roboto";
+        ctx.fillText((score >= 0 ? "+" : "-") + Math.abs(score) + "%", x + 20, y - 2);
+
+        // arrow box
+        ctx.fillStyle = dColor;
+        ctx.fillRect(x, y - 15, 15, 15);
+        ctx.strokeStyle = lColor;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+
+        if(score >= 0){
+          ctx.moveTo(x + 7.5, y - 2);
+          ctx.lineTo(x + 7.5, y - 13);
+          ctx.stroke();
+          ctx.moveTo(x + 2, y - 7.5);
+          ctx.lineTo(x + 7.5, y - 13);
+          ctx.lineTo(x + 13, y - 7.5);
+          ctx.stroke();
+        }else{
+          ctx.moveTo(x + 7.5, y - 2);
+          ctx.lineTo(x + 7.5, y - 13);
+          ctx.stroke();
+          ctx.moveTo(x + 2, y - 7.5);
+          ctx.lineTo(x + 7.5, y - 2);
+          ctx.lineTo(x + 13, y - 7.5);
+          ctx.stroke();
+        }
+        done();
+      }
+    }
+  }));
+
+  Vue.component('v-baloon', Vue.extend({
+    props: ["ord", "title", "amount", "x", "y", "direction","bgColor", "withShadow", "bgImage"],
+    methods: {
+      draw: function (ctx, done) {
+
+        var x = parseInt(this.x);
+        var y = parseInt(this.y);
+        var title = this.title;
+        var amount = this.amount;
+        var withShadow = this.withShadow == "true";
+        var bgImage = this.bgImage;
+        
+        var WIDTH = 80;
+        var HEIGHT = title ? 50 : 30;
+        
+        var direction = this.direction || "left";
+        var bgColor = this.bgColor || "#99d6c4";
+
+        if(withShadow){
+          ctx.fillStyle = "rgba(91, 91, 91, 0.3)";
+          if(direction == "left" || direction == "down"){
+            ctx.fillRect(x + 3, y - HEIGHT - 3 , WIDTH, HEIGHT);
+          }else{
+            ctx.fillRect(x - 3, y - HEIGHT - 3 , WIDTH, HEIGHT);
+          }
+        }
+
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(x, y - HEIGHT, WIDTH, HEIGHT);
+
+        var drawText = function(){
+          ctx.fillStyle = "#000";
+          ctx.font = "Bold 18px Roboto";
+          ctx.fillText(amount, x + 8, y - HEIGHT + 22 );
+
+          if(title){
+            ctx.font = "12px Roboto";
+            ctx.fillText(title, x + 8, y - 10);
+          }
+        };
+
+        // bgImage
+        if(bgImage){
+          var img = new Image();
+          img.src = bgImage;
+          img.onload = function(){
+            ctx.drawImage(img, x, y - HEIGHT);
+            drawText();
+          }
+        }else{
+          drawText();
+        }
+
+        ctx.fillStyle = bgColor;
+        ctx.beginPath();
+        switch(direction){
+          case "left": {
+            ctx.moveTo(x, y - 30);
+            ctx.lineTo(x - 8, y - 25);
+            ctx.lineTo(x, y - 20);
+            break;
+          }
+          case "right":{
+            ctx.moveTo(x + WIDTH, y - 30);
+            ctx.lineTo(x + WIDTH + 8, y - 25);
+            ctx.lineTo(x + WIDTH, y - 20);
+            break;
+          }
+          case "down":{
+            ctx.moveTo(x + WIDTH / 2 - 4, y);
+            ctx.lineTo(x + WIDTH / 2, y + 8);
+            ctx.lineTo(x + WIDTH / 2 + 4, y);
+            break;
+          }
+        }
+        ctx.fill();
+        done();
+      }
+    }
+  }));
+
+    var font = new FontFaceObserver('Roboto', {
+        weight: 400
+    });
+
+    font.load().then(function () {
+        console.log('Font is available');
+
+      var vc = new Vue({
+        el: '#canvas',
+        data: {
+          score1: 12.34,
+          score2: -12.34,
+          meterCount: 5
+        },
+        methods: {
+          onRendered: function (ctx) {
+          }
+        }
+      });
+      setTimeout(function(){
+        vc.score1 = 567;
+        vc.meterCount = 6;
+      }, 2000);
+        
+        
+        
+//        drawMeter(0.6, 20, 280);
+//
+//        drawScore(12.34, 10, 20, "left");
+//        drawScore(-12.34, 120, 20, "right");
+//
+//        drawBaloon("53.57%", "Equity Ratio", 10, 110, "left", true);
+//        drawBaloon("12.34%", "Equity Ratio", 120, 110, "right", true);
+//        drawBaloon("12.34%", "Equity Ratio", 230, 110, "down", true);
+//
+//        drawBaloonWithYear("$489M", "2013", 340, 110);
+//
+//        drawBaloonWithScore("53.57%", "Equity Ratio", 12.34, 10, 200, "left");
+//        drawBaloonWithScore("53.57%", "Equity Ratio", 12.34, 120, 200, "right");
+    }, function () {
+        console.log('Font is not available');
+    });
+    
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    var drawBaloonWithYear = function(text, year, x, y){
+        drawBaloon(text, null, x, y, {
+            direction: "down",
+            bgColor: "#f3f3f5",
+            bgImage: "img/calc.png"
+        });
+        ctx.save();
+        ctx.translate(x - 7, y - 2);
+        ctx.rotate(- Math.PI / 2);
+
+        ctx.strokeStyle = "#000";
+        ctx.fillStyle = "#000";
+        ctx.fillText(year, 0, 0);
+        ctx.restore();
+    };
+    
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

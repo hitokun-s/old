@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6 Babel Browserify Sample</title>
+    <!--js/basic.js は、browserifyによって、basic.es6からビルドされる-->
+    <script type="text/javascript" src="js/basic.js"></script>
+    <script type="text/javascript" src="../components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="../components/view-source/view-source.js"></script>
+    <link href="../components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <p>basic.es6</p>
+    <script type="text/es6" class="vs">
+    import * as math from "./math.es6";
+    console.log("2π = " + math.sum(math.pi, math.pi));
+</script>
+    <p>math.es6</p>
+    <script type="text/es6" class="vs">
+    export function sum(x, y) {
+        return x + y;
+    }
+    export var pi = 3.141593;
+</script>
+</div>
+</body>
+</html>

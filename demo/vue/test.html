@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue.js Exercise</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.4/vue.min.js"></script>
+</head>
+<body>
+
+
+<ul id="example">
+    <input v-model="parentMsg"/>
+    <my-global message="I'm global."></my-global>
+    <my-local v-bind:message="parentMsg"></my-local>
+    <hoge inline-template><p>hoge</p></hoge>
+    <li v-for="item in items">
+        {{ item.message }}
+    </li>
+</ul>
+
+<script>
+    // global component
+    Vue.component('my-global', {
+        template: '<div>A custom global component!:{{message}}</div>',
+        props: ['message']
+    });
+
+    Vue.component("hoge", {
+        data:{message: "fuga"}
+    });
+//    var Child = {
+//        template: '<div>A custom local component!: {{message}}</div>',
+//        props: ['message']
+//    }
+    var Child = Vue.extend({
+        template: '<div>A custom local component!: {{message}}</div>',
+        props: ['message'],
+        created: function () {
+            console.log("created");
+        },
+        mounted: function () {
+            console.log("mounted");
+        },
+        updated: function () {
+            console.log("updated");
+        },
+        destroyed: function () {
+            console.log("destroyed");
+        },
+    });
+    var example = new Vue({
+        el: '#example',
+        data: {
+            items: [
+                {message: 'Foo'},
+                {message: 'Bar'}
+            ],
+            parentMsg:""
+        },
+        components: {
+            // <my-component> will only be available in parent's template
+            'my-local': Child
+        }
+    });
+</script>
+</body>
+</html>

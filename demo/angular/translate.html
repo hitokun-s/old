@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Angular Translate" />
+    <meta property="og:type" content="article" />
+
+    <title>Angular Translate | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.15.2/angular-translate.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.15.2/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.15.2/angular-translate-storage-local/angular-translate-storage-local.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.15.2/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.15.2/angular-translate-handler-log/angular-translate-handler-log.min.js"></script>
+
+
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <div ng-app="app">
+    <div ng-controller="controller">
+        <h1>Angular Translate</h1>
+        Example Button:
+        <button class="button" translate="common.save" ng-click="changeLang()"></button>
+    </div>
+</div>
+
+<script>
+    // refs: http://mame0112.hatenablog.com/entry/2015/05/19/192840
+    
+    var app = angular.module("app", ['ngCookies',"pascalprecht.translate"]);
+    
+    app.config(['$translateProvider', function($translateProvider) {
+
+        // useStaticFilesLoaderは外部のjsonを読み込みますよ、という意味
+        // /langフォルダ内、lang_で始まり、.jsonで終わるファイルを指す。例：lang_ja.json
+        $translateProvider.useStaticFilesLoader({
+            prefix : '../lang/lang_',
+            suffix : '.json'
+        });
+        $translateProvider.determinePreferredLanguage();
+
+        $translateProvider.preferredLanguage('ja'); // 初期設定言語
+        $translateProvider.fallbackLanguage('en'); // 初期設定言語がなかった場合のバックアップ言語
+        
+        // jsonに定義していない文言があると、それを見つけてエラーを吐くようにする
+        $translateProvider.useMissingTranslationHandlerLog();
+        
+        $translateProvider.useLocalStorage();
+        $translateProvider.useSanitizeValueStrategy('escaped');
+
+    }]);
+
+    app.controller('controller', ['$scope', '$translate', function($scope, $translate){
+//        alert("change lang after 1 sec...");
+//        setTimeout(function(){
+//            $translate.use('en');
+//        }, 1000);
+        $scope.changeLang = function(){
+            var current = $translate.use();
+            console.log("current:", current);
+
+            $translate.use(current == 'ja' ? 'en': 'ja');
+        };
+    }]);
+
+</script>
+
+
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="Network - Adventure of HelloWorld" />
+    <meta property="og:type" content="article" />
+
+    <title>Network - Adventure of HelloWorld | Hitokun's</title>
+    
+    <!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+            svg{
+                width:100%;
+                height:400px;
+            }
+        </style>
+        <div id="content">
+            <p>I got networked!</p>
+            <div class="text-center">
+                <svg></svg>
+            </div>
+        </div>
+        <script>
+            var graph = {nodes: [
+                    {id: 1, letter: "H"},
+                    {id: 2, letter: "E"},
+                    {id: 3, letter: "L"},
+                    {id: 4, letter: "L"},
+                    {id: 5, letter: "O"}
+                ],
+                links: [
+                    {source: 0, target: 1},
+                    {source: 0, target: 2},
+                    {source: 0, target: 3},
+                    {source: 0, target: 4},
+                    {source: 1, target: 2},
+                    {source: 1, target: 3},
+                    {source: 1, target: 4},
+                    {source: 2, target: 3},
+                    {source: 2, target: 4},
+                    {source: 3, target: 4}
+                ]
+            };
+
+            var newData = [
+                {node: {id: 6, letter: "W"}, links: [5]},
+                {node: {id: 7, letter: "O"}, links: [6]},
+                {node: {id: 8, letter: "R"}, links: [7,6]},
+                {node: {id: 9, letter: "L"}, links: [8,6,7]},
+                {node: {id: 10, letter: "D"}, links: [9,8,7,6]}
+            ];
+
+            var svg = d3.select("svg");
+            var force;
+
+            var update = function() {
+
+                var link = svg.selectAll(".link")
+                        .data(force.links(), function(d) {
+                            return d.source.id + "-" + d.target.id;
+                        });
+                link.enter().append("line").classed("link", true)
+                        .attr({
+                            "stroke-width": 2,
+                            stroke: "gray"
+                        });
+                link.exit().remove();
+
+                var node = svg.selectAll(".node")
+                        .data(force.nodes(), function(d) {
+                            return d.id;
+                        });
+                var node_g = node.enter().append("g").classed("node", true);
+
+                node_g.append("circle")
+                        .attr({
+                            r: 10,
+                            stroke: "blue",
+                            "stroke-width": 2,
+                            fill: "yellow"
+                        });
+                node_g.append("text").text(function(d) {
+                    return d.letter;
+                }).attr({
+                    stroke: "red",
+                    "dominant-baseline": "middle" // verticla centering
+                }).attr("x", function() {
+                    return -this.getBBox().width / 2; // horizontal centering
+                });
+                node.exit().remove();
+
+                // node forward, link backward
+                svg.selectAll(".node, .link").sort(function(a, b) {
+                    var aIsNode = (a.source === undefined);
+                    var bIsNode = (b.source === undefined);
+                    if (aIsNode && !bIsNode) {
+                        return 1;
+                    }
+                    if (!aIsNode && bIsNode) {
+                        return -1;
+                    }
+                    return 0;
+                });
+
+                force.on('tick', function() {
+                    link.attr({
+                        'x1': function(d) {
+                            return d.source.x;
+                        },
+                        'y1': function(d) {
+                            return d.source.y;
+                        },
+                        'x2': function(d) {
+                            return d.target.x;
+                        },
+                        'y2': function(d) {
+                            return d.target.y;
+                        }
+                    });
+                    node.attr("transform", function(d) {
+                        return "translate(" + d.x + "," + d.y + ")";
+                    });
+                });
+            };
+
+            var addNode = function(n) {
+                force.nodes().push(n);
+            };
+
+            var addLink = function(l) {
+                force.links().push(l);
+            };
+
+            var addNodeWithLinks = function(_node, _links) {
+                addNode(_node);
+                _links.forEach(function(idx){
+                    addLink({source: findNodeById(_node.id), target: findNodeById(idx)});
+                });
+                
+            };
+
+            var findNodeById = function(id) {
+                // Array.filter is valid after ECMAScript5
+                return force.nodes().filter(function(v) {
+                    return v.id === id;
+                })[0];
+            };
+
+            var Iterator = function(array) {
+                var idx = -1;
+                this.next = function() {
+                    idx++;
+                    if (idx >= array.length)
+                        return null;
+                    return array[idx];
+                };
+            };
+            var it = new Iterator(newData);
+
+            $(function() {
+                force = d3.layout.force()
+                        .charge(-340)
+                        .linkDistance(100)
+                        .size([parseInt(svg.style("width")), parseInt(svg.style("height"))]);
+                force.nodes(graph.nodes).links(graph.links);
+                force.start();
+
+                update();
+
+                var interval = setInterval(function() {
+                    var elm = it.next();
+                    if (elm) {
+                        force.stop();
+                        addNodeWithLinks(elm.node, elm.links);
+                        update();
+                        force.start();
+                    } else {
+                        window.clearInterval(interval);
+                    }
+                }, 1000);
+            });
+        </script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

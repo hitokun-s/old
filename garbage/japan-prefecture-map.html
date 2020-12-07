@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Japan Prefecture Map">
+    <meta name="Keywords" content="Japan,prefecture,map">
+    
+    <meta property="og:url" content="https://hitokun-s.github.io/garbage/japan-prefecture-map.html"/>
+    <meta property="og:description" content="Japan Prefecture Map"/>
+    
+    <meta property="og:title" content="Japan Prefecture Map" />
+    <meta property="og:type" content="article" />
+
+    <title>Japan Prefecture Map | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/topojson@3.0.0"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style type="text/css">
+    .pref {
+        cursor: pointer;
+    }
+    .answer{
+        border-bottom: 3px solid black;
+        display: inline-block;
+        min-width:100px;
+    }
+    svg{
+        position: absolute !important;
+        top: 0px;
+    }
+</style>
+
+<script>
+    var width = 900,
+            height = 960;
+
+    var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+    var projection = d3.geo.mercator()
+            .center([136, 35.5])
+            .scale(2000)
+            .translate([width / 2, height / 2]);
+
+    var path = d3.geo.path().projection(projection);
+    
+    $(function () {
+        d3.json("data/japan.json", function (error, japan) {
+//            var topo = topojson.object(japan, japan.objects.pref).geometries; // <= old syntax
+            var topo = topojson.feature(japan, japan.objects.pref).features;
+            svg.selectAll(".pref")
+                    .data(topo)
+                    .enter()
+                    .append("path")
+                    .attr("class", function (d, i) {
+//                        return "pref pref" + pref[d.properties.name_local];
+                        return "pref pref" + i;
+                    })
+                    .attr({
+                        fill: "transparent",
+                        stroke: "darkgrey"
+                    })
+                    .attr("d", path)
+                    .on("mouseover", function (d) {
+                        d3.select(this).attr({
+                            fill: "lavenderblush",
+                            stroke: "red"
+                        });
+                        indication.prefName = d.properties.name + "(" + d.properties.name_local + ")";
+                    })
+                    .on("mouseout", function () {
+                        d3.select(this).attr({
+                            fill: "transparent",
+                            stroke: "darkgrey"
+                        });
+                        indication.prefName = "";
+                    });
+        });
+    });
+    
+</script>
+<h1>Japan Prefecture Map</h1>
+<p>Please move mouse on map to know the name of a prefecture.</p>
+<p id="indication">The prefecture is <span class="answer"><b>{{ prefName }}</b></span></p>
+
+<script>
+    var indication = new Vue({
+        el: '#indication',
+        data: {
+            prefName: ""
+        }
+    });
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

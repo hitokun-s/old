@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    <meta property="og:image" content="https://hitokun-s.github.io/../image/5bets.png"/>
+    
+    
+    
+    <meta property="og:title" content="5bets" />
+    <meta property="og:type" content="article" />
+
+    <title>5bets | Hitokun's</title>
+    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <link href="css/5bets.css" rel="stylesheet">
+
+    <script>
+        var must_stop = [false, false, false, false, false];
+        var trans_time = [0.1, 0.1, 0.1, 0.1, 0.1];
+
+        var dict = [];
+
+        $(function () {
+            d3.csv("data/5bets.csv", function (d) {
+                return {
+                    id: +d.item_id, // convert to number
+                    w: d.word,
+                    m: d.meaning,
+                    level: +d.level // convert to number
+                };
+            }, function (error, rows) {
+                console.log("dict csv loaded!");
+                dict = rows;
+            });
+        });
+
+        var moveImpl = function () {
+            var mother = $(this).parent(".mother");
+            var idx = $(".mother").index(mother);
+            console.log(idx);
+            $(this).unbind();
+            if (must_stop[idx] == true) {
+                trans_time[idx] += 0.1;
+                mother.children().css("transition", trans_time[idx] + "s linear");
+                mother.children().css("-webkit-transition", trans_time[idx] + "s linear");
+                mother.children().css("-moz-transition", trans_time[idx] + "s linear");
+            }
+            if (trans_time[idx] > 1) {
+                mother.children().css("transition", "0.1s linear");
+                mother.children().css("-webkit-transition", "0.1s linear");
+                mother.children().css("-moz-transition", "0.1s linear");
+                must_stop[idx] = false;
+                trans_time[idx] = 0.1;
+                if (idx == 4) {
+                    showQuiz();
+                    $("#start_btn").attr("disabled", false);
+                }
+                return;
+            }
+            mother.children().eq(25).bind("webkitTransitionEnd", moveImpl);
+            mother.children().eq(25).bind("transitionend", moveImpl);
+            mother.append(mother.children().eq(0));
+        }
+
+        function move() {
+            $("#start_btn").attr("disabled", true);
+            $(".mother").removeClass("stopping");
+            $(".mother").addClass("rotating");
+            $("#quiz").empty();
+            must_stop = [false, false, false, false, false];
+            trans_time = [0.1, 0.1, 0.1, 0.1, 0.1];
+            stop_idx = 0;
+            $("#mother1 .child").eq(25).bind("webkitTransitionEnd", moveImpl);
+            $("#mother1 .child").eq(25).bind("transitionend", moveImpl);
+            $("#mother2 .child").eq(25).bind("webkitTransitionEnd", moveImpl);
+            $("#mother2 .child").eq(25).bind("transitionend", moveImpl);
+            $("#mother3 .child").eq(25).bind("webkitTransitionEnd", moveImpl);
+            $("#mother3 .child").eq(25).bind("transitionend", moveImpl);
+            $("#mother4 .child").eq(25).bind("webkitTransitionEnd", moveImpl);
+            $("#mother4 .child").eq(25).bind("transitionend", moveImpl);
+            $("#mother5 .child").eq(25).bind("webkitTransitionEnd", moveImpl);
+            $("#mother5 .child").eq(25).bind("transitionend", moveImpl);
+
+            $("#mother1").append($("#mother1 .child").eq(0));
+            $("#mother2").append($("#mother2 .child").eq(0));
+            $("#mother3").append($("#mother3 .child").eq(0));
+            $("#mother4").append($("#mother4 .child").eq(0));
+            $("#mother5").append($("#mother5 .child").eq(0));
+        }
+
+        var stop_idx = 0;
+        function stop() {
+            var tgt = $(".mother").eq(stop_idx);
+            tgt.removeClass("rotating");
+            tgt.addClass("stopping");
+            must_stop[stop_idx++] = true;
+        }
+        $(document).ready(function () {
+            $("<div>").addClass("haba").append($("#mother1").clone().attr("id", "mother2")).appendTo($("#slot"));
+            $("<div>").addClass("haba").append($("#mother1").clone().attr("id", "mother3")).appendTo($("#slot"));
+            $("<div>").addClass("haba").append($("#mother1").clone().attr("id", "mother4")).appendTo($("#slot"));
+            $("<div>").addClass("haba").append($("#mother1").clone().attr("id", "mother5")).appendTo($("#slot"));
+            $('#title').fadeOut(200, function () {
+                $(this).fadeIn(200)
+            });
+        });
+
+        function showQuiz() {
+            $(".mother").each(function () {
+                var letter = $(this).children().eq(1).text();
+                $("#quiz").append($("<input>").val($.trim(letter)));
+            });
+            getWord();
+        }
+
+        function getWord() {
+            letters = [];
+            $("#quiz input").each(function () {
+                letters.push($(this).val());
+            });
+
+            // 以下github page移行のために、サーバーサイドでphpで処理していたのを、クライアントサイドでの処理に切り替えた。
+            var regexp = new RegExp(letters.join(".*"), 'i');
+            var res = dict.filter(function(v){
+                return regexp.test(v.w);
+            });
+            if (res.length == 0) {
+                $("#quiz").empty();
+                $("#quiz").append("Sorry, No Word Including Such 5 Bets!");
+                return;
+            }
+            console.log("res count:" + res.length);
+            quiz_group = res;
+            console.log(quiz_group);
+            quiz_idx = 0;
+            show();
+
+//            $.ajax({
+//                type: "GET",
+//                url: "./query.php",
+//                data: "1=" + letters[0] + "&2=" + letters[1] + "&3=" + letters[2] + "&4=" + letters[3] + "&5=" + letters[4] + "",
+//                async: false,
+//                success: function (data) {
+//                    var res = JSON.parse(data);
+//                    console.log("res count:" + res.length);
+//                    if (res.length == 0) {
+//                        $("#quiz").empty();
+//                        $("#quiz").append("Sorry, No Word Including Such 5 Bets!");
+//                        return;
+//                    }
+//                    quiz_group = res;
+//                    quiz_idx = 0;
+//                    show();
+//                },
+//                error: function (XMLHttpRequest, textStatus, errorThrown) {
+//                    alert("failure!");
+//                }
+//            });
+        }
+        var letters;
+        var quiz_group;
+        var quiz_idx;
+        var temp_answer;
+        function show() {
+            var answer = quiz_group[quiz_idx]["w"];
+            var meaning = quiz_group[quiz_idx]["m"];
+            temp_answer = [];
+            $("#quiz").empty();
+            var j = 0;
+            var letter_cnt = 0;
+            var cnt_max = 0;
+            for (var i = 0; i < answer.length; i++) {
+                var temp_char = answer.charAt(i);
+                if (temp_char == " ") {
+                    if (letter_cnt > cnt_max) {
+                        cnt_max = letter_cnt;
+                    }
+                    letter_cnt = 0;
+                    $("#quiz").append($("<br>"));
+                    continue;
+                }
+                letter_cnt++;
+                temp_answer.push(temp_char);
+                if (temp_char === letters[j]) {
+                    var input = $("<input>").val(temp_char);
+                    j++;
+                } else {
+                    var input = $("<input>");
+                }
+
+                $("#quiz").append(input);
+            }
+            if (letter_cnt > cnt_max) {
+                cnt_max = letter_cnt;
+            }
+            var percent = 100 / cnt_max;
+            console.log("p:" + percent);
+            $("input").css("width", percent + "%");
+            $("#meaning_entity").text(meaning);
+            $("#meaning").css("display", "block");
+        }
+        function bet() {
+            var success = true;
+            var i = 0;
+            $("#quiz").children("input").each(function () {
+                if ($(this).val() !== temp_answer[i]) {
+                    success = false;
+                }
+                i++;
+            });
+            if (success) {
+                alert("well done!");
+            } else {
+                alert("not correct...");
+            }
+        }
+
+        function hint() {
+            var empty_idx = [];
+            var i = 0;
+            $("#quiz").children("input").each(function () {
+                if ($(this).val() == "") {
+                    empty_idx.push(i);
+                }
+                i++;
+            });
+            var hint_idx = empty_idx[Math.floor(Math.random() * empty_idx.length)];
+            $("#quiz").children("input").eq(hint_idx).val(temp_answer[hint_idx]);
+        }
+        function pass() {
+            quiz_idx++;
+            if (quiz_group.length > quiz_idx) {
+                show();
+            } else {
+                alert("Sorry, No More Question For Such 5 Bets!");
+            }
+        }
+    </script>
+
+<div id="container" class="center">
+    <div id="title" class="webfont">5 bets</div>
+
+    <div id="slot">
+        <div class="haba">
+            <div id="mother1" class="mother rotating">
+                <div class="child"><a>e</a></div>
+                <div class="child"><a>a</a></div>
+                <div class="child"><a>b</a></div>
+                <div class="child"><a>c</a></div>
+                <div class="child"><a>d</a></div>
+                <div class="child"><a>e</a></div>
+                <div class="child"><a>f</a></div>
+                <div class="child"><a>g</a></div>
+                <div class="child"><a>o</a></div>
+                <div class="child"><a>i</a></div>
+                <div class="child"><a>e</a></div>
+                <div class="child"><a>c</a></div>
+                <div class="child"><a>l</a></div>
+                <div class="child"><a>m</a></div>
+                <div class="child"><a>n</a></div>
+                <div class="child"><a>o</a></div>
+                <div class="child"><a>p</a></div>
+                <div class="child"><a>e</a></div>
+                <div class="child"><a>r</a></div>
+                <div class="child"><a>s</a></div>
+                <div class="child"><a>t</a></div>
+                <div class="child"><a>u</a></div>
+                <div class="child"><a>n</a></div>
+                <div class="child"><a>m</a></div>
+                <div class="child"><a>e</a></div>
+                <div class="child"><a>c</a></div>
+            </div>
+        </div>
+    </div>
+    <button id="start_btn" onclick="move()">start</button>
+    <button onclick="stop()">stop</button>
+
+    <div id="quiz"></div>
+
+    <div id="meaning">
+        <p>* means *</p>
+        <span id="meaning_entity"></span>
+    </div>
+
+    <div id="btn_corner">
+        <div id="bet_btn" class="circle_btn webfont">
+            <a onclick="bet()">bet</a>
+        </div>
+        <div class="filler_btn">
+        </div>
+        <div id="hint_btn" class="circle_btn webfont">
+            <a onclick="hint()">hint</a>
+        </div>
+        <div class="filler_btn">
+        </div>
+        <div id="pass_btn" class="circle_btn webfont">
+            <a onclick="pass()">pass</a>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

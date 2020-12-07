@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="B/S treemap bar chart" />
+    <meta property="og:type" content="article" />
+
+    <title>B/S treemap bar chart | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <link href="../demo/css/autograph.css" rel="stylesheet">
+
+    <style>
+        #graph {
+            z-index: 10;
+            width: 800px;
+            height: 600px;
+            font: 10px sans-serif;
+        }
+
+        .tt {
+            visibility: visible;
+        }
+    </style>
+
+<div class="container">
+    <h1>B/S treemap bar chart</h1>
+    <div id="graph" class="text-center"></div>
+</div>
+<script>
+    var svg;
+
+    var margin = {top: 30, right: 40, bottom: 100, left: 100};
+    var width = $("#graph").width() - margin.left - margin.right;
+    var height = $("#graph").height() - margin.top - margin.bottom;
+    var radius = Math.min($("#graph").width(), $("#graph").height()) / 2;
+
+    var colorsRight = d3.scale.linear().domain([0, 4]).range(['#fbc97f', '#F28CBB']);
+    var colorsLeft = d3.scale.linear().domain([0, 4]).range(['#CAE1FF', 'blue']);
+
+    var getTotalSize = function (data) {
+        var sum = 0;
+        data.forEach(function (d) {
+            d.children.forEach(function (o) {
+                sum += o.size;
+            })
+        });
+        return sum;
+    };
+
+    var checkConsistency = function (data) {
+        data.forEach(function (v) {
+            var leftSum = getTotalSize(v.data.left);
+            var rightSum = getTotalSize(v.data.right);
+            console.log("leftSum:" + leftSum);
+            console.log("rightSum:" + rightSum);
+        });
+    };
+
+    var showMainGraph = function (data, baseSvg, opt) {
+
+        data.forEach(function (d) {
+//            d[itemIdx] = parseInt(d[itemIdx].replace(/,/g, ""));//convert to number
+            d.total = getTotalSize(d.data.left) + getTotalSize(d.data.right);
+        });
+
+        var arc = d3.svg.arc().outerRadius(radius - 10).innerRadius(0);
+
+//        var parseDate = d3.time.format("%d-%b-%y").parse;
+
+        // スケールと出力レンジの定義
+        var xScale = d3.scale.ordinal().rangeRoundBands([0, opt.width], 0.3); // 幅と余白の比率
+        xScale.domain(data.map(function (d) {
+            return d.month;
+        }));
+        var yScale = d3.scale.linear()
+                .domain([0,
+                    d3.max(data.map(function (d) {
+                        return d.total;
+                    }))])
+                .range([opt.height, 0]);
+
+        // 軸の定義
+        var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient("bottom")
+                .innerTickSize(0)
+                .outerTickSize(0)
+                .tickPadding(10);
+
+        var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .outerTickSize(0)
+                .orient("left");
+
+        var xAxisObj, yAxisObj;
+
+        // 呼び出し順で前後配置が決まるため、順序を入れ替えやすいようにメソッド化。
+        var showGrid = function () {
+            xAxisObj = baseSvg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + opt.height + ")")
+                    .call(xAxis)
+                    .selectAll("text")
+                    .style("text-anchor", "middle");
+            var xText = xAxisObj.append("text").text("").style("text-anchor", "middle")
+                    .attr("transform", "translate(130,40)");
+
+            // y軸をsvgに表示
+            yAxisObj = baseSvg.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis);
+            var yText = yAxisObj.append("text")
+                    //                        .attr("transform", "rotate(-90)")
+                    //                        .attr("y", 6)
+                    //                        .attr("dy", ".71em"))
+                    .text("資産規模").style("text-anchor", "end")
+                    .attr("transform", "translate(0,-10)");
+        };
+
+        xAxis.scale(xScale);
+        baseSvg.select(".x").call(xAxis);
+
+        var g = baseSvg.selectAll(".bar")
+                .data(data)
+                .enter().append("g")
+                .attr("class", "bar")
+                .style("cursor", "pointer")
+                .attr("transform", function (d) {
+                    return "translate(" + xScale(d.month) + "," + yScale(d.total) + ")";
+                })
+                .attr("width", xScale.rangeBand())
+                .attr("height", function (d) {
+                    return opt.height - yScale(d.total);
+                }).on("click", function(d){
+                    baseSvg.selectAll("*").remove();
+                    showBSTreeMap(d.data, baseSvg, {
+                        width:opt.width,
+                        height:opt.height,
+                        showText:true
+                    });
+                });
+        g.each(function (d) {
+            console.log(this);
+            showBSTreeMap(d.data, d3.select(this), {
+                width: this.getAttribute("width"),
+                height: opt.height - yScale(d.total)
+            });
+        });
+        showGrid();
+    };
+
+    // 引数：left,rightのプロパティに、treeMap構造のデータが配列で入っている
+    // opt : width:int, height:int, showText:boolean（項目名を表示するか）
+    var showBSTreeMap = function (data, baseSvg, opt) {
+
+        data.left = _.sortBy(data.left, function (v) {
+            var sum = 0;
+            v.children.forEach(function (c) {
+                sum += c.size;
+            });
+            return sum;
+        });
+        data.left.forEach(function (v, i) {
+            v.children.forEach(function (d) {
+                d.type = "left";
+                d.color = colorsLeft(i);
+            });
+        });
+        data.right = _.sortBy(data.right, function (v) {
+            var sum = 0;
+            v.children.forEach(function (c) {
+                sum += c.size;
+            });
+            return sum;
+        });
+        data.right.forEach(function (v, i) {
+            v.children.forEach(function (d) {
+                d.type = "right";
+                d.color = colorsRight(i);
+            });
+        });
+        data = {
+            name: "",
+            children: [
+                {
+                    name: "right",
+                    children: data.right
+                },
+                {
+                    name: "left",
+                    children: data.left
+                }
+            ]
+        };
+
+        var treemap = d3.layout.treemap().size([opt.width, opt.height]).sticky(false).mode('slice-dice');
+        var treemapData = treemap.value(function (d) {
+            return d.size;
+        }).nodes(data);
+
+        var boxGroup = baseSvg.selectAll("g") //Boxグループを追加
+                .data(treemapData)
+                .enter()
+                .append("g");
+        var box = boxGroup.append('rect')
+                .attr({
+                    fill: "none",
+                    stroke: "white",
+                    "stroke-width": 3
+                })
+                .attr("x", function (d) {
+                    return d.x
+                })
+                .attr("y", function (d) {
+                    return d.y
+                })
+                .attr("width", function (d) {
+                    return d.dx
+                })
+                .attr("height", function (d) {
+                    return d.dy
+                })
+                .attr("fill", function (d, i) {
+                    return d.color;
+                });
+        if(opt.showText){
+            var text = boxGroup.append('text').text(function (d) {
+                        return d.name;
+                    })
+                    .attr("x", function (d) {
+                        return d.x + d.dx / 2;
+                    })
+                    .attr("y", function (d) {
+                        return d.y + d.dy / 2;
+                    })
+                    //                .attr("font-size", function (d) {
+                    //                    var rect_height = d.dy;
+                    //                    return Math.min(rect_height, 20);
+                    //                })
+                    //                .attr("stroke-width", function (d) {
+                    //                    var rect_height = d.dy;
+                    //                    return rect_height < 20 ? 1 : 2;
+                    //                })
+                    .attr({
+                        fill: "black",
+                        "stroke-width": 2,
+                        "font-weight": "bold",
+                        "font-family": "MS Gothic",
+                        "text-anchor": "middle",
+                        "dominant-baseline": "middle"
+//                    visibility:"hidden"
+                    }).attr("writing-mode", function (d) {
+                        return this.getBBox().width > d.dx ? "vertical-rl" : "horizontal-tb";
+                    });
+        }
+
+        // 外周を追加。今回は白線区切りなので、なくても良いといえば良い。
+//        baseSvg.append("rect").attr({
+//            x: 0,
+//            y: 0,
+//            width: width,
+//            height: height,
+//            stroke: "white",
+//            "stroke-width": 3,
+//            fill: "none"
+//        });
+    };
+
+    $(function () {
+        svg = d3.select("#graph").append("svg").attr({
+            class: "tt",
+            width: $("#graph").width(),
+            height: $("#graph").height()
+        });
+        var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        d3.json("data/fin.json", function (data) {
+            checkConsistency(data); // BSの左右が等しいか確認用
+            showMainGraph(data, g, {
+                width: width,
+                height: height
+            });
+        });
+    })
+
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    
+    
+    
+    
+    
+    
+    <meta property="og:title" content="path between two svg" />
+    <meta property="og:type" content="article" />
+
+    <title>path between two svg | Hitokun's</title>
+    
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+    svg{
+        border: 1px solid black;
+    }
+    #parent{
+        width: 900px;
+        height:500px;
+    }
+</style>
+
+<h1>Please drag the background of left/right svg element!</h1>
+<svg id="parent">
+    <g transform="translate(50,50)">
+        <svg id="svg1"></svg>
+    </g>
+    <g transform="translate(450,50)">
+        <svg id="svg2"></svg>
+    </g>
+</svg>
+<script>
+    var data = [
+        {x: 50, y: 80, r:20},
+        {x: -30, y: 60, r:23},
+        {x: 80, y: -50, r:26},
+        {x: -50, y: -30, r:20}
+    ];
+
+    d3.select("#parent").append("text").text("parent <svg> element").attr({
+        x:10,
+        y:20,
+        "font-size":20
+    });
+
+    d3.select("#svg1").append("rect").attr("id", "plate1");
+    d3.select("#svg2").append("rect").attr("id", "plate2");
+    d3.selectAll("rect").attr({
+        x: 0,
+        y: 0,
+        width: 400,
+        height: 400,
+        "fill": "white",
+        "fill-opacity": 1,
+        "stroke-width": 1,
+        stroke: "black"
+    });
+
+    var makeGraph = function(selector,idx) {
+        var g = d3.select(selector)
+                .attr("width", 400)
+                .attr("height", 400)
+                .append("g")
+                .attr("transform", "translate(200,200)");
+        g.selectAll(".link")
+                .data(data)
+                .enter()
+                .append("path")
+                .classed("link", true)
+                .attr("d", function(d) {
+                    return "M0,0L" + d.x + "," + d.y;
+                })
+                .attr({
+                    stroke: "lightgreen",
+                    "stroke-width": 5
+                });
+        g.selectAll(".node")
+                .data(data)
+                .enter()
+                .append("circle")
+                .classed("node", true)
+                .attr({
+                    stroke:"lightgreen",
+                    "stroke-width": 5
+                })
+                .attr("r", function(d){return d.r})
+                .attr("cx", function(d) {
+                    return d.x;
+                })
+                .attr("cy", function(d) {
+                    return d.y;
+                });
+        g.append("circle").attr({
+            cx:0,
+            cy:0,
+            r:10,
+            fill:"red",
+            stroke:"lightgreen",
+            "stroke-width": 5
+        });
+        d3.select(selector).append("text").text("<svg> element "+idx).attr({
+            x:10,
+            y:20,
+            "font-size":20
+        });
+    };
+    makeGraph("#svg1","1");
+    makeGraph("#svg2","2");
+
+    d3.select("#plate1").datum({x: 200, y: 200});
+    d3.select("#plate2").datum({x: 200, y: 200});
+
+    var drag = d3.behavior.drag().on("drag", function(d) {
+        d.x += d3.event.dx;
+        d.y += d3.event.dy;
+        d3.select(this.parentNode).select("g").attr("transform", "translate(" + d.x + "," + d.y + ")");
+        var self = this;
+        d3.select("#overPath").attr("d", function(_d) {
+            if (self.id === "plate1") {
+                _d.x1 += d3.event.dx;
+                _d.y1 += d3.event.dy;
+            } else {
+                _d.x2 += d3.event.dx;
+                _d.y2 += d3.event.dy;
+            }
+            return "M" + _d.x1 + "," + _d.y1 + "L" + _d.x2 + "," + _d.y2;
+        });
+    });
+
+    d3.selectAll("#plate1,#plate2").call(drag);
+
+    d3.select("#parent").append("path")
+            .datum({x1: 250, y1: 250, x2: 650, y2: 250})
+            .attr({
+                id: "overPath",
+                d: "M250,250L650,250",
+                stroke: "red",
+                "stroke-width": 5
+            });
+</script>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

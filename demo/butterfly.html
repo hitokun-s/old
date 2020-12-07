@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+    <meta name="viewport" content="width=960">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta property="fb:admins" content="100002358474209">
+    <meta property="fb:app_id" content="362864550832043">
+    <meta property='og:site_name' content='Hitokun's />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@hitokuns">
+    
+    <meta name="description" content="Butterfly telling your browser supporting CSS3 or not">
+    
+    <meta property="og:image" content="https://hitokun-s.github.io/../image/butterfly.png"/>
+    
+    <meta property="og:description" content="Butterfly telling your browser supporting CSS3 or not"/>
+    
+    <meta property="og:title" content="Butterfly" />
+    <meta property="og:type" content="article" />
+
+    <title>Butterfly | Hitokun's</title>
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+    <script src="/js/google-tracking.js"></script>
+
+    <link href="/css/responsive-helper.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 20px;
+            min-width: 800px;
+            overflow-x: auto;
+        }
+        .h-40{
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="ui top container">
+    <div class="ui tabular menu h-40">
+        <div class="left menu">
+            <a href="/" class="item"><h1>Hitokun's</h1></a>
+            <div class="large screen only">
+                <span class="ui left pointing big label" style="margin-top:21px;">
+                    My.status = (I as Programmer).canHelp(You) ? HAPPY : SAD;
+                </span>
+            </div>
+        </div>
+        <div class="right menu">
+            <a href="/index.html" class="item active">
+                Home
+            </a>
+            <a href="/about.html" class="item ">
+                About
+            </a>
+            <a href="/contact.html" class="item ">
+                Contact
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui container">
+    <div class="ui big breadcrumb" id="breadcrumb" v-if="!isHome()">
+        <template v-for="item in getMenu()">
+            <a :href="item.path" class="section">{{ item.name }}</a>
+            <i class="right chevron icon divider"></i>
+        </template>
+    </div>
+    <style>
+        body{
+            overflow: hidden;
+        }
+
+        #parent{
+            position: absolute;
+            left: 40%;
+            top:30%;
+            transform-style: preserve-3d;
+            perspective-origin: 0px -200px;
+            animation-name: parent-orbit;
+            animation-duration: 20s;
+            animation-iteration-count:infinite;
+            animation-timing-function:ease-in-out;
+        }
+        @keyframes parent-orbit{
+            0% {transform: perspective(500px)  translateX(200px)  translateY(0px) rotateY(-200deg) ;}
+            50% {transform: perspective(500px)  translateX(-200px)  translateY(100px) rotateY(160deg) ;}
+            100% {transform: perspective(500px) translateX(200px)  translateY(0px) rotateY(520deg) ;}
+        }
+
+        #container{
+            width: 203px;
+            transform-style: preserve-3d;
+            transform:  perspective(300px) translateX(200px);
+
+            transform-style: preserve-3d;
+            transform: translateX(200px) rotateX(90deg);
+            animation-name: orbit;
+            animation-duration: 0.6s;
+            animation-iteration-count:infinite;
+            animation-timing-function:ease-in-out;
+        }
+        @keyframes orbit{
+            0% {transform:  translateX(300px) translateY(20px) rotateX(60deg);}
+            50% {transform:  translateX(300px) translateY(0px) rotateX(60deg);}
+            100% {transform:  translateX(300px) translateY(20px) rotateX(60deg);}
+        }
+
+        #left{
+            transform: rotateY(45deg);
+            transform: rotateY(45deg);
+            transform-origin:100% 50%;
+            animation-name: forleft;
+        }
+        #right{
+            transform: rotateY(-45deg);
+            transform: rotateY(-45deg);
+            transform-origin:0% 50%;
+            animation-name: forright;
+        }
+
+        .feather{
+            animation-duration: 0.3s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count:infinite;
+            animation-direction:alternate-reverse;
+        }
+
+        @keyframes forleft{
+            from {transform: rotateY(-45deg);}
+            to {transform: rotateY(45deg);}
+        }
+        @keyframes forright{
+            from {transform: rotateY(45deg);}
+            to {transform: rotateY(-45deg);}
+        }
+
+
+        #serif-wrapper{
+            display: absolute;
+            animation-name: serif-orbit;
+            animation-duration: 10s;
+            animation-iteration-count:infinite;
+            animation-timing-function:ease-in-out;
+        }
+        @keyframes serif-orbit{
+            0% {transform: translateY(-50px) translateX(300px) rotateY(200deg);}
+            100% {transform: translateY(-50px) translateX(300px) rotateY(-160deg);}
+        }
+        #serif{
+            font-size: 30px;
+            font-family: "Batang";
+            animation-name: serif-light;
+            animation-duration: 1.5s;
+            animation-iteration-count:infinite;
+        }
+
+        @keyframes serif-light{
+            0% {opacity:0;}
+            20% {opacity:1;}
+            80% {opacity:1;}
+            100% {opacity:0;}
+        }
+
+        .btn{
+            margin: 4px auto;;
+        }
+    </style>
+
+    <script>
+        var show = function() {
+            $("#container").css({
+                "background-color": "red",
+                "opacity": 0.5
+            });
+            $("#parent").css({
+                "background-color": "yellow",
+                "opacity": 0.5
+            });
+        }
+        var hide = function() {
+            $(".plate").css({
+                "background-color": "transparent",
+                "opacity": 1
+            });
+        }
+        var stop = function(){
+            $("#parent, #container, #serif-wrapper, #serif, .feather").css("animation-play-state","paused");
+        }
+        var start = function(){
+            $("#parent, #container, #serif-wrapper, #serif, .feather").css("animation-play-state","running");
+        }
+        var listenEvents = [
+            'webkitAnimationIteration', // webkit(Chrome1.0, Safari3.2)
+            'oAnimationIteration', // Opera10.5
+            'animationiteration'        // IE10, Fx4以降, 12.10以降
+        ];
+        var tweet = function(){
+            var idx = -1;
+            var arr = [
+                "I am","a man","dreaming","I am ","a butterfly ?",
+                "or","I am","a butterfly","dreaming","I am","a man ?"
+            ];
+
+            arr.push("");
+            return function(){
+                idx++;
+                if(idx >= arr.length){
+                    idx = 0;
+                }
+                return arr[idx];
+            }
+        }();
+        $(function() {
+            $("#serif").on(listenEvents.join(' '), function() {
+                $("#serif").text(tweet());
+            });
+        });
+    </script>
+
+<h1>Butterfly</h1>
+<div class="container">
+    <a class="ui primary button" onclick="show()">Show Structure</a>
+    <a class="ui primary button" onclick="hide()">Hide Structure</a>
+    <a class="ui danger button" onclick="stop()">Stop</a>
+    <a class="ui danger button" onclick="start()">Start</a>
+    <span>If you see the butterfly flying, your browser supports CSS3.</span>
+    <div id="parent" class="plate">
+        <div id="container" class="plate">
+            <!--do not insert line break between img tags-->
+            <img id="left" class="feather" src="../images/butterfly_left.png"><img id="right" class="feather" src="../images/butterfly_right.png">
+        </div>
+        <div id="serif-wrapper">
+            <p id="serif"></p>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    var breadcrumb = new Vue({
+        el: '#breadcrumb',
+        data: {
+        },
+        methods: {
+            getMenu: function(){
+                var totalPath = "/";
+                var res = [];
+                var paths = window.location.pathname.split("/");
+                for(var i = 0; i < paths.length - 1; i++){
+                    var path = paths[i];
+                    totalPath = totalPath + (path ? (path + "/") : "");
+                    res.push({name: path || "Home", path: totalPath})
+                }
+                return res;
+            },
+            isHome: function(){
+              console.log(window.location.pathname);
+              return window.location.pathname == "/";
+            }
+        },
+        components: {
+        }
+    });
+</script>
+
+<style>
+    body{
+        padding-top: 10px;
+    }
+</style>
+
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+<div class="container ng-cloak" ng-controller="ShareControllerA">
+    <h5>This is ShareControllerA</h5>
+    <input type="text" class="form-control" ng-model="data.text">
+    <a ng-href="#/b">to view b</a>
+
+    <input type="text" ng-model="current1"
+           ng-focus="opened1 = true" pattern="[0-9]{6}"
+           uib-datepicker-popup="yyyy/MM" is-open="opened1"
+           current-text="今日" clear-text="クリア" close-text="閉じる" datepicker-options="datePickerOptions1"
+    />
+    <input type="text" ng-model="current2"
+           ng-focus="opened2 = true" pattern="[0-9]{6}"
+           uib-datepicker-popup="yyyy/MM" is-open="opened2"
+           current-text="今日" clear-text="クリア" close-text="閉じる" datepicker-options="datePickerOptions2"
+    />
+    <button ng-click="show()">show date</button>
+</div>
