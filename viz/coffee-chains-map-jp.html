@@ -113,11 +113,11 @@
 <div class="coffee-header">
     <h1>Coffee Chain Locations in Japan</h1>
     <div id="chain-selector">
-        <div class="ui checkbox checked mobile hidden" v-for="chain in chains">
+        <div class="ui checkbox mobile hidden" v-for="chain in chains">
             <input type="checkbox" :id="chain" :value="chain" checked="checkedChains" v-on:click="clicked" onclick="hoge(this.id, this.checked)">
             <label :for="chain" class="lbl-chain"><img :src="'img/'+chain+'.png'" alt=""></label>
         </div>
-        <div class="sui checkbox checked mobile only" v-for="chain in chains">
+        <div class="sui checkbox mobile only" v-for="chain in chains">
             <input type="checkbox" :id="chain" :value="chain" checked="checkedChains" v-on:click="clicked">
             <label :for="chain" class="lbl-chain">{{chain}}</label>
         </div>
