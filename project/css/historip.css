@@ -5,7 +5,7 @@ ref:http://fortawesome.github.io/Font-Awesome/icons/
 
 @font-face {
     font-family:"indicator";
-    src:url("/css/font/digital-7.ttf");
+    src:url("../../css/font/digital-7.ttf");
     font-weight:normal;
     font-style:normal;
 }
